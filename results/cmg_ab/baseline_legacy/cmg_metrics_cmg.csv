@@ -1,0 +1,16 @@
+name,B aero + CMG (unified MPC)
+rmse_deg,41.6652018430945
+max_err_deg,114.58755850337825
+roll_rmse_deg,39.730767021660974
+pitch_rmse_deg,11.840377541156043
+yaw_rmse_deg,4.154594586622109
+max_H_Nms,163.11650337026936
+H_limit_Nms,200.0
+min_sigma_Nms,0.48838658358664233
+sigma_floor_Nms,12.247448713915889
+int_delta2,14.849632532104378
+max_gdot_rad_s,1.4999999999999993
+gdot_limit_rad_s,1.5
+solve_ms_mean,342.52429285691636
+n_qp_fail,0
+n_failsafe,176

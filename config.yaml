@@ -1,0 +1,229 @@
+# Near-space rarefied-atmosphere hybrid attitude control simulation
+# All SI units unless noted. Values marked "example" should be replaced by
+# vehicle-specific data before using the results in a paper.
+
+vehicle:
+  m: 1200.0          # kg (example)
+  Iy: 8500.0         # kg m^2 pitch inertia (example)
+  S: 4.2             # m^2 reference area
+  cbar: 3.2          # m mean aerodynamic chord
+  Cm0: 0.0
+  Cm_alpha: -0.35    # 1/rad
+  Cm_q: -12.0        # per rad (pitch damping, q*cbar/(2V))
+  Cm_delta: 0.45     # 1/rad
+
+servo:
+  delta_max_deg: 25.0
+  delta_dot_max_deg_s: 60.0
+  tau_s: 0.05        # s first-order servo time constant
+
+wheel:
+  Jw: 0.7            # kg m^2 rotor inertia
+  Omega_max_rpm: 5000.0
+  M_stall: 60.0      # N m stall (current-limited) torque
+  P_max: 12000.0     # W drive peak power
+  tau_w: 0.03        # s torque-loop time constant
+  M_cmd_max: 60.0    # N m command limit
+  dM_cmd_max: 2000.0 # N m/s command slew limit
+
+disturbance:
+  Md0: 20.0          # N m constant
+  Md_amp: 15.0       # N m sinusoidal amplitude
+  Md_freq: 0.05      # Hz
+
+# Atmosphere backend: exp | us76 | msis2
+#   exp   -- 8-layer exponential fit (legacy, kept for exact reproducibility)
+#   us76  -- full U.S. Standard Atmosphere 1976
+#   msis2 -- NRLMSIS 2.0 via pymsis (solar/geomagnetic activity aware)
+environment:
+  backend: msis2
+  msis2:
+    f107: 150.0
+    f107a: 150.0
+    ap: 4.0
+    lat: 45.0
+    lon: 0.0
+    date: "2024-01-01T00:00:00"
+    z_max_km: 120.0
+    dz_km: 0.25
+  layers:
+    - {h_lo: 0,     h_hi: 11000,  rho_ref: 1.225,     H: 9060.0, T: 288.15, grad: -0.0065}
+    - {h_lo: 11000, h_hi: 20000,  rho_ref: 0.3639,    H: 6430.0, T: 216.65, grad: 0.0}
+    - {h_lo: 20000, h_hi: 32000,  rho_ref: 0.08803,   H: 6330.0, T: 216.65, grad: 0.001}
+    - {h_lo: 32000, h_hi: 47000,  rho_ref: 0.013225,  H: 6740.0, T: 228.65, grad: 0.0028}
+    - {h_lo: 47000, h_hi: 51000,  rho_ref: 0.0014275, H: 7920.0, T: 270.65, grad: 0.0}
+    - {h_lo: 51000, h_hi: 71000,  rho_ref: 0.00086169,H: 7700.0, T: 270.65, grad: -0.0028}
+    - {h_lo: 71000, h_hi: 86000,  rho_ref: 6.421e-05, H: 6750.0, T: 214.65, grad: -0.002}
+    - {h_lo: 86000, h_hi: 100000, rho_ref: 6.958e-06, H: 5560.0, T: 186.87, grad: 0.0}
+
+# Analytic near-space skip trajectory (replace by the real skip profile).
+trajectory:
+  h0: 30000.0          # m initial altitude
+  amp: 70000.0         # m altitude excursion (30 km -> 100 km at half period)
+  period: 240.0        # s skip period
+  V0: 4000.0           # m/s
+  dVdt: 4.0            # m/s^2 deceleration
+  alpha_trim_deg: 2.0
+  maneuver_amp_deg: 5.0     # commanded pitch pulse during the rarefied phase
+  maneuver_start: 105.0     # s
+  maneuver_duration: 10.0   # s
+
+# Three-axis (6-DOF attitude) extension
+vehicle3:
+  mass: 1200.0
+  Jx: 1200.0
+  Jy: 8500.0
+  Jz: 9000.0
+  S: 4.2
+  b: 2.6
+  cbar: 3.2
+  Cm_alpha: -0.35
+  Cm_q: -12.0
+  Cm_de: 0.45
+  Cl_beta: -0.08
+  Cl_p: -0.40
+  Cl_r: 0.10
+  Cl_da: 0.12
+  Cl_dr: 0.02
+  Cn_beta: 0.12
+  Cn_p: -0.03
+  Cn_r: -0.15
+  Cn_da: 0.01
+  Cn_dr: -0.10
+  delta_max_deg: [25.0, 20.0, 20.0]
+  delta_dot_max_deg_s: [60.0, 60.0, 60.0]
+  Jw: 0.7
+  Omega_max_rpm: 5000.0
+  M_stall: 60.0
+  P_max: 12000.0
+  Md0: [0.2, 0.5, 0.3]     # residual at high altitude (realistic, ~0.1 N.m)
+  Md_amp: [4.0, 20.0, 6.0] # aerodynamic part at the 30 km reference condition
+  Md_freq: [0.03, 0.05, 0.04]
+
+# Actuator set.  This is the ONLY switch that distinguishes the A and B cases:
+#   surface_only -- aerodynamic surfaces only; the CMG is structurally absent
+#                   (gimbals frozen, no CMG torque, no CMG momentum)
+#   surface_cmg  -- aerodynamic surfaces + 4-unit pyramid CMG, optimised jointly
+actuators:
+  mode: surface_cmg
+
+# Realistic single-gimbal CMG cluster (4-unit pyramid).
+# Sized so that the guaranteed torque (sigma_min(A)*gdot_max at home = 61 N m)
+# covers the 60 N m class requirement, with 200 N m s cluster momentum.
+cmg:
+  n: 4
+  beta_deg: 54.7356
+  h0: 50.0             # N m s per unit (rotor speed regulated at 6000 rpm)
+  gdot_max: 1.5        # rad/s   (86 deg/s)
+  gddot_max: 10.0      # rad/s^2
+  tau_g: 0.03          # s gimbal rate loop
+  rotor_rpm: 6000.0
+  mass_per_unit: 30.0  # kg (rotor + gimbal + motor + electronics)
+  power_per_unit: 200.0  # W steady (windage + gimbal + electronics)
+  sigma_floor_frac: 0.30
+
+trajectory3:
+  dist_scale_qinf: true
+  # transient disturbance at the top of the skip (gust / separation event):
+  # 80 N.m pitch pulse for 1.5 s at 112 s = 120 N.m.s, where the aero authority
+  # is only ~11 N.m (h = 100 km): far above the aero ceiling, so the CMG owns
+  # the fast transient and the aero then unloads it over the next few seconds.
+  dist_pulse_amp: [0.0, 80.0, 0.0]
+  dist_pulse_start: 112.0
+  dist_pulse_duration: 1.5
+  heading_deg: 5.0
+  heading_amp_deg: 0.0
+  heading_period: 200.0
+  # commanded attitude manoeuvre (quintic, zero rate/accel at both ends).
+  # These are the BASE defaults; every experiment case overrides them in
+  # configs/cmg_ab/matrix.yaml, which is the file that defines the A/B matrix.
+  maneuver:
+    axis: pitch          # roll | pitch | yaw
+    start: 1.0e9         # disabled by default
+    duration: 20.0       # Tm [s]
+    delta_deg: 0.0
+
+# CMG MPC: short nodes, because a gimbal at 1.5 rad/s sweeps 1.5 rad per 1 s
+# node and the linearisation of A(gamma) would be invalid.
+mpc_cmg:
+  q_att: 4000.0
+  q_rate: 50.0
+  r_delta: 1.0
+  r_gdot: 5.0e-3
+  # Error-adaptive CMG effort: cheap while a transient is being fought, more
+  # expensive at trim (the aero then carries the sustained torque).  For the
+  # scheme to be active the two values MUST differ; the historical 0.5/0.5
+  # setting silently disabled it.  The transient value is the smallest one that
+  # still lets OSQP converge (0.01 and below hit the iteration cap on the
+  # transient branch), see docs/CMG-权重与动量约束核验.md.
+  r_cmg_transient: 0.05
+  r_cmg_trim: 0.50
+  e_thresh_deg: 0.5
+  M_cmg_box: 61.0      # deliverable CMG torque ceiling (guaranteed torque)
+  H_lim_frac: 0.30     # hard CMG momentum budget: 0.30 * 200 = 60 N.m.s
+  H_planner_max: 50.0  # planner hard momentum box (inside the ~58 usable)
+  w_gamma: 5.0
+  w_H: 3.0e-3          # expensive CMG momentum: it must not park on trim
+  q_unload_min: 40.0   # forbid CMG unloading while q_inf < 40 Pa (thin air)
+  s_delta: 10.0
+  rho_sing: 10000.0
+  terminal_scale: 10.0
+  n_sqp: 2
+  k_att: 4.0
+  k_rate: 4.0
+  k_unload: 0.05
+  torque_margin: 0.8      # deliverable-torque envelope safety factor
+  sigma_margin: 1.15      # required sigma_min / floor
+  horizon:
+    - {n: 6,  dt: 0.2}   # first step MUST equal simulation.dt_ctrl; 14 nodes keeps
+    - {n: 4,  dt: 0.5}   # the QP small enough for real-time (7.2 s horizon)
+    - {n: 4,  dt: 1.0}
+
+mpc3:
+  r_gdot: 1.0e-4       # gimbal-rate effort
+  w_gamma: 1.0         # pull gimbals toward the home configuration
+  w_H: 5.0e-4          # CMG cluster momentum (soft desaturation)
+  rho_sing: 1000.0     # singularity-slack penalty
+  k_unload: 0.05
+  q_att: 4000.0
+  q_rate: 50.0
+  w_h: 5.0e-4
+  r_delta: 1.0
+  r_tau: 1.0e-4
+  s_delta: 10.0
+  s_tau: 1.0e-3
+  terminal_scale: 10.0
+  n_sqp: 1
+  horizon:
+    - {n: 8,  dt: 0.2}   # first step MUST equal simulation.dt_ctrl
+    - {n: 6,  dt: 0.5}
+    - {n: 6,  dt: 1.0}
+
+mpc:
+  q_theta: 10000.0
+  q_q: 100.0
+  w_h: 5.0e-4
+  r_delta: 1.0
+  r_w: 1.0e-4
+  s_delta: 10.0
+  s_w: 1.0e-3
+  rho_slack: 10.0
+  lambda_eta: 2.0
+  M_man: 100.0         # N m reference manoeuvre torque for the margin
+  eta_max: 1.0
+  n_sqp: 1
+  admm_iter: 200
+  admm_tol: 1.0e-4
+  k_theta: 16.0
+  k_q: 8.0
+  horizon:
+    - {n: 5,  dt: 0.25}
+    - {n: 6,  dt: 0.5}
+    - {n: 8,  dt: 4.0}
+
+simulation:
+  T: 200.0
+  dt_plant: 0.005
+  dt_ctrl: 0.2
+  log_every: 1
+  theta0_offset_deg: 0.0
