@@ -291,8 +291,8 @@ def maneuver_figure(case):
     rB = data["B"][0]
     for i, col in enumerate(("#d62728", "#ff9896", "#8c564b", "#e377c2")):
         ax.plot(rB["t"], rB["gimbal_%d" % (i + 1)], color=col, lw=0.7,
-                label="B γ%d" % (i + 1) if i < 2 else None)
-    ax.set_ylabel("框架角 γ [°]")
+                label="B $\\gamma_%d$" % (i + 1) if i < 2 else None)
+    ax.set_ylabel("框架角 $\\gamma$ [°]")
     ax2 = ax.twinx()
     ax2.plot(data["A"][0]["t"], data["A"][0]["sigma"], **{**STYLE["A"], "lw": 1.0})
     ax2.plot(rB["t"], rB["sigma"], **{**STYLE["B"], "lw": 1.0})
@@ -302,8 +302,8 @@ def maneuver_figure(case):
     ax2.set_ylabel("σ_min(A) [N·m·s]（A=蓝/B=红）")
     ax.set_title("第 8 行：框架角（左轴，仅 B 有 CMG）与最小奇异度量 σ_min（右轴）",
                  fontsize=10)
-    handles = [Line2D([], [], color="#d62728", lw=0.9, label="B γ1"),
-               Line2D([], [], color="#ff9896", lw=0.9, label="B γ2"),
+    handles = [Line2D([], [], color="#d62728", lw=0.9, label="B $\\gamma_1$"),
+               Line2D([], [], color="#ff9896", lw=0.9, label="B $\\gamma_2$"),
                Line2D([], [], color=STYLE["A"]["color"], lw=1.2, label="σ_min A"),
                Line2D([], [], color=STYLE["B"]["color"], lw=1.2, label="σ_min B"),
                Line2D([], [], color="k", lw=0.8, ls="-.", label="奇异下限 %.1f" % floor)]

@@ -1,4 +1,4 @@
-﻿"""Reproduce the comparison study end to end.
+"""Reproduce the comparison study end to end.
 
     python run_all.py
 
@@ -6,6 +6,13 @@ Runs C0-C4, writes results/*.csv and results/comparison.png, and prints a
 summary table.
 """
 from __future__ import annotations
+
+import os
+import sys
+
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _ROOT not in sys.path:                    # repository root, for nearspace/legacy
+    sys.path.insert(0, _ROOT)
 
 import csv
 import os
@@ -23,14 +30,17 @@ from legacy.model import ModelParams
 from legacy.simulate import run_case
 from nearspace.trajectory import SkipTrajectory
 
+ROOT = _ROOT
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "results")
+CACHE = os.path.join(ROOT, "results", "_cache")    # shared NRLMSIS-2.0 cache
+CFG = os.path.join(HERE, "config.yaml")            # frozen C0-C4 / T1-T3 config
 
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    cfg = load_config(os.path.join(HERE, "config.yaml"))
-    atm = make_atmosphere(cfg, cache_dir=OUT)
+    cfg = load_config(CFG)
+    atm = make_atmosphere(cfg, cache_dir=CACHE)
     traj = SkipTrajectory(cfg.trajectory, atm)
 
     nominal = ModelParams.from_config(cfg)

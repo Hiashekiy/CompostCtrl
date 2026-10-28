@@ -1,8 +1,15 @@
-﻿"""Three-axis comparison study.
+"""Three-axis comparison study.
 
     python run_three_axis.py
 """
 from __future__ import annotations
+
+import os
+import sys
+
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _ROOT not in sys.path:                    # repository root, for nearspace/legacy
+    sys.path.insert(0, _ROOT)
 
 import csv
 import os
@@ -19,18 +26,21 @@ from nearspace.config import load_config
 from legacy.controllers3 import UnifiedMPC3Controller
 from nearspace.model6 import VehicleParams
 from legacy.simulate3 import run_case3
-from nearspace.trajectory3 import Trajectory3D
+from legacy.trajectory3_legacy import Trajectory3D
 
+ROOT = _ROOT
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "results")
+CACHE = os.path.join(ROOT, "results", "_cache")    # shared NRLMSIS-2.0 cache
+CFG = os.path.join(HERE, "config.yaml")            # frozen C0-C4 / T1-T3 config
 
 
 def main():
     os.makedirs(OUT, exist_ok=True)
-    cfg = load_config(os.path.join(HERE, "config.yaml"))
+    cfg = load_config(CFG)
     backend = sys.argv[1] if len(sys.argv) > 1 else getattr(cfg.environment, "backend", "exp")
     T = float(sys.argv[2]) if len(sys.argv) > 2 else None
-    atm = make_atmosphere(cfg, cache_dir=OUT, backend=backend)
+    atm = make_atmosphere(cfg, cache_dir=CACHE, backend=backend)
     traj = Trajectory3D(cfg, atm)
     print("atmosphere backend:", backend)
 

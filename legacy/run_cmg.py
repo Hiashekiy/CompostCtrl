@@ -1,10 +1,17 @@
-﻿"""Aero-surface + CMG comparison (realistic CMG cluster).
+"""Aero-surface + CMG comparison (realistic CMG cluster).
 
     python run_cmg.py <backend> <T> <case>
 
 case: aero | cmg   (aero = CMG disabled, cmg = unified MPC with the CMG cluster)
 """
 from __future__ import annotations
+
+import os
+import sys
+
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _ROOT not in sys.path:                    # repository root, for nearspace/legacy
+    sys.path.insert(0, _ROOT)
 
 import csv
 import os
@@ -19,10 +26,13 @@ from nearspace.atmosphere_factory import make_atmosphere
 from nearspace.cmg_control import LTVMPCCMG2
 from nearspace.config import load_config
 from nearspace.model6c import VehicleCMGParams, make_cluster, plant_step6c
-from nearspace.trajectory3 import Trajectory3D
+from legacy.trajectory3_legacy import Trajectory3D
 
+ROOT = _ROOT
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "results")
+CACHE = os.path.join(ROOT, "results", "_cache")    # shared NRLMSIS-2.0 cache
+CFG = os.path.join(HERE, "config.yaml")            # frozen C0-C4 / T1-T3 config
 
 
 def run(name, cfg, traj, prm, cl, mpc, T):
@@ -70,8 +80,8 @@ def main():
     T = float(sys.argv[2]) if len(sys.argv) > 2 else 140.0
     case = sys.argv[3] if len(sys.argv) > 3 else "cmg"
     os.makedirs(OUT, exist_ok=True)
-    cfg = load_config(os.path.join(HERE, "config.yaml"))
-    atm = make_atmosphere(cfg, cache_dir=OUT, backend=backend)
+    cfg = load_config(CFG)
+    atm = make_atmosphere(cfg, cache_dir=CACHE, backend=backend)
     traj = Trajectory3D(cfg, atm)
     prm = VehicleCMGParams.from_config(cfg)
     cl = make_cluster(prm)

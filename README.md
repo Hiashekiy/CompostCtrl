@@ -8,7 +8,9 @@
 
 研究问题、验收标准和统计口径见 `docs/CMG-协同姿态控制实验实施方案.md`；
 本次实施的逐项结果见 `docs/CMG-协同姿态控制实验-实施报告.md`；
-权重与动量约束的专项核验见 `docs/CMG-权重与动量约束核验.md`。
+权重与动量约束的专项核验见 `docs/CMG-权重与动量约束核验.md`；
+把早期 C 组 / T 组的**反作用轮换成 CMG** 的装置对比见
+`docs/CMG-装置替换实验-反作用轮对比.md`。
 
 > 结论性提醒：本仓库不预设"CMG 一定更好"。所有 A/B 差异都必须在同一参考、
 > 同一扰动、同一初值、同一评分容差下取得，并且要同时报告求解失败、
@@ -22,27 +24,33 @@
 D:\项目\飞轮\
 ├─ config.yaml                     全部基础参数（飞行器/大气/弹道/控制器权重）
 ├─ configs\cmg_ab\matrix.yaml      A/B 实验矩阵：common + cases + modes
+├─ configs\cmg_ab\device_sweep.yaml 装置替换实验（反作用轮 ↔ CMG）的场景与臂
 ├─ nearspace\                      有效代码（无遗留）
 │  ├─ atmosphere.py                8 段指数大气（legacy 后端，仅用于复现旧数据）
 │  ├─ atmosphere_real.py           完整 US76 + NRLMSIS-2.0（pymsis，带 CSV 缓存）
 │  ├─ atmosphere_factory.py        后端选择 exp / us76 / msis2
 │  ├─ trajectory.py                skip 弹道（h, V, γ）
-│  ├─ trajectory3.py               三轴姿态参考 + 五次多项式指令机动 + 扰动
-│  ├─ model6.py                    三轴刚体、气动系数、四元数工具
+│  ├─ trajectory3.py               三轴姿态参考 + 五次多项式/bump 指令机动 + 扰动
+│  ├─ model6.py                    三轴刚体、气动系数、四元数工具、3 轮真值模型
 │  ├─ cmg.py                       CMG 金字塔几何、角动量、Jacobian、奇异度量、能力核算
 │  ├─ model6c.py                   18 状态真值模型 [q, ω, δ, γ, γ̇]（`cmg_on` 决定 A/B）
 │  ├─ qp.py                        行缩放 OSQP + ADMM 回退
 │  ├─ cmg_control.py               统一 LTV-MPC（决策量 = [δ_c, M_cmg]）+ 操纵律
+│  ├─ mpc3.py                      三轴统一 LTV-MPC（16 状态，反作用轮装置臂）
+│  ├─ cmg_hier.py                  分层：力矩层 MPC + 伪逆操纵律分配（C2 装置臂）
+│  ├─ arms.py                      装置替换实验的臂定义（无装置 / 轮 / CMG × 控制结构）
 │  ├─ metrics.py                   §4.5/§5.5 全部指标与固定评分常数
 │  ├─ scenarios.py                 场景解析、权重/预算/CMG 能力核算、机动可行性
 │  ├─ sim.py                       闭环仿真、时序记录、元数据
 │  └─ config.py                    YAML 叠加加载（base: / extends:）
 ├─ scripts\
 │  ├─ run_cmg_ab.py                统一 A/B 运行入口（配置驱动，唯一变量是执行机构）
+│  ├─ run_device_sweep.py          C0-C4 / T1-T3 的装置替换实验（轮 ↔ CMG）
 │  ├─ verify_cmg_weights.py        §7.1/§7.2 权重链路 + 力矩链路核验
 │  ├─ check_maneuver_feasibility.py §5.2 机动可行性检查
 │  ├─ evaluate_cmg_ab.py           指标表、改善率、§10.4 判据
 │  ├─ plot_cmg_ab.py               §9 总体对比图 + 执行机构机理图
+│  ├─ plot_device_sweep.py         装置替换实验的对比图
 │  └─ run_all_experiments.py       端到端复现（核验 → 仿真 → 评估 → 作图）
 ├─ tests\
 │  ├─ test_atmosphere_real.py      大气后端验证（US76 公认值比对等）
@@ -81,6 +89,14 @@ python scripts/run_cmg_ab.py --case maneuver10 maneuver20 --jobs 4
 # 只重算指标 / 只重画图（原始 CSV 不动）
 python scripts/evaluate_cmg_ab.py
 python scripts/plot_cmg_ab.py
+
+# 装置替换实验：把 C0-C4 / T1-T3 里的反作用轮换成 CMG
+python scripts/run_device_sweep.py --all --jobs 4
+python scripts/plot_device_sweep.py
+
+# 复现早期的 C0-C4 / T1-T3（反作用轮版本，代码在 legacy/）
+python legacy/run_all.py
+python legacy/run_three_axis.py msis2 150
 
 # 专项核验
 python scripts/verify_cmg_weights.py

@@ -1,0 +1,27 @@
+cases: ['tseries']  arms: ['T1']  jobs: 1
+==============================================================================
+case=tseries  arm=T1  T1 无动量交换装置，仅舵面
+  weights in force : {"q_att": 4000.0, "q_rate": 50.0, "r_delta": 1.0, "r_gdot": 0.005, "r_cmg_transient": 0.05, "r_cmg_trim": 0.5, "e_thresh_deg": 0.5, "w_gamma": 5.0, "w_H": 0.003, "s_delta": 10.0, "rho_sing": 10000.0, "terminal_scale": 10.0, "n_sqp": 2, "sigma_margin": 1.15, "torque_margin": 0.8, "horizon": [[6, 0.2], [4, 0.5], [4, 1.0]], "adaptive_scheme_active": true}
+  wheel: h_max=366.5 N·m·s  M_stall=60.0 N·m  P_max=12000 W  tau_cmd_max=60.0 N·m
+  horizon          : T=150 s  dt_ctrl=0.200  dt_plant=0.0050
+==============================================================================
+  t=  19.8 s  err=0.021 deg  |H|=0.0  fail=0
+  t=  39.8 s  err=0.026 deg  |H|=0.0  fail=0
+  t=  59.8 s  err=0.095 deg  |H|=0.0  fail=0
+  t=  79.8 s  err=0.078 deg  |H|=0.0  fail=0
+  t=  99.8 s  err=0.033 deg  |H|=0.0  fail=0
+  t= 119.8 s  err=2.433 deg  |H|=0.0  fail=0
+  t= 139.8 s  err=2.415 deg  |H|=0.0  fail=0
+[tseries/T1] RMSE=1.2301 deg  peak=4.430 deg  device|M|max=0.00 N·m  |H|max=0.0 N·m·s  sat=0.256  QP fail=0  wall=142s
+# 装置替换实验（tseries）
+
+由 `scripts/run_device_sweep.py` 从各 arm 的 `metrics.json` 自动生成。
+
+| arm | 装置 | 三轴 RMSE [°] | 峰值 [°] | 滚转/俯仰/偏航 RMSE [°] | 机动窗峰值 [°] | 机动后稳定 [s] | 舵面峰值 [°] | 饱和比例 | 装置峰值力矩 [N·m] | 装置峰值角动量 [N·m·s] | σ_min | QP 失败 | 平均求解 [ms] |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| T1 | rw | 1.23 | 4.43 | 0.6341 / 0.5119 / 0.9262 | 4.43 | — | 20 | 0.2557 | 0 | 0 | 1000 | 0 | 168.3 |
+| T3_rw | rw | 0.04817 | 0.05208 | 0.028 / 0.03875 / 0.004722 | — | — | 1.596 | 0 | 0.001689 | 0.001085 | 1000 | 0 | 67.79 |
+| T3_cmg | cmg | 0.0494 | 0.05432 | 0.02829 / 0.04004 / 0.004902 | — | — | 1.598 | 0 | 0.02456 | 0.004837 | 37.81 | 0 | 178.3 |
+
+
+143 s wall

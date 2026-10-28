@@ -22,13 +22,23 @@ from .trajectory import SkipTrajectory
 
 QUINTIC_PEAK_RATE = 1.875      # max |ds/dt| of 10s^3-15s^4+6s^5  -> 1.875/Tm
 QUINTIC_PEAK_ACC = 5.773503    # max |d2s/dt2|                  -> 5.7735/Tm^2
+BUMP_PEAK_RATE = np.pi        # 0.5*(1-cos(2*pi*s))             -> pi/Tm
+BUMP_PEAK_ACC = 2.0 * np.pi ** 2
 
 
 class Maneuver:
-    """Quintic attitude-command step on one body axis."""
+    """Commanded attitude excursion on one body axis.
 
-    def __init__(self, axis="pitch", t0=1.0e9, duration=10.0, delta_deg=0.0):
+    shape='hold' : quintic step, the new attitude is held afterwards (§5.3)
+    shape='bump' : raised cosine 0 -> delta -> 0 over Tm; this is the shape the
+                   earlier C0-C4 / T1-T3 studies used, kept so those experiment
+                   groups can be replayed with a different momentum device.
+    """
+
+    def __init__(self, axis="pitch", t0=1.0e9, duration=10.0, delta_deg=0.0,
+                 shape="hold"):
         self.axis = str(axis).lower()
+        self.shape = str(shape).lower()
         self.t0 = float(t0)
         self.Tm = max(float(duration), 1e-6)
         self.delta = np.deg2rad(float(delta_deg))
@@ -43,24 +53,26 @@ class Maneuver:
 
     @property
     def peak_rate(self) -> float:
-        return QUINTIC_PEAK_RATE * abs(self.delta) / self.Tm
+        k = BUMP_PEAK_RATE if self.shape == "bump" else QUINTIC_PEAK_RATE
+        return k * abs(self.delta) / self.Tm
 
     @property
     def peak_accel(self) -> float:
-        return QUINTIC_PEAK_ACC * abs(self.delta) / self.Tm ** 2
+        k = BUMP_PEAK_ACC if self.shape == "bump" else QUINTIC_PEAK_ACC
+        return k * abs(self.delta) / self.Tm ** 2
 
     def value(self, t: float) -> float:
         if not self.enabled:
             return 0.0
         s = (t - self.t0) / self.Tm
-        if s <= 0.0:
-            return 0.0
-        if s >= 1.0:
-            return self.delta
+        if s <= 0.0 or s >= 1.0:
+            return 0.0 if self.shape == "bump" else (0.0 if s <= 0.0 else self.delta)
+        if self.shape == "bump":
+            return self.delta * 0.5 * (1.0 - np.cos(2.0 * np.pi * s))
         return self.delta * (10.0 * s ** 3 - 15.0 * s ** 4 + 6.0 * s ** 5)
 
     def phase(self, t: float) -> int:
-        """0 before, 1 during, 2 after (hold)."""
+        """0 before, 1 during, 2 after."""
         if not self.enabled:
             return 0
         return 0 if t < self.t0 else (1 if t < self.t_end else 2)
@@ -82,13 +94,26 @@ class Trajectory3D:
         self.pulse_dur = float(getattr(t3, "dist_pulse_duration", 1.0))
         m = getattr(t3, "maneuver", None)
         if m is None:
-            self.maneuver = Maneuver(t0=1.0e9, delta_deg=0.0)
+            specs = []
+        elif isinstance(m, list):
+            specs = m
         else:
-            self.maneuver = Maneuver(axis=getattr(m, "axis", "pitch"),
-                                     t0=float(getattr(m, "start", 1.0e9)),
-                                     duration=float(getattr(m, "duration", 10.0)),
-                                     delta_deg=float(getattr(m, "delta_deg", 0.0)))
+            specs = [m]
+        self.maneuvers = [
+            Maneuver(axis=getattr(s, "axis", "pitch"),
+                     t0=float(getattr(s, "start", 1.0e9)),
+                     duration=float(getattr(s, "duration", 10.0)),
+                     delta_deg=float(getattr(s, "delta_deg", 0.0)),
+                     shape=str(getattr(s, "shape", "hold")))
+            for s in specs]
         self.qinf_ref = 0.5 * self.rho(0.0) * self.V(0.0) ** 2
+
+    @property
+    def maneuver(self) -> Maneuver:
+        """Primary (first) manoeuvre: kept for windows and single-axis reports."""
+        if self.maneuvers:
+            return self.maneuvers[0]
+        return Maneuver(t0=1.0e9, delta_deg=0.0)
 
     # ---- geometry -------------------------------------------------------
     def h(self, t):
@@ -109,10 +134,16 @@ class Trajectory3D:
 
     # ---- attitude reference ---------------------------------------------
     def _man(self, t):
-        mv = self.maneuver
-        return (mv.value(t) if mv.axis == "roll" else 0.0,
-                mv.value(t) if mv.axis == "pitch" else 0.0,
-                mv.value(t) if mv.axis == "yaw" else 0.0)
+        roll = pitch = yaw = 0.0
+        for mv in self.maneuvers:
+            v = mv.value(t)
+            if mv.axis == "roll":
+                roll += v
+            elif mv.axis == "pitch":
+                pitch += v
+            elif mv.axis == "yaw":
+                yaw += v
+        return roll, pitch, yaw
 
     def roll_ref(self, t):
         return self._man(t)[0]
@@ -172,6 +203,8 @@ class Trajectory3D:
         out = {}
         if self.pulse_start < T:
             out["dist"] = (self.pulse_start, min(self.pulse_start + self.pulse_dur, T))
-        if self.maneuver.enabled and self.maneuver.t0 < T:
-            out["man"] = (self.maneuver.t0, min(self.maneuver.t_end, T))
+        live = [mv for mv in self.maneuvers if mv.enabled and mv.t0 < T]
+        if live:
+            out["man"] = (min(mv.t0 for mv in live),
+                          min(max(mv.t_end for mv in live), T))
         return out
