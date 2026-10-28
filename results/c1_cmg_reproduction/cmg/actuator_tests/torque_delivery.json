@@ -1,0 +1,542 @@
+{
+  "test": "torque_delivery",
+  "hardware": {
+    "units": 4,
+    "h0_Nms": 50.0,
+    "cluster_momentum_Nms": 200.0,
+    "gimbal_rate_max_rad_s": 1.5,
+    "gimbal_accel_max_rad_s2": 10.0,
+    "unit_peak_torque_Nm": 75.0,
+    "guaranteed_torque_Nm": 86.77213955916108,
+    "home_sigma_min_Nms": 40.8248290463863,
+    "sigma_floor_Nms": 12.247448713915889,
+    "single_axis_momentum_Nms": 107.73504162160748,
+    "single_axis_momentum_range": [
+      -107.73504162160748,
+      107.73504162160748
+    ],
+    "cluster_mass_kg": 120.0,
+    "cluster_power_W": 800.0
+  },
+  "controller_budget": {
+    "mode": "surface_cmg",
+    "M_cmg_box_Nm": 61.0,
+    "H_lim_frac": 0.3,
+    "H_lim_Nms": 60.0,
+    "H_planner_max_Nms": 50.0,
+    "q_unload_min_Pa": 40.0,
+    "unload_cap": 0.6,
+    "sigma_floor_Nms": 12.247448713915889,
+    "qp_viol_tol": 0.001
+  },
+  "sweep": [
+    {
+      "axis": "pitch (+y)",
+      "demand_Nm": 5.0,
+      "ceiling_home_Nm": 86.60256243241125,
+      "delivered_early_Nm": 4.958207448036123,
+      "delivered_sustained_Nm": 4.95599328243296,
+      "ratio_early": 0.9916414896072245,
+      "ratio_sustained": 0.991198656486592,
+      "max_sample_over_instant_ceiling": 0.058061071314067805,
+      "gimbal_rate_peak_rad_s": 0.08709160697110171,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 40.236422225219,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": null,
+      "momentum_change_Nms": 9.767071417602905,
+      "momentum_Nms": 9.767071417602914,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "pitch (+y)",
+      "demand_Nm": 10.0,
+      "ceiling_home_Nm": 86.60256243241125,
+      "delivered_early_Nm": 9.979419097091375,
+      "delivered_sustained_Nm": 9.937149688458563,
+      "ratio_early": 0.9979419097091375,
+      "ratio_sustained": 0.9937149688458563,
+      "max_sample_over_instant_ceiling": 0.1219790124808193,
+      "gimbal_rate_peak_rad_s": 0.1829689197103601,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 38.39599830546457,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": null,
+      "momentum_change_Nms": 19.617075707215534,
+      "momentum_Nms": 19.617075707215545,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "pitch (+y)",
+      "demand_Nm": 20.0,
+      "ceiling_home_Nm": 86.60256243241125,
+      "delivered_early_Nm": 19.931887826956505,
+      "delivered_sustained_Nm": 19.71970584349227,
+      "ratio_early": 0.9965943913478252,
+      "ratio_sustained": 0.9859852921746135,
+      "max_sample_over_instant_ceiling": 0.3090730190129232,
+      "gimbal_rate_peak_rad_s": 0.46361741451513455,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 30.017334155459007,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": null,
+      "momentum_change_Nms": 39.13124495173644,
+      "momentum_Nms": 39.13124495173645,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "pitch (+y)",
+      "demand_Nm": 40.0,
+      "ceiling_home_Nm": 86.60256243241125,
+      "delivered_early_Nm": 39.693181023083966,
+      "delivered_sustained_Nm": -0.0005351903130569799,
+      "ratio_early": 0.9923295255770992,
+      "ratio_sustained": -1.3379757826424498e-05,
+      "max_sample_over_instant_ceiling": 0.9999983486235057,
+      "gimbal_rate_peak_rad_s": 0.0778736756799828,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 0.005208585382215982,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": 1.455,
+      "momentum_change_Nms": 57.734935984273484,
+      "momentum_Nms": 57.73493598427349,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "pitch (+y)",
+      "demand_Nm": 61.0,
+      "ceiling_home_Nm": 86.60256243241125,
+      "delivered_early_Nm": 59.90621352442981,
+      "delivered_sustained_Nm": -0.0008736990778006163,
+      "ratio_early": 0.9820690741709804,
+      "ratio_sustained": -1.4322935701649448e-05,
+      "max_sample_over_instant_ceiling": 0.9999999986579182,
+      "gimbal_rate_peak_rad_s": 0.6096564318328425,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 0.0006119081644125668,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": 1.035,
+      "momentum_change_Nms": 57.73503826842578,
+      "momentum_Nms": 57.73503826842579,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "pitch (+y)",
+      "demand_Nm": 86.0,
+      "ceiling_home_Nm": 86.60256243241125,
+      "delivered_early_Nm": 69.24563044589667,
+      "delivered_sustained_Nm": -0.001540202300439857,
+      "ratio_early": 0.8051817493708915,
+      "ratio_sustained": -1.790932907488206e-05,
+      "max_sample_over_instant_ceiling": 0.9999999999999913,
+      "gimbal_rate_peak_rad_s": 0.20402966008790022,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 0.0028038861309952197,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": 0.875,
+      "momentum_change_Nms": 57.73464680825745,
+      "momentum_Nms": 57.73464680825745,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "pitch (+y)",
+      "demand_Nm": 120.0,
+      "ceiling_home_Nm": 86.60256243241125,
+      "delivered_early_Nm": 69.19793543290047,
+      "delivered_sustained_Nm": -0.0004199361391772059,
+      "ratio_early": 0.5766494619408372,
+      "ratio_sustained": -3.4994678264767157e-06,
+      "max_sample_over_instant_ceiling": 0.9999999999999922,
+      "gimbal_rate_peak_rad_s": 0.001393071229680909,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 0.0014260735662755511,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": 0.875,
+      "momentum_change_Nms": 57.734416796067464,
+      "momentum_Nms": 57.73441679606747,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "diag (1,1,1)/sqrt3",
+      "demand_Nm": 5.0,
+      "ceiling_home_Nm": 141.4213382303171,
+      "delivered_early_Nm": 4.985158165312885,
+      "delivered_sustained_Nm": 5.006159527113693,
+      "ratio_early": 0.997031633062577,
+      "ratio_sustained": 1.0012319054227388,
+      "max_sample_over_instant_ceiling": 0.03545197832585046,
+      "gimbal_rate_peak_rad_s": 0.07672921225288871,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 40.633584378335556,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": null,
+      "momentum_change_Nms": 9.839619205274658,
+      "momentum_Nms": 9.83961920527467,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "diag (1,1,1)/sqrt3",
+      "demand_Nm": 10.0,
+      "ceiling_home_Nm": 141.4213382303171,
+      "delivered_early_Nm": 9.996108659740026,
+      "delivered_sustained_Nm": 9.966016588635147,
+      "ratio_early": 0.9996108659740026,
+      "ratio_sustained": 0.9966016588635147,
+      "max_sample_over_instant_ceiling": 0.07090799277857616,
+      "gimbal_rate_peak_rad_s": 0.19932623800420635,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 40.070303335354524,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": null,
+      "momentum_change_Nms": 19.67591772805473,
+      "momentum_Nms": 19.675917728054745,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "diag (1,1,1)/sqrt3",
+      "demand_Nm": 20.0,
+      "ceiling_home_Nm": 141.4213382303171,
+      "delivered_early_Nm": 19.962865530025297,
+      "delivered_sustained_Nm": 19.726489121109328,
+      "ratio_early": 0.9981432765012649,
+      "ratio_sustained": 0.9863244560554664,
+      "max_sample_over_instant_ceiling": 0.14929553994589204,
+      "gimbal_rate_peak_rad_s": 0.4727208536947189,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 40.24876936976919,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": null,
+      "momentum_change_Nms": 39.05616758386752,
+      "momentum_Nms": 39.056167583867534,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "diag (1,1,1)/sqrt3",
+      "demand_Nm": 40.0,
+      "ceiling_home_Nm": 141.4213382303171,
+      "delivered_early_Nm": 39.69374989923237,
+      "delivered_sustained_Nm": 38.627320157675946,
+      "ratio_early": 0.9923437474808093,
+      "ratio_sustained": 0.9656830039418987,
+      "max_sample_over_instant_ceiling": 0.29142655980780335,
+      "gimbal_rate_peak_rad_s": 1.292609639046737,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 19.155851208293534,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": null,
+      "momentum_change_Nms": 77.81633470326253,
+      "momentum_Nms": 77.81633470326254,
+      "gimbal_rate_saturated": false
+    },
+    {
+      "axis": "diag (1,1,1)/sqrt3",
+      "demand_Nm": 61.0,
+      "ceiling_home_Nm": 141.4213382303171,
+      "delivered_early_Nm": 60.51955324156759,
+      "delivered_sustained_Nm": 55.80698487945642,
+      "ratio_early": 0.9921238236322556,
+      "ratio_sustained": 0.9148686045812529,
+      "max_sample_over_instant_ceiling": 0.45769717288616746,
+      "gimbal_rate_peak_rad_s": 1.4999999999847993,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 20.002117547588526,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": null,
+      "momentum_change_Nms": 110.33569918890153,
+      "momentum_Nms": 110.33569918890154,
+      "gimbal_rate_saturated": true
+    },
+    {
+      "axis": "diag (1,1,1)/sqrt3",
+      "demand_Nm": 86.0,
+      "ceiling_home_Nm": 141.4213382303171,
+      "delivered_early_Nm": 77.99660342350789,
+      "delivered_sustained_Nm": 65.05962696018588,
+      "ratio_early": 0.9069372491105568,
+      "ratio_sustained": 0.7565072902347195,
+      "max_sample_over_instant_ceiling": 0.6123954953822552,
+      "gimbal_rate_peak_rad_s": 1.4999999999999993,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 21.969440769042,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": null,
+      "momentum_change_Nms": 129.17955368760366,
+      "momentum_Nms": 129.1795536876037,
+      "gimbal_rate_saturated": true
+    },
+    {
+      "axis": "diag (1,1,1)/sqrt3",
+      "demand_Nm": 120.0,
+      "ceiling_home_Nm": 141.4213382303171,
+      "delivered_early_Nm": 72.49878515098048,
+      "delivered_sustained_Nm": 68.44793353261488,
+      "ratio_early": 0.6041565429248373,
+      "ratio_sustained": 0.570399446105124,
+      "max_sample_over_instant_ceiling": 0.7562085722180838,
+      "gimbal_rate_peak_rad_s": 1.4999999999999993,
+      "gimbal_rate_limit_rad_s": 1.5,
+      "sigma_min": 20.973916530041993,
+      "sigma_home": 40.8248290463863,
+      "sigma_floor": 12.247448713915889,
+      "t_below_sigma_floor_s": null,
+      "momentum_change_Nms": 134.51344819348816,
+      "momentum_Nms": 134.5134481934882,
+      "gimbal_rate_saturated": true
+    }
+  ],
+  "checks": [
+    {
+      "check": "below 0.75 x ceiling: delivery over 0.3-0.6 s tracks the demand",
+      "ok": true,
+      "value": [
+        [
+          "pitch (+y)",
+          5.0,
+          0.992
+        ],
+        [
+          "pitch (+y)",
+          10.0,
+          0.998
+        ],
+        [
+          "pitch (+y)",
+          20.0,
+          0.997
+        ],
+        [
+          "pitch (+y)",
+          40.0,
+          0.992
+        ],
+        [
+          "pitch (+y)",
+          61.0,
+          0.982
+        ],
+        [
+          "diag (1,1,1)/sqrt3",
+          5.0,
+          0.997
+        ],
+        [
+          "diag (1,1,1)/sqrt3",
+          10.0,
+          1.0
+        ],
+        [
+          "diag (1,1,1)/sqrt3",
+          20.0,
+          0.998
+        ],
+        [
+          "diag (1,1,1)/sqrt3",
+          40.0,
+          0.992
+        ],
+        [
+          "diag (1,1,1)/sqrt3",
+          61.0,
+          0.992
+        ],
+        [
+          "diag (1,1,1)/sqrt3",
+          86.0,
+          0.907
+        ]
+      ]
+    },
+    {
+      "check": "delivery degrades as the demand approaches the ceiling",
+      "ok": true,
+      "value": {
+        "pitch (+y)": [
+          0.992,
+          0.577
+        ],
+        "diag (1,1,1)/sqrt3": [
+          0.997,
+          0.604
+        ]
+      }
+    },
+    {
+      "check": "no sample exceeds the instantaneous analytic ceiling",
+      "ok": true,
+      "value": 0.9999999999999922
+    },
+    {
+      "check": "gimbal rate never exceeds the hardware limit",
+      "ok": true,
+      "value": 1.5
+    },
+    {
+      "check": "momentum stays inside the cluster envelope",
+      "ok": true,
+      "value": [
+        200.0,
+        134.5134481934882
+      ]
+    },
+    {
+      "check": "demands <= 20 N·m never cross the singularity floor",
+      "ok": true,
+      "value": [
+        [
+          "pitch (+y)",
+          5.0,
+          null
+        ],
+        [
+          "pitch (+y)",
+          10.0,
+          null
+        ],
+        [
+          "pitch (+y)",
+          20.0,
+          null
+        ],
+        [
+          "diag (1,1,1)/sqrt3",
+          5.0,
+          null
+        ],
+        [
+          "diag (1,1,1)/sqrt3",
+          10.0,
+          null
+        ],
+        [
+          "diag (1,1,1)/sqrt3",
+          20.0,
+          null
+        ]
+      ]
+    },
+    {
+      "check": "sustained demand above the sustainable level crosses the floor (recorded, not tuned away)",
+      "ok": true,
+      "value": {
+        "crossed": [
+          [
+            "pitch (+y)",
+            40.0
+          ],
+          [
+            "pitch (+y)",
+            61.0
+          ],
+          [
+            "pitch (+y)",
+            86.0
+          ],
+          [
+            "pitch (+y)",
+            120.0
+          ]
+        ],
+        "sustained": [
+          [
+            "pitch (+y)",
+            5.0,
+            0.991,
+            40.2364
+          ],
+          [
+            "pitch (+y)",
+            10.0,
+            0.994,
+            38.396
+          ],
+          [
+            "pitch (+y)",
+            20.0,
+            0.986,
+            30.0173
+          ],
+          [
+            "pitch (+y)",
+            40.0,
+            -0.0,
+            0.0052
+          ],
+          [
+            "pitch (+y)",
+            61.0,
+            -0.0,
+            0.0006
+          ],
+          [
+            "pitch (+y)",
+            86.0,
+            -0.0,
+            0.0028
+          ],
+          [
+            "pitch (+y)",
+            120.0,
+            -0.0,
+            0.0014
+          ],
+          [
+            "diag (1,1,1)/sqrt3",
+            5.0,
+            1.001,
+            40.6336
+          ],
+          [
+            "diag (1,1,1)/sqrt3",
+            10.0,
+            0.997,
+            40.0703
+          ],
+          [
+            "diag (1,1,1)/sqrt3",
+            20.0,
+            0.986,
+            40.2488
+          ],
+          [
+            "diag (1,1,1)/sqrt3",
+            40.0,
+            0.966,
+            19.1559
+          ],
+          [
+            "diag (1,1,1)/sqrt3",
+            61.0,
+            0.915,
+            20.0021
+          ],
+          [
+            "diag (1,1,1)/sqrt3",
+            86.0,
+            0.757,
+            21.9694
+          ],
+          [
+            "diag (1,1,1)/sqrt3",
+            120.0,
+            0.57,
+            20.9739
+          ]
+        ]
+      }
+    }
+  ],
+  "passed": true
+}

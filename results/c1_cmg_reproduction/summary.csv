@@ -1,0 +1,21 @@
+metric,label,A,B,better
+err_rmse_deg,attitude RMSE whole run [deg],14.764117703972355,69.4818438645126,min
+err_peak_deg,peak attitude error [deg],43.47723959525912,178.30879270825903,min
+high_rmse_deg,high-altitude (>=90 km) RMSE [deg],25.17328053630024,70.68459704287199,min
+high_peak_deg,high-altitude peak error [deg],43.47723959525912,146.43415395674018,min
+delta_sat_frac_all,surface saturation time fraction [-],0.25774225774225773,0.45754245754245754,min
+delta_peak_all_deg,peak surface deflection [deg],24.999999999999986,24.999999999999986,info
+delta_travel_deg,surface mean travel per step [deg],0.13783938051868916,1.0236515218753446,min
+aero_moment_peak_Nm,peak aero moment [N m],"[0.02970199607371402, 502.48294386727986, 0.14081191377444763]","[5629.914511384916, 25309.011436281307, 5786.574701254884]",info
+maneuver_settle_after_ref_s,settle time after the reference pulse [s],50.39999999992207,,min
+cmg_torque_peak_Nm,CMG peak torque [N m],0.0,114.04320733812688,info
+cmg_momentum_peak_Nms,CMG peak stored momentum [N m s],0.0,97.62437843838933,info
+cmg_gimbal_rate_peak_rad_s,CMG peak gimbal rate [rad/s],0.0,1.499999999999996,info
+cmg_sigma_min,CMG minimum singularity index [N m s],40.8248290463863,2.759747736553519,max
+qp_fail_count,QP failure steps,0,462,min
+fallback_count,failsafe fallback steps,0,462,min
+qp_fail_longest_run,longest continuous fallback [steps],0,462,min
+max_constraint_violation,max constraint violation,3.5553598888959925e-05,323348895473.72504,min
+solve_time_mean_ms,mean solve time [ms],225.2863312683398,338.2467228772033,min
+solve_time_p95_ms,p95 solve time [ms],279.67340001487173,600.6794999993872,min
+solve_time_max_ms,worst solve time [ms],323.4570999920834,1499.4978999893647,min

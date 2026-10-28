@@ -1,0 +1,158 @@
+{
+  "case": "c1_diag_unload",
+  "config": "configs\\c1_cmg_reproduction.yaml",
+  "mode_A": {
+    "mode": "surface_only",
+    "M_cmg_box_Nm": 0.0
+  },
+  "mode_B": {
+    "mode": "surface_cmg",
+    "M_cmg_box_Nm": 61.0
+  },
+  "config_differences": [
+    "/actuators/mode: 'surface_only' -> 'surface_cmg'",
+    "/label: 'A 仅气动舵面（CMG 在真值模型中断开）' -> 'B 气动舵面 + CMG（统一 MPC 联合优化）'",
+    "/mpc_cmg/M_cmg_box: 0.0 -> 61.0",
+    "/scenario/mode_label: 'A 仅气动舵面（CMG 在真值模型中断开）' -> 'B 气动舵面 + CMG（统一 MPC 联合优化）'"
+  ],
+  "unexpected_differences": [],
+  "high_window_s": [
+    90.4,
+    149.6
+  ],
+  "initial_state": {
+    "zipped": {
+      "q0": 0.9988960616987121,
+      "q1": -0.0007612632768451531,
+      "q2": 0.01743579561349186,
+      "q3": 0.043612743921365014,
+      "p": 0.0,
+      "q": 0.0,
+      "r": 0.0,
+      "de": 0.027149566142134013,
+      "da": 0.0,
+      "dr": 0.0,
+      "g1": 0.0,
+      "g2": 0.0,
+      "g3": 0.0,
+      "g4": 0.0,
+      "gd1": 0.0,
+      "gd2": 0.0,
+      "gd3": 0.0,
+      "gd4": 0.0
+    }
+  },
+  "disturbance_pitch": {
+    "min": 5.0,
+    "max": 35.0,
+    "t_of_max": 5.0,
+    "impulse_over_run_Nms": 4004.0
+  },
+  "checks": [
+    {
+      "check": "config diff limited to the actuator block",
+      "ok": true,
+      "value": [
+        "/actuators/mode: 'surface_only' -> 'surface_cmg'",
+        "/label: 'A 仅气动舵面（CMG 在真值模型中断开）' -> 'B 气动舵面 + CMG（统一 MPC 联合优化）'",
+        "/mpc_cmg/M_cmg_box: 0.0 -> 61.0",
+        "/scenario/mode_label: 'A 仅气动舵面（CMG 在真值模型中断开）' -> 'B 气动舵面 + CMG（统一 MPC 联合优化）'"
+      ]
+    },
+    {
+      "check": "disturbance identical in A and B",
+      "ok": true,
+      "value": 0.0
+    },
+    {
+      "check": "pitch disturbance equals legacy 20+15sin(2pi0.05t)",
+      "ok": true,
+      "value": 0.0
+    },
+    {
+      "check": "roll/yaw disturbance are exactly zero",
+      "ok": true,
+      "value": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "check": "pitch reference pulse = 5 deg raised cosine at 105 s / 10 s",
+      "ok": true,
+      "value": [
+        0.0,
+        5.0,
+        0.0
+      ]
+    },
+    {
+      "check": "high-altitude window identical in A and B",
+      "ok": true,
+      "value": [
+        [
+          90.4,
+          149.6
+        ],
+        [
+          90.4,
+          149.6
+        ]
+      ]
+    },
+    {
+      "check": "high-altitude window matches the frozen legacy profile",
+      "ok": true,
+      "value": [
+        [
+          90.4,
+          149.6
+        ],
+        [
+          90.4,
+          149.6
+        ]
+      ]
+    },
+    {
+      "check": "identical initial state",
+      "ok": true,
+      "value": null
+    },
+    {
+      "check": "identical time steps",
+      "ok": true,
+      "value": [
+        0.2,
+        0.005,
+        200.0
+      ]
+    },
+    {
+      "check": "identical vehicle / aero / servo parameters",
+      "ok": true,
+      "value": null
+    },
+    {
+      "check": "identical CMG hardware",
+      "ok": true,
+      "value": null
+    },
+    {
+      "check": "identical scoring constants",
+      "ok": true,
+      "value": {
+        "err_tol_abs_deg": 0.05,
+        "recovery_rel_frac": 0.1,
+        "hold_sec": 2.0,
+        "man_tol_frac": 0.05,
+        "man_tol_floor_deg": 0.5,
+        "man_hold_sec": 3.0,
+        "sat_frac": 0.999,
+        "hold_window_sec": 20.0,
+        "dist_tail_sec": 5.0
+      }
+    }
+  ],
+  "passed": true
+}

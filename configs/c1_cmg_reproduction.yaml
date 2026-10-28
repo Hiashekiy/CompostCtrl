@@ -1,0 +1,113 @@
+# =====================================================================
+# C1 纯舵面实验复现 + CMG 统一 MPC 对比（正式 A/B）
+# =====================================================================
+# 任务来源：legacy/config.yaml 的 C1（俯仰单轴，仅气动舵面）。
+# 本文件把它搬到与四单元 CMG 兼容的 18 状态三轴模型上，A、B 共用同一任务：
+#
+#     * 弹道 30 km -> 100 km 顶点 -> 回落，周期 240 s，V0 = 4000 m/s，dV/dt = -4 m/s^2
+#     * 仿真 200 s，dt_ctrl = 0.2 s，dt_plant = 0.005 s
+#     * 参考姿态：俯仰 = gamma + alpha_trim(2 deg) + 5 deg 余弦脉冲 @105 s / 10 s；
+#       滚转/偏航参考为常量（无指令机动）
+#     * 外部扰动：俯仰 `20 + 15*sin(2*pi*0.05 t)` N·m，即 legacy 的 C1 扰动原样搬过来
+#       （legacy 的 Md 不做动压缩放，故这里 dist_scale_qinf=false，其余两轴用
+#        vehicle3 缺省的小残差，不额外加滚转/偏航扰动）
+#     * 舵面限制、舵机时间常数、大气后端（NRLMSIS-2.0）、评分常数全部继承 config.yaml
+#
+# A 与 B 的唯一差异仍然只有 modes 块（执行机构）；CMG 硬件与控制器预算沿用
+# 主实验冻结值（configs/cmg_ab/matrix.yaml 的 common 段），不针对本任务重新调参。
+#
+#   python scripts/run_c1_cmg_ab.py --modes A B      # 正式两组
+#   python scripts/evaluate_c1_cmg_ab.py             # 指标表 + 图
+# =====================================================================
+base: ../config.yaml
+
+common:
+  environment:
+    backend: msis2
+  simulation:
+    dt_plant: 0.005
+    dt_ctrl: 0.2
+  trajectory:
+    h0: 30000.0
+    period: 240.0          # 顶点时刻 t = 120 s
+    V0: 4000.0
+    dVdt: 4.0
+    alpha_trim_deg: 2.0
+  trajectory3:
+    dist_scale_qinf: false      # legacy C1 的扰动不随动压缩放
+    dist_pulse_amp: [0.0, 0.0, 0.0]
+    dist_pulse_start: 1.0e9
+    dist_pulse_duration: 1.5
+    heading_deg: 5.0
+    heading_amp_deg: 0.0
+    heading_period: 200.0
+    high_window_km: 90.0        # 高空段统计窗口的阈值（运行前固定）
+    maneuver: []
+  # legacy C1 的俯仰扰动原样搬过来：20 N·m 常值 + 15 N·m / 0.05 Hz 正弦。
+  # 滚转、偏航外部扰动按要求置零（config.yaml 缺省的 4 N·m / 6 N·m 气动残差
+  # 在本实验中不属于任务，若保留会让"只有俯仰扰动"的说法不成立）。
+  vehicle3:
+    Md0: [0.0, 20.0, 0.0]
+    Md_amp: [0.0, 15.0, 0.0]
+    Md_freq: [0.03, 0.05, 0.04]
+  cmg:
+    n: 4
+    beta_deg: 54.7356
+    h0: 50.0
+    gdot_max: 1.5
+    gddot_max: 10.0
+    tau_g: 0.03
+    sigma_floor_frac: 0.30
+  mpc_cmg:
+    q_att: 4000.0
+    q_rate: 50.0
+    r_delta: 1.0
+    r_cmg_transient: 0.05
+    r_cmg_trim: 0.50
+    e_thresh_deg: 0.5
+    M_cmg_box: 61.0
+    H_lim_frac: 0.30
+    H_planner_max: 50.0
+    w_gamma: 5.0
+    w_H: 3.0e-3
+    q_unload_min: 40.0
+    s_delta: 10.0
+    rho_sing: 10000.0
+    terminal_scale: 10.0
+    n_sqp: 2
+    k_att: 4.0
+    k_rate: 4.0
+    k_unload: 0.05
+    torque_margin: 0.8
+    sigma_margin: 1.15
+    horizon:
+      - {n: 6, dt: 0.2}
+      - {n: 4, dt: 0.5}
+      - {n: 4, dt: 1.0}
+
+modes:
+  A:
+    label: "A 仅气动舵面（CMG 在真值模型中断开）"
+    actuators: {mode: surface_only}
+  B:
+    label: "B 气动舵面 + CMG（统一 MPC 联合优化）"
+    actuators: {mode: surface_cmg}
+
+cases:
+  # 诊断臂（不属于正式 A/B 对比，只为定位 B 组失败来源）：
+  # 同一任务，但允许在稀薄气段卸载，用来判断"薄气段禁止卸载"是不是 B 发散的原因。
+  c1_diag_unload:
+    label: "诊断：同任务，允许全高度卸载（q_unload_min = 0），仅跑 B"
+    scenario: {name: c1_diag_unload, vertex_km: 100.0, T: 200.0}
+    trajectory3:
+      maneuver:
+        - {axis: pitch, start: 105.0, duration: 10.0, delta_deg: 5.0, shape: bump}
+    mpc_cmg:
+      q_unload_min: 0.0
+
+  c1:
+    label: "C1 任务：100 km 顶点，5 deg 俯仰余弦脉冲 @105 s / 10 s，扰动 20+15sin(2pi0.05t) N·m"
+    scenario: {name: c1, vertex_km: 100.0, T: 200.0}
+    trajectory3:
+      maneuver:
+        - {axis: pitch, start: 105.0, duration: 10.0, delta_deg: 5.0, shape: bump}

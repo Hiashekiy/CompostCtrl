@@ -104,8 +104,8 @@ def build_cfg(case, mode, path=MATRIX):
     return cfg
 
 
-def out_dir(case, mode):
-    return os.path.join(OUTROOT, case, mode)
+def out_dir(case, mode, root=OUTROOT):
+    return os.path.join(root, case, mode)
 
 
 # ---------------------------------------------------------------------------
@@ -158,10 +158,11 @@ def write_timeseries(path, rec):
             fh.write(",".join("%.10g" % v for v in row) + "\n")
 
 
-def run_one(case, mode, verbose=True, tag=None):
+def run_one(case, mode, verbose=True, tag=None, config_path=MATRIX,
+            outroot=OUTROOT, cache_dir=None):
     t0 = time.time()
-    cfg = build_cfg(case, mode)
-    od = out_dir(case, mode)
+    cfg = build_cfg(case, mode, config_path)
+    od = out_dir(case, mode, outroot)
     os.makedirs(od, exist_ok=True)
 
     if verbose:
@@ -176,7 +177,7 @@ def run_one(case, mode, verbose=True, tag=None):
               % (cfg.simulation.T, cfg.simulation.dt_ctrl, cfg.simulation.dt_plant))
         print("=" * 78, flush=True)
 
-    rec = sim.run(cfg, cache_dir=os.path.join(OUTROOT, "_cache"),
+    rec = sim.run(cfg, cache_dir=cache_dir or os.path.join(OUTROOT, "_cache"),
                   progress=verbose)
     write_timeseries(os.path.join(od, "timeseries.csv"), rec)
     with open(os.path.join(od, "metrics.json"), "w", encoding="utf-8") as fh:
@@ -208,8 +209,8 @@ def _j(o):
 # ---------------------------------------------------------------------------
 # metrics table
 # ---------------------------------------------------------------------------
-def update_tables(case_metrics):
-    """Append one row per (case, mode) to results/cmg_ab/<case>/metrics.csv."""
+def update_tables(case_metrics, outroot=OUTROOT):
+    """Append one row per (case, mode) to <outroot>/<case>/metrics.csv."""
     fields = ["case", "mode", "err_rmse_deg", "err_peak_deg",
               "err_rmse_roll_deg", "err_rmse_pitch_deg", "err_rmse_yaw_deg",
               "peak_err_dist_deg", "peak_err_dist_tail_deg",
@@ -224,7 +225,7 @@ def update_tables(case_metrics):
               "max_constraint_violation", "solve_time_mean_ms", "solve_time_p95_ms",
               "wall_time_s"]
     for r in case_metrics:
-        d = os.path.join(OUTROOT, r["case"])
+        d = os.path.join(outroot, r["case"])
         os.makedirs(d, exist_ok=True)
         path = os.path.join(d, "metrics.csv")
         rows = []
@@ -268,9 +269,13 @@ def main(argv=None):
     ap.add_argument("--jobs", type=int, default=1)
     ap.add_argument("--tag", default=None)
     ap.add_argument("--list", action="store_true")
+    ap.add_argument("--config", default=MATRIX,
+                    help="experiment YAML in the base/common/modes/cases form")
+    ap.add_argument("--out", default=OUTROOT, help="results root for this experiment")
     a = ap.parse_args(argv)
+    matrix, outroot = os.path.abspath(a.config), os.path.abspath(a.out)
 
-    _, blocks = load_matrix()
+    _, blocks = load_matrix(matrix)
     cases = sorted(blocks.get("cases", {}))
     if a.list:
         for c in cases:
@@ -278,28 +283,30 @@ def main(argv=None):
         return 0
     todo = cases if a.all else (a.case or ["tracking"])
 
-    os.makedirs(OUTROOT, exist_ok=True)
+    os.makedirs(outroot, exist_ok=True)
+    print("config:", matrix)
     print("cases:", todo, " modes:", a.modes, " jobs:", a.jobs)
 
     # warm the NRLMSIS-2.0 cache once, serially, so parallel workers only read
-    _warm_cache(todo[0], a.modes[0])
+    _warm_cache(todo[0], a.modes[0], matrix, outroot)
 
     jobs = [(c, m) for c in todo for m in a.modes]
     t0 = time.time()
     if a.jobs > 1 and len(jobs) > 1:
-        results, bad = _parallel(jobs, a.jobs, a.tag)
+        results, bad = _parallel(jobs, a.jobs, a.tag, matrix, outroot)
     else:
-        results = [run_one(c, m, verbose=True, tag=a.tag) for c, m in jobs]
+        results = [run_one(c, m, verbose=True, tag=a.tag, config_path=matrix,
+                           outroot=outroot) for c, m in jobs]
         bad = []
     ok = [r for r in results if r and "error" not in r]
-    update_tables(ok)
+    update_tables(ok, outroot)
     print("\n%d runs ok, %d failed, %.0f s wall" % (len(ok), len(bad), time.time() - t0))
     for r in bad:
         print("  FAILED", r)
     return 0 if not bad else 1
 
 
-def _parallel(jobs, nproc, tag):
+def _parallel(jobs, nproc, tag, matrix=MATRIX, outroot=OUTROOT):
     """Run each (case, mode) in its own process.
 
     Windows named pipes are unavailable in this environment, so multiprocessing
@@ -308,7 +315,7 @@ def _parallel(jobs, nproc, tag):
     artefacts they write.
     """
     import subprocess
-    logdir = os.path.join(OUTROOT, "_logs")
+    logdir = os.path.join(outroot, "_logs")
     os.makedirs(logdir, exist_ok=True)
     pending = list(jobs)
     running = []
@@ -319,7 +326,8 @@ def _parallel(jobs, nproc, tag):
             logp = os.path.join(logdir, "%s_%s.log" % (case, mode))
             fh = open(logp, "w", encoding="utf-8")
             cmd = [sys.executable, os.path.abspath(__file__),
-                   "--case", case, "--modes", mode, "--jobs", "1"]
+                   "--case", case, "--modes", mode, "--jobs", "1",
+                   "--config", matrix, "--out", outroot]
             if tag:
                 cmd += ["--tag", tag]
             running.append((case, mode, subprocess.Popen(cmd, stdout=fh,
@@ -332,7 +340,7 @@ def _parallel(jobs, nproc, tag):
                 continue
             fh.close()
             running.remove(item)
-            mp = os.path.join(OUTROOT, case, mode, "metrics.json")
+            mp = os.path.join(outroot, case, mode, "metrics.json")
             if proc.returncode == 0 and os.path.exists(mp):
                 with open(mp, encoding="utf-8") as f2:
                     done.append(dict(case=case, mode=mode, metrics=json.load(f2)))
@@ -343,9 +351,9 @@ def _parallel(jobs, nproc, tag):
     return done, bad
 
 
-def _warm_cache(case, mode):
+def _warm_cache(case, mode, matrix=MATRIX, outroot=OUTROOT):
     try:
-        cfg = build_cfg(case, mode)
+        cfg = build_cfg(case, mode, matrix)
         from nearspace.atmosphere_factory import make_atmosphere
         make_atmosphere(cfg, cache_dir=os.path.join(OUTROOT, "_cache"),
                         backend=getattr(cfg.environment, "backend", "msis2"))

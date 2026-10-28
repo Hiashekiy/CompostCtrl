@@ -161,6 +161,18 @@ def compute(rec: dict, windows: dict | None = None, delta_max_deg=None) -> dict:
         m["max_overshoot_roll_deg"] = float(np.max(ex[hsel])) if hsel.any() else None
         m["max_overshoot_yaw_deg"] = float(np.max(ez[hsel])) if hsel.any() else None
 
+    # -- high-altitude (rarefied) window, fixed by the trajectory ------------
+    w = windows.get("high")
+    if w is None:
+        m["high_rmse_deg"] = m["high_peak_deg"] = m["high_time_s"] = None
+    else:
+        w0, w1 = w
+        sel = (t >= w0) & (t <= w1)
+        m["high_rmse_deg"] = float(np.sqrt(np.mean(en[sel] ** 2))) if sel.any() else None
+        m["high_peak_deg"] = float(np.max(en[sel])) if sel.any() else None
+        m["high_time_s"] = float(w1 - w0)
+        m["high_window_s"] = [float(w0), float(w1)]
+
     # -- 6/7/8 aerodynamic surfaces -----------------------------------------
     d = np.asarray(rec["delta_deg"], dtype=float)
     dmax = np.asarray(delta_max_deg, dtype=float) if delta_max_deg is not None else None

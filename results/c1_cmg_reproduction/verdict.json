@@ -1,0 +1,75 @@
+{
+  "improvement_pct": -370.6129093363851,
+  "checks": [
+    {
+      "check": "B reduces the whole-run RMSE below A",
+      "ok": false,
+      "value": [
+        14.764117703972355,
+        69.4818438645126
+      ],
+      "rule": "B < A"
+    },
+    {
+      "check": "B reduces the whole-run RMSE by at least 20%",
+      "ok": false,
+      "value": -370.6129093363851,
+      "rule": "improvement >= 20 %"
+    },
+    {
+      "check": "B reduces the peak attitude error",
+      "ok": false,
+      "value": [
+        43.47723959525912,
+        178.30879270825903
+      ],
+      "rule": "B < A"
+    },
+    {
+      "check": "B reduces the high-altitude RMSE",
+      "ok": false,
+      "value": [
+        25.13087474882034,
+        70.56550239220466
+      ],
+      "rule": "B < A"
+    },
+    {
+      "check": "B reduces the surface saturation fraction",
+      "ok": false,
+      "value": [
+        0.25774225774225773,
+        0.45754245754245754
+      ],
+      "rule": "B < A"
+    },
+    {
+      "check": "no sustained QP failure in B",
+      "ok": false,
+      "value": 462,
+      "rule": "longest continuous fallback run < 5 steps (1 s)"
+    },
+    {
+      "check": "B keeps the momentum inside the controller budget",
+      "ok": false,
+      "value": 97.62437843838933,
+      "rule": "<= 60 N m s"
+    },
+    {
+      "check": "B keeps the singularity index above the floor",
+      "ok": false,
+      "value": 2.759747736553519,
+      "rule": "> 12.25 N m s"
+    },
+    {
+      "check": "worst solve time is reported against the 200 ms control period",
+      "ok": true,
+      "value": [
+        323.4570999920834,
+        1499.4978999893647
+      ],
+      "rule": "reported, not judged"
+    }
+  ],
+  "any_hard_failure": true
+}

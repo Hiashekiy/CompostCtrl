@@ -10,7 +10,10 @@
 本次实施的逐项结果见 `docs/CMG-协同姿态控制实验-实施报告.md`；
 权重与动量约束的专项核验见 `docs/CMG-权重与动量约束核验.md`；
 把早期 C 组 / T 组改用 CMG 重做、以及三轴任务的容量边界见
-`docs/CMG-装置替换实验-C组与T组.md`。
+`docs/CMG-装置替换实验-C组与T组.md`；
+历史 C1 的冻结复现与"同一任务的 CMG 正式 A/B"见
+`docs/C1复现与CMG统一MPC对比实验报告.md`（结论：复现通过；CMG 在该任务上差 4.7 倍，
+原因是任务角冲量 4004 N·m·s 是 60 N·m·s 预算的 67 倍）。
 
 > 结论性提醒：本仓库不预设"CMG 一定更好"。所有 A/B 差异都必须在同一参考、
 > 同一扰动、同一初值、同一评分容差下取得，并且要同时报告求解失败、
@@ -25,6 +28,7 @@ D:\项目\飞轮\
 ├─ config.yaml                     全部基础参数（飞行器/大气/弹道/控制器权重）
 ├─ configs\cmg_ab\matrix.yaml      A/B 实验矩阵：common + cases + modes
 ├─ configs\cmg_ab\device_sweep.yaml C 组 / T 组的场景、控制结构臂与难度扫描
+├─ configs\c1_cmg_reproduction.yaml C1 任务的匹配三轴 A/B（legacy 扰动原样搬入）
 ├─ nearspace\                      有效代码（无遗留）
 │  ├─ atmosphere.py                8 段指数大气（legacy 后端，仅用于复现旧数据）
 │  ├─ atmosphere_real.py           完整 US76 + NRLMSIS-2.0（pymsis，带 CSV 缓存）
@@ -52,6 +56,10 @@ D:\项目\飞轮\
 │  ├─ evaluate_cmg_ab.py           指标表、改善率、§10.4 判据
 │  ├─ plot_cmg_ab.py               §9 总体对比图 + 执行机构机理图
 │  ├─ plot_device_sweep.py         C 组 / T 组的对比图
+│  ├─ reproduce_c1.py               冻结环境 + 复现历史 C1 + 验收（方案 §2）
+│  ├─ validate_cmg_actuator.py      CMG 力矩方向 / 交付能力 / 统一 MPC 闭环单元测试
+│  ├─ run_c1_cmg_ab.py              C1 任务的匹配模型 A/B（含一致性检查与诊断臂）
+│  ├─ evaluate_c1_cmg_ab.py         C1 A/B 指标表、判据与 10 张图
 │  └─ run_all_experiments.py       端到端复现（核验 → 仿真 → 评估 → 作图）
 ├─ tests\
 │  ├─ test_atmosphere_real.py      大气后端验证（US76 公认值比对等）
@@ -59,6 +67,7 @@ D:\项目\飞轮\
 ├─ results\
 │  ├─ cmg_ab\<case>\<A|B>\         每次运行的 timeseries.csv / metrics.json / meta.json / config_resolved.yaml
 │  ├─ cmg_ab\summary.{csv,md}      A/B 对比与改善率（脚本生成）
+│  ├─ c1_cmg_reproduction\         C1 复现（baseline/）+ 匹配模型 A/B（cmg/）+ 图 + summary.md
 │  ├─ cmg_ab\maneuver_feasibility.csv
 │  ├─ cmg_ab\weight_verification.json
 │  ├─ cmg_ab\baseline_legacy\      旧代码的 CMG 对比原始数据（只读参考）
@@ -98,6 +107,12 @@ python scripts/plot_device_sweep.py
 # 复现早期的 C0-C4 / T1-T3（反作用轮版本，代码在 legacy/）
 python legacy/run_all.py
 python legacy/run_three_axis.py msis2 150
+
+# C1 复现与 CMG 正式 A/B（含单元测试与诊断臂）
+python scripts/reproduce_c1.py
+python scripts/validate_cmg_actuator.py
+python scripts/run_c1_cmg_ab.py --check && python scripts/run_c1_cmg_ab.py --modes A B
+python scripts/evaluate_c1_cmg_ab.py
 
 # 专项核验
 python scripts/verify_cmg_weights.py

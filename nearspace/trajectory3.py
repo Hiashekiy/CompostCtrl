@@ -107,6 +107,9 @@ class Trajectory3D:
                      shape=str(getattr(s, "shape", "hold")))
             for s in specs]
         self.qinf_ref = 0.5 * self.rho(0.0) * self.V(0.0) ** 2
+        # fixed high-altitude scoring window (threshold in km; 0 disables it)
+        self.high_window_km = float(getattr(t3, "high_window_km", 90.0) or 0.0)
+        self.dt_win = float(getattr(getattr(cfg, "simulation", None), "dt_ctrl", 0.2))
 
     @property
     def maneuver(self) -> Maneuver:
@@ -207,4 +210,12 @@ class Trajectory3D:
         if live:
             out["man"] = (min(mv.t0 for mv in live),
                           min(max(mv.t_end for mv in live), T))
+        # the rarefied-arc window is defined by the trajectory alone (never by
+        # the results), so A and B are scored over exactly the same interval
+        if self.high_window_km > 0.0:
+            tt = np.arange(0.0, T + 1e-9, self.dt_win)
+            hh = np.array([self.h(x) for x in tt]) / 1000.0
+            above = np.flatnonzero(hh >= self.high_window_km)
+            if above.size:
+                out["high"] = (float(tt[above[0]]), float(tt[above[-1]]))
         return out
