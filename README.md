@@ -47,7 +47,8 @@ D:\项目\飞轮\
 │  ├─ run_cmg_ab.py                统一 A/B 运行入口（配置驱动，唯一变量是执行机构）
 │  ├─ run_device_sweep.py          C 组 / T 组改用 CMG 重做（控制结构 + 任务难度）
 │  ├─ verify_cmg_weights.py        §7.1/§7.2 权重链路 + 力矩链路核验
-│  ├─ check_maneuver_feasibility.py §5.2 机动可行性检查`n│  ├─ check_horizon_sensitivity.py  预测时域敏感性（同一真值，只换时域）
+│  ├─ check_maneuver_feasibility.py §5.2 机动可行性检查
+│  ├─ check_horizon_sensitivity.py  预测时域敏感性（同一真值，只换时域）
 │  ├─ evaluate_cmg_ab.py           指标表、改善率、§10.4 判据
 │  ├─ plot_cmg_ab.py               §9 总体对比图 + 执行机构机理图
 │  ├─ plot_device_sweep.py         C 组 / T 组的对比图
