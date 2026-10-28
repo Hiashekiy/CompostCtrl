@@ -176,9 +176,29 @@ cases:
         - {axis: roll,  start: 110.0, duration: 40.0, delta_deg: 5.0, shape: bump}
         - {axis: yaw,   start: 110.0, duration: 40.0, delta_deg: 3.0, shape: bump}
 
+  # ---------------------------------------------------------------------
+  # C 组「同条件」对照：原 C0-C4 是俯仰单轴模型，扰动为
+  #   Md = 20 + 15·sin(2π·0.05t)  N·m，且**不按动压缩放**
+  # 而 6 自由度管线默认 vehicle3.Md0 = 0.5 N·m 且 dist_scale_qinf: true，
+  # 所以 cseries 的 C1 只有 0.47°，单轴 C1 是 10.41°——两者不可比。
+  # 这里把 6 自由度工况的扰动改成与单轴完全一致，再放入 CMG。
+  # ---------------------------------------------------------------------
+  cseries_pitchdist:
+    extends: cseries
+    label: "C 组同条件：俯仰 20 N·m 恒定 + 15 N·m 振荡扰动（不按动压缩放）"
+    scenario: {name: cseries_pitchdist, vertex_km: 100.0, T: 200.0}
+    trajectory3:
+      dist_scale_qinf: false
+      dist_pulse_amp: [0.0, 0.0, 0.0]
+    vehicle3:
+      Md0: [0.2, 20.0, 0.3]
+      Md_amp: [4.0, 15.0, 6.0]
+      Md_freq: [0.03, 0.05, 0.04]
+
 arms:
   cseries: [C0, C1, C2, C3, C4]
   tseries: [T1, T3]
+  cseries_pitchdist: [C1, C3, C4]
 
   # ---------------------------------------------------------------------
   # T 组难度扫描。满幅需求 ≈ 139 N·m·s（俯仰 116.5 / 偏航 74.0 / 滚转 16.4），

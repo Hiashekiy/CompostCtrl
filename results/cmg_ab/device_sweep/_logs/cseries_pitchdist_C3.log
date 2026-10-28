@@ -1,0 +1,31 @@
+cases: ['cseries_pitchdist']  arms: ['C3']  jobs: 1
+==============================================================================
+case=cseries_pitchdist  arm=C3  C3 统一 MPC + CMG（统一优化 δ_c 与 M_cmg）
+  weights in force : {"q_att": 4000.0, "q_rate": 50.0, "r_delta": 1.0, "r_gdot": 0.005, "r_cmg_transient": 0.05, "r_cmg_trim": 0.5, "e_thresh_deg": 0.5, "w_gamma": 5.0, "w_H": 0.003, "s_delta": 10.0, "rho_sing": 10000.0, "terminal_scale": 10.0, "n_sqp": 2, "sigma_margin": 1.15, "torque_margin": 0.8, "horizon": [[6, 0.2], [4, 0.5], [4, 1.0]], "adaptive_scheme_active": true}
+  controller budget: {"mode": "surface_cmg", "M_cmg_box_Nm": 61.0, "H_lim_frac": 0.3, "H_lim_Nms": 60.0, "H_planner_max_Nms": 50.0, "q_unload_min_Pa": 40.0, "unload_cap": 0.6, "sigma_floor_Nms": 12.247448713915889, "qp_viol_tol": 0.001}
+  CMG hardware     : {"units": 4, "h0_Nms": 50.0, "cluster_momentum_Nms": 200.0, "gimbal_rate_max_rad_s": 1.5, "gimbal_accel_max_rad_s2": 10.0, "unit_peak_torque_Nm": 75.0, "guaranteed_torque_Nm": 86.77213955916108, "home_sigma_min_Nms": 40.8248290463863, "sigma_floor_Nms": 12.247448713915889, "single_axis_momentum_Nms": 107.73504162160748, "single_axis_momentum_range": [-107.73504162160748, 107.73504162160748], "cluster_mass_kg": 120.0, "cluster_power_W": 800.0}
+  horizon          : T=200 s  dt_ctrl=0.200  dt_plant=0.0050
+==============================================================================
+  t=  19.8 s  err=0.018 deg  |H|=0.0  fail=0
+  t=  39.8 s  err=0.025 deg  |H|=0.0  fail=0
+  t=  59.8 s  err=0.097 deg  |H|=0.0  fail=0
+  t=  79.8 s  err=0.023 deg  |H|=0.0  fail=0
+  t=  99.8 s  err=0.464 deg  |H|=2.2  fail=0
+  t= 119.8 s  err=53.002 deg  |H|=86.8  fail=68
+  t= 139.8 s  err=149.795 deg  |H|=86.6  fail=168
+  t= 159.8 s  err=162.056 deg  |H|=71.3  fail=268
+  t= 179.8 s  err=79.056 deg  |H|=91.2  fail=368
+  t= 199.8 s  err=37.528 deg  |H|=96.3  fail=468
+[cseries_pitchdist/C3] RMSE=78.5021 deg  peak=179.963 deg  device|M|max=112.09 N·m  |H|max=96.8 N·m·s  sat=0.451  QP fail=469  wall=268s
+# 装置替换实验（cseries_pitchdist）
+
+由 `scripts/run_device_sweep.py` 从各 arm 的 `metrics.json` 自动生成。
+
+| arm | 装置 | 三轴 RMSE [°] | 峰值 [°] | 滚转/俯仰/偏航 RMSE [°] | 机动窗峰值 [°] | 机动后稳定 [s] | 舵面峰值 [°] | 饱和比例 | 装置峰值力矩 [N·m] | 装置峰值角动量 [N·m·s] | σ_min | QP 失败 | 平均求解 [ms] |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| C1 | cmg | 15.15 | 44.41 | 1.81 / 14.81 / 2.802 | 11.04 | 60.4 | 25 | 0.2797 | 0 | 1.441e-14 | 40.82 | 0 | 109.1 |
+| C3 | cmg | 78.5 | 180 | 78.14 / 24.79 / 37.51 | 28.18 | — | 25 | 0.4505 | 112.1 | 96.79 | 2.336 | 469 | 247.9 |
+| C4 | cmg | 80.22 | 179.5 | 79 / 28.33 / 43.27 | 27.45 | — | 25 | 0.4456 | 105.4 | 88.02 | 1.286 | 471 | 200.8 |
+
+
+268 s wall
