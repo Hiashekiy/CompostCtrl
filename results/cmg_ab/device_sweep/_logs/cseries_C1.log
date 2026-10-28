@@ -1,34 +1,29 @@
 cases: ['cseries']  arms: ['C1']  jobs: 1
 ==============================================================================
-case=cseries  arm=C1  C1 仅气动舵面（无动量交换装置）
+case=cseries  arm=C1  C1 仅气动舵面（CMG 在真值模型中断开）
   weights in force : {"q_att": 4000.0, "q_rate": 50.0, "r_delta": 1.0, "r_gdot": 0.005, "r_cmg_transient": 0.05, "r_cmg_trim": 0.5, "e_thresh_deg": 0.5, "w_gamma": 5.0, "w_H": 0.003, "s_delta": 10.0, "rho_sing": 10000.0, "terminal_scale": 10.0, "n_sqp": 2, "sigma_margin": 1.15, "torque_margin": 0.8, "horizon": [[6, 0.2], [4, 0.5], [4, 1.0]], "adaptive_scheme_active": true}
-  wheel: h_max=366.5 N·m·s  M_stall=60.0 N·m  P_max=12000 W  tau_cmd_max=60.0 N·m
+  controller budget: {"mode": "surface_only", "M_cmg_box_Nm": 61.0, "H_lim_frac": 0.3, "H_lim_Nms": 60.0, "H_planner_max_Nms": 50.0, "q_unload_min_Pa": 40.0, "unload_cap": 0.6, "sigma_floor_Nms": 12.247448713915889, "qp_viol_tol": 0.001}
+  CMG hardware     : {"units": 4, "h0_Nms": 50.0, "cluster_momentum_Nms": 200.0, "gimbal_rate_max_rad_s": 1.5, "gimbal_accel_max_rad_s2": 10.0, "unit_peak_torque_Nm": 75.0, "guaranteed_torque_Nm": 86.77213955916108, "home_sigma_min_Nms": 40.8248290463863, "sigma_floor_Nms": 12.247448713915889, "single_axis_momentum_Nms": 107.73504162160748, "single_axis_momentum_range": [-107.73504162160748, 107.73504162160748], "cluster_mass_kg": 120.0, "cluster_power_W": 800.0}
   horizon          : T=200 s  dt_ctrl=0.200  dt_plant=0.0050
 ==============================================================================
-  t=  19.8 s  err=0.017 deg  |H|=0.0  fail=0
-  t=  39.8 s  err=0.026 deg  |H|=0.0  fail=0
-  t=  59.8 s  err=0.095 deg  |H|=0.0  fail=0
-  t=  79.8 s  err=0.078 deg  |H|=0.0  fail=0
-  t=  99.8 s  err=0.248 deg  |H|=0.0  fail=0
-  t= 119.8 s  err=0.676 deg  |H|=0.0  fail=0
-  t= 139.8 s  err=0.111 deg  |H|=0.0  fail=0
-  t= 159.8 s  err=0.031 deg  |H|=0.0  fail=0
-  t= 179.8 s  err=0.109 deg  |H|=0.0  fail=0
+  t=  19.8 s  err=0.018 deg  |H|=0.0  fail=0
+  t=  39.8 s  err=0.025 deg  |H|=0.0  fail=0
+  t=  59.8 s  err=0.106 deg  |H|=0.0  fail=0
+  t=  79.8 s  err=0.066 deg  |H|=0.0  fail=0
+  t=  99.8 s  err=0.013 deg  |H|=0.0  fail=0
+  t= 119.8 s  err=1.082 deg  |H|=0.0  fail=0
+  t= 139.8 s  err=0.253 deg  |H|=0.0  fail=0
+  t= 159.8 s  err=0.005 deg  |H|=0.0  fail=0
+  t= 179.8 s  err=0.105 deg  |H|=0.0  fail=0
   t= 199.8 s  err=0.037 deg  |H|=0.0  fail=0
-[cseries/C1] RMSE=0.4832 deg  peak=3.315 deg  device|M|max=0.00 N·m  |H|max=0.0 N·m·s  sat=0.000  QP fail=0  wall=84s
+[cseries/C1] RMSE=0.4706 deg  peak=2.647 deg  device|M|max=0.00 N·m  |H|max=0.0 N·m·s  sat=0.000  QP fail=0  wall=144s
 # 装置替换实验（cseries）
 
 由 `scripts/run_device_sweep.py` 从各 arm 的 `metrics.json` 自动生成。
 
 | arm | 装置 | 三轴 RMSE [°] | 峰值 [°] | 滚转/俯仰/偏航 RMSE [°] | 机动窗峰值 [°] | 机动后稳定 [s] | 舵面峰值 [°] | 饱和比例 | 装置峰值力矩 [N·m] | 装置峰值角动量 [N·m·s] | σ_min | QP 失败 | 平均求解 [ms] |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| C0_rw | rw | 0.02696 | 0.03541 | 6.816e-05 / 0.02696 / 2.096e-05 | — | — | 1.588 | 0 | 0.0001721 | 0.0004464 | 1000 | 0 | 60.36 |
-| C0_cmg | cmg | 0.03291 | 0.04382 | 7.826e-05 / 0.03291 / 2.15e-05 | — | — | 1.598 | 0 | 0.03111 | 0.006029 | 38.28 | 0 | 652.2 |
-| C1 | rw | 0.4832 | 3.315 | 0.0008829 / 0.4831 / 0.007471 | 3.315 | 16.4 | 11.12 | 0 | 0 | 0 | 1000 | 0 | 74.56 |
-| C2_cmg | cmg | 0.03237 | 0.04237 | 8.326e-05 / 0.03237 / 3.696e-05 | — | — | 1.597 | 0 | 0.1511 | 0.5066 | 37.6 | 0 | 214.7 |
-| C3_rw | rw | 0.03237 | 0.04237 | 7.772e-05 / 0.03237 / 2.187e-05 | — | — | 1.597 | 0 | 0.0002581 | 0.0004189 | 1000 | 0 | 211 |
-| C3_cmg | cmg | 0.03291 | 0.04382 | 7.915e-05 / 0.03291 / 2.145e-05 | — | — | 1.598 | 0 | 0.03104 | 0.006062 | 38.55 | 0 | 267.7 |
-| C4_cmg | cmg | 0.03889 | 0.05165 | 0.001188 / 0.03887 / 0.0002555 | — | — | 1.599 | 0 | 0.03104 | 0.006064 | 38.55 | 0 | 166.3 |
+| C1 | cmg | 0.4706 | 2.647 | 0.003029 / 0.4705 / 0.006128 | 2.647 | 17.8 | 24.25 | 0 | 0 | 1.441e-14 | 40.82 | 0 | 133.2 |
 
 
-84 s wall
+144 s wall

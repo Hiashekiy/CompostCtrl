@@ -1,17 +1,17 @@
-"""Figures for the device-replacement sweep (RW -> CMG).
+"""Figures for the C-group / T-group replay with the CMG as the only device.
 
     python scripts/plot_device_sweep.py [--cases cseries tseries]
 
 One figure per case, 5 panels overlaid for all arms of that case:
 
     1  quaternion geodesic attitude error  ‖e‖
-    2  per-axis error (pitch and roll/yaw of the driven axes)
-    3  elevator / aileron deflection with the limits drawn
-    4  momentum-exchange device: stored momentum norm
-    5  momentum-exchange device: applied body moment
+    2  pitch-axis error
+    3  elevator deflection with the limit drawn
+    4  CMG stored momentum norm
+    5  CMG moment applied to the body (pitch axis)
 
 House style: time in seconds, angles in degrees, moments in N·m, momentum in
-N·m·s; the wheel arms are dashed, the CMG arms solid, "no device" in black.
+N·m·s; "no device" (C1/T1) in black.
 """
 from __future__ import annotations
 
@@ -38,16 +38,13 @@ FIG = os.path.join(ROOT, "figures", "cmg_ab")
 
 # arm -> (colour, linestyle, short legend label)
 STYLE = {
-    "C0_rw":    ("#7f7f7f", (0, (1, 1)), "C0 理想轮"),
-    "C0_cmg":   ("#2ca02c", (0, (1, 1)), "C0' 理想 CMG"),
-    "C1":       ("#000000", "-", "C1/T1 仅舵面"),
-    "T1":       ("#000000", "-", "C1/T1 仅舵面"),
-    "C2_cmg":   ("#ff7f0e", "-", "C2' 分层+CMG"),
-    "C3_rw":    ("#1f77b4", "--", "C3/T3 统一 MPC+轮"),
-    "T3_rw":    ("#1f77b4", "--", "C3/T3 统一 MPC+轮"),
-    "C3_cmg":   ("#d62728", "-", "C3'/T3' 统一 MPC+CMG"),
-    "T3_cmg":   ("#d62728", "-", "C3'/T3' 统一 MPC+CMG"),
-    "C4_cmg":   ("#9467bd", "-.", "C4' 统一 MPC+CMG（失配 20%）"),
+    "C0": ("#2ca02c", (0, (1, 1)), "C0 理想 CMG（无滞后失配）"),
+    "C1": ("#000000", "-", "C1/T1 仅舵面"),
+    "T1": ("#000000", "-", "C1/T1 仅舵面"),
+    "C2": ("#ff7f0e", "-", "C2 分层分配 + CMG"),
+    "C3": ("#1f77b4", "--", "C3/T3 统一 MPC + CMG"),
+    "T3": ("#1f77b4", "--", "C3/T3 统一 MPC + CMG"),
+    "C4": ("#9467bd", "-.", "C4 统一 MPC + CMG（气动失配 20%）"),
 }
 
 
@@ -117,9 +114,9 @@ def figure(case, arms_list):
         c, ls, lab = STYLE.get(a, ("k", "-", a))
         ax.plot(rec["t"], rec["dev_H_norm"], color=c, ls=ls, lw=1.3,
                 label="%s  max %.1f N·m·s" % (lab, m["cmg_momentum_peak_Nms"]))
-    ax.set_ylabel("‖H_dev‖ [N·m·s]")
-    ax.set_title("动量交换装置储存的角动量范数（上限：反作用轮 3 轴各 366.5 → 范数 634.7；"
-                 "CMG 控制器预算 60、硬件集群 200）", fontsize=9)
+    ax.set_ylabel("‖H_cmg‖ [N·m·s]")
+    ax.set_title("CMG 储存角动量范数（控制器预算 60 N·m·s，硬件集群 200 N·m·s）",
+                 fontsize=9)
     ax.legend(fontsize=6.5, ncol=2, frameon=False)
     ax.grid(alpha=0.3)
 
@@ -127,9 +124,9 @@ def figure(case, arms_list):
     for a, (rec, m) in data.items():
         c, ls, lab = STYLE.get(a, ("k", "-", a))
         ax.plot(rec["t"], rec["dev_M_y"], color=c, ls=ls, lw=1.1)
-    ax.set_ylabel("装置力矩 My [N·m]")
+    ax.set_ylabel("M_cmg,y [N·m]")
     ax.set_xlabel("时间 [s]")
-    ax.set_title("装备施加在俯仰轴上的力矩（反作用轮 = −τ，CMG = −A·gdot）", fontsize=10)
+    ax.set_title("CMG 施加在俯仰轴上的力矩（−A·gdot）", fontsize=10)
     ax.grid(alpha=0.3)
 
     fig.tight_layout()

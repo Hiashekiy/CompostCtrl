@@ -1,4 +1,4 @@
-# legacy —— 归档代码（不在当前实验链路内）
+# legacy —— 归档代码（不在当前实验链路内）`n`r`n> **反作用轮装置已弃用。** 当前流程只用 CMG（`nearspace/arms.py`）。本目录保留轮子方案的`n`r`n> 实现与数据，仅为可追溯性；`results/legacy_rw/` 与 `results/cmg_ab/baseline_legacy/``n`r`n> 是它的原始结果。
 
 本目录保存**被 CMG A/B 研究取代**的早期实现，只为了可追溯性保留，不参与
 `scripts/` 中任何流程，也不再维护。当前有效代码只有 `nearspace/` + `scripts/`。

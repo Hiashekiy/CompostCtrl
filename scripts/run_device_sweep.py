@@ -72,12 +72,33 @@ def load_sweep(path=SWEEP):
     return raw, blocks
 
 
+def resolve_case(blocks, case):
+    """Expand `extends:` chains inside the cases block (same semantics as the
+    A/B matrix, so a sweep case inherits the reference and only overrides what
+    it declares)."""
+    cases = blocks.get("cases", {})
+    if case not in cases:
+        raise SystemExit("unknown case %r; known: %s" % (case, ", ".join(sorted(cases))))
+    chain, cur = [], case
+    while True:
+        chain.append(cur)
+        parent = cases[cur].get("extends")
+        if not parent:
+            break
+        if parent not in cases or parent in chain:
+            raise SystemExit("bad extends chain for %r" % case)
+        cur = parent
+    merged = {}
+    for name in reversed(chain):
+        merged = deep_merge(merged, cases[name])
+    merged.pop("extends", None)
+    return merged
+
+
 def build_cfg(case, path=SWEEP):
     base, blocks = load_sweep(path)
-    if case not in blocks["cases"]:
-        raise SystemExit("unknown case %r; known: %s" % (case, ", ".join(sorted(blocks["cases"]))))
     d = deep_merge(base, blocks["common"])
-    d = deep_merge(d, blocks["cases"][case])
+    d = deep_merge(d, resolve_case(blocks, case))
     cfg = _to_ns(d)
     sc = cfg.scenario
     cfg.trajectory.amp = float(sc.vertex_km) * 1000.0 - float(cfg.trajectory.h0)

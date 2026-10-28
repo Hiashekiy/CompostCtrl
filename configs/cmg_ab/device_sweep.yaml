@@ -1,5 +1,5 @@
 # =====================================================================
-# 装置替换实验：把 C 组（俯仰任务）/ T 组（三轴任务）里的反作用轮换成 CMG
+# 装置替换实验：C 组（俯仰任务）/ T 组（三轴任务）改用 CMG（反作用轮已弃用）
 # =====================================================================
 # 结构：base（工程参数） + common（两组共享） + cases（两组历史任务）
 #       + arms（见 nearspace/arms.py）
@@ -34,7 +34,7 @@ common:
     heading_amp_deg: 0.0
     heading_period: 200.0
     maneuver: []
-  # 反作用轮装置（原 C/T 组所用）：3 正交轮，60 N·m / 366.5 N·m·s / 12 kW
+  # 注：早期 C/T 组用的反作用轮已弃用，其代码与数据在 legacy/ 与 results/legacy_rw/
   vehicle3:
     Jw: 0.7
     Omega_max_rpm: 5000.0
@@ -118,6 +118,78 @@ cases:
         - {axis: roll,  start: 110.0, duration: 20.0, delta_deg: 5.0, shape: bump}
         - {axis: yaw,   start: 110.0, duration: 20.0, delta_deg: 3.0, shape: bump}
 
+  tseries_s60:
+    extends: tseries
+    label: "T 组 0.6 幅（3°/3°/1.8°）：理论需求 ≈ 83 N·m·s"
+    scenario: {name: tseries_s60, vertex_km: 100.0, T: 150.0}
+    trajectory3:
+      maneuver:
+        - {axis: pitch, start: 110.0, duration: 20.0, delta_deg: 3.0, shape: bump}
+        - {axis: roll,  start: 110.0, duration: 20.0, delta_deg: 3.0, shape: bump}
+        - {axis: yaw,   start: 110.0, duration: 20.0, delta_deg: 1.8, shape: bump}
+
+  tseries_s40:
+    extends: tseries
+    label: "T 组 0.4 幅（2°/2°/1.2°）：理论需求 ≈ 56 N·m·s（≈ 预算 60）"
+    scenario: {name: tseries_s40, vertex_km: 100.0, T: 150.0}
+    trajectory3:
+      maneuver:
+        - {axis: pitch, start: 110.0, duration: 20.0, delta_deg: 2.0, shape: bump}
+        - {axis: roll,  start: 110.0, duration: 20.0, delta_deg: 2.0, shape: bump}
+        - {axis: yaw,   start: 110.0, duration: 20.0, delta_deg: 1.2, shape: bump}
+
+  tseries_s25:
+    extends: tseries
+    label: "T 组 0.25 幅（1.25°/1.25°/0.75°）：理论需求 ≈ 35 N·m·s"
+    scenario: {name: tseries_s25, vertex_km: 100.0, T: 150.0}
+    trajectory3:
+      maneuver:
+        - {axis: pitch, start: 110.0, duration: 20.0, delta_deg: 1.25, shape: bump}
+        - {axis: roll,  start: 110.0, duration: 20.0, delta_deg: 1.25, shape: bump}
+        - {axis: yaw,   start: 110.0, duration: 20.0, delta_deg: 0.75, shape: bump}
+
+  tseries_h50:
+    extends: tseries
+    label: "T 组满幅 + 动量预算放宽到 50%（100 N·m·s）"
+    scenario: {name: tseries_h50, vertex_km: 100.0, T: 150.0}
+    mpc_cmg: {H_lim_frac: 0.50}
+
+  # 同样的角度、把机动时间拉长：需求 ∝ 1/Tm，俯仰轴需求
+  # Tm=30 → 77.7 N·m·s（低于单轴硬件 107.7）、Tm=40 → 58.2。
+  tseries_t30:
+    extends: tseries
+    label: "T 组满幅 5°/5°/3°，Tm = 30 s（需求 ≈ 93 N·m·s）"
+    scenario: {name: tseries_t30, vertex_km: 100.0, T: 175.0}
+    trajectory3:
+      maneuver:
+        - {axis: pitch, start: 110.0, duration: 30.0, delta_deg: 5.0, shape: bump}
+        - {axis: roll,  start: 110.0, duration: 30.0, delta_deg: 5.0, shape: bump}
+        - {axis: yaw,   start: 110.0, duration: 30.0, delta_deg: 3.0, shape: bump}
+
+  tseries_t40:
+    extends: tseries
+    label: "T 组满幅 5°/5°/3°，Tm = 40 s（需求 ≈ 70 N·m·s）"
+    scenario: {name: tseries_t40, vertex_km: 100.0, T: 185.0}
+    trajectory3:
+      maneuver:
+        - {axis: pitch, start: 110.0, duration: 40.0, delta_deg: 5.0, shape: bump}
+        - {axis: roll,  start: 110.0, duration: 40.0, delta_deg: 5.0, shape: bump}
+        - {axis: yaw,   start: 110.0, duration: 40.0, delta_deg: 3.0, shape: bump}
+
 arms:
-  cseries: [C0_rw, C0_cmg, C1, C2_cmg, C3_rw, C3_cmg, C4_cmg]
-  tseries: [T1, T3_rw, T3_cmg]
+  cseries: [C0, C1, C2, C3, C4]
+  tseries: [T1, T3]
+
+  # ---------------------------------------------------------------------
+  # T 组难度扫描。满幅需求 ≈ 139 N·m·s（俯仰 116.5 / 偏航 74.0 / 滚转 16.4），
+  # 其中俯仰一项就已超过 CMG 单轴硬件可用量 107.7，也超过控制器预算 60。
+  # 按幅度缩放 s 把需求降到 0.6 / 0.4 / 0.25 倍，找出 CMG 不发散的边界。
+  # ---------------------------------------------------------------------
+  tseries_s60: [T1, T3]
+  tseries_s40: [T1, T3]
+  tseries_s25: [T1, T3]
+  # 满幅、动量预算从 30% 放宽到 50%（60 → 100 N·m·s）：区分"预算太小"与
+  # "硬件容量 / 近奇异"。按 §7.3 的要求，控制器预算与硬件极限必须分开报告。
+  tseries_h50: [T1, T3]
+  tseries_t30: [T1, T3]
+  tseries_t40: [T1, T3]
