@@ -85,6 +85,9 @@ class ControlAllocator:
         ])
         lo = np.concatenate([d_lo, g_lo])
         hi = np.concatenate([d_hi, g_hi])
+        if not self.spec.cmg_on:          # A 组：CMG 结构上不存在，框架角速度恒为 0
+            lo[3:] = 0.0
+            hi[3:] = 0.0
         return np.minimum(lo, hi), np.maximum(lo, hi)
 
     def _design(self, x, env: FlightEnv):
@@ -111,9 +114,15 @@ class ControlAllocator:
         b = np.concatenate([w * (np.asarray(tau_req, dtype=float) - M_aero0),
                             lg * np.asarray(gdot_ref, dtype=float),
                             np.zeros(n)])
-        res = lsq_linear(M, b, bounds=(lo, hi), method="bvls", tol=1e-10, max_iter=200)
-        z = np.asarray(res.x, dtype=float)
-        return z[:n], z[n:], bool(res.success), str(res.message)
+        # 被钉死的变量（例如 A 组框架角速度恒 0）先从问题里剔除，否则 bvls 要求严格下界
+        free = (hi - lo) > 1e-12
+        z = np.array(lo, dtype=float)
+        if not np.any(free):
+            return z[:n], z[n:], True, "all-fixed"
+        sol = lsq_linear(M[:, free], b + M[:, ~free] @ z[~free],
+                         bounds=(lo[free], hi[free]), method="bvls", tol=1e-10, max_iter=200)
+        z[free] = np.asarray(sol.x, dtype=float)
+        return z[:n], z[n:], bool(sol.success), str(sol.message)
 
     def allocate(self, x, tau_req, env: FlightEnv, gdot_ref=None, dt: float = 0.2) -> AllocationResult:
         t0 = time.perf_counter()
@@ -132,7 +141,10 @@ class ControlAllocator:
         # 预测力矩用"本轮实际会被 plant 执行"的指令评估，保证与 plant 同源
         pred = M_aero0 + B_delta @ delta_c + B_gdot @ gdot_c
         resid = np.asarray(tau_req, dtype=float) - pred
-        feasible = ok and float(np.linalg.norm(resid)) <= self.w.feas_tol
+        # 可行性看残差与数值有效性；求解器的 success 只作诊断（退化问题里 bvls 会报
+        # success=False 但解是正确的，若把它当"不可行"会让 A 组每周期都误进回退）。
+        finite = bool(np.all(np.isfinite(delta_c)) and np.all(np.isfinite(gdot_c)))
+        feasible = finite and float(np.linalg.norm(resid)) <= self.w.feas_tol
         return AllocationResult(
             delta_cmd=delta_c, gdot_cmd=gdot_c, predicted_torque=pred, residual=resid,
             feasible=feasible, fallback=False, status=msg,

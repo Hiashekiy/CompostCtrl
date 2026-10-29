@@ -1,0 +1,91 @@
+{
+  "name": "s3_C",
+  "case": "high_altitude_maneuver",
+  "policy": "C",
+  "scenario": {
+    "altitude_km": 100.0,
+    "V_m_s": 4000.0,
+    "heading_deg": 0.0,
+    "trim_euler_deg": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "M_dist": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "M_dist_amp": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "M_dist_freq": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "maneuver": {
+      "axis": "pitch",
+      "t0": 10.0,
+      "duration": 20.0,
+      "delta_deg": 3.0
+    }
+  },
+  "simulation": {
+    "T": 60.0,
+    "dt_ctrl": 0.2,
+    "dt_plant": 0.005
+  },
+  "cmg": {
+    "n": 4,
+    "beta_deg": 54.7356,
+    "h0": 50.0,
+    "gdot_max": 1.5,
+    "gddot_max": 10.0,
+    "tau_g": 0.03,
+    "travel_deg": 90.0,
+    "rotor_rpm": 6000.0,
+    "sigma_floor_frac": 0.3
+  },
+  "control": {
+    "k_att": 0.15,
+    "k_rate": 0.55,
+    "tau_max": 1000.0
+  },
+  "allocation": {
+    "w_tau": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "lambda_gamma": 0.0002,
+    "lambda_delta": 0.005,
+    "feas_tol": 0.001
+  },
+  "maneuver": {
+    "axis": "pitch",
+    "t0": 10.0,
+    "duration": 20.0,
+    "delta_deg": 3.0
+  },
+  "search": {
+    "step_s": 0.5,
+    "horizon_s": 30.0,
+    "max_expansions": 400,
+    "max_search_time_ms": 60.0,
+    "demand_refresh_s": 1.0,
+    "predict_substeps": 2,
+    "reuse_path": true,
+    "local_repair_budget_ratio": 0.8,
+    "exploration_budget_ratio": 0.2,
+    "max_full_replans": 3,
+    "lambda_move": 1.0,
+    "lambda_sing": 2.0,
+    "lambda_future": 4.0,
+    "w_near": 1.0,
+    "w_far": 0.35
+  },
+  "tol_deg": 0.5
+}

@@ -45,7 +45,8 @@ class AttitudeController:
         w_err = np.asarray(omega, dtype=float) - np.asarray(omega_ref, dtype=float)
         J = self.spec.inertia.J
         tau = -J @ (self.gains.k_att * e + self.gains.k_rate * w_err)
-        tau = tau + np.cross(omega, J @ omega + self.cmg.momentum(gamma))
+        H = self.cmg.momentum(gamma) if self.spec.cmg_on else np.zeros(3)
+        tau = tau + np.cross(omega, J @ omega + H)
         n = float(np.linalg.norm(tau))
         if n > self.gains.tau_max:
             tau = tau * (self.gains.tau_max / n)

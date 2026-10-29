@@ -113,10 +113,16 @@ class BoundedAStar:
         return res.gdot_ref, res.info
 
     # ---- 搜索 -----------------------------------------------------------
-    def plan(self, x, t, ref, demand: FutureDemand | None = None) -> SearchResult:
+    def plan(self, x, t, ref, demand: FutureDemand | None = None,
+             incumbent: list[tuple[int, ...]] | None = None,
+             budget: SearchBudget | None = None,
+             incumbent_verified: bool = False) -> SearchResult:
+        """在图搜索。`incumbent` 是上一周期的路径（节点索引序列，与时间层对齐），
+        给出时先复核它；只在预算内寻找**严格更优**的路径（D 组热启动，§7.2）。"""
         t_start = time.perf_counter()
         dt_search = float(self.search_cfg.get("step_s", 0.5))
         horizon = float(self.search_cfg.get("horizon_s", 30.0))
+        budget = budget or self.budget
         if demand is None:
             demand = self._get_demand(x, t, ref, dt_search, horizon)
         demand_ms = self.demand_time_ms
@@ -135,6 +141,10 @@ class BoundedAStar:
                 self.graph.max_step_index))
             g0 = self.graph.node_gamma(start)
 
+        # ---- 历史路径复核（热启动） -------------------------------------
+        inc_cost, inc_valid, inc_rows = self._evaluate_incumbent(ev, incumbent, start, n,
+                                                                 gdot_now, incumbent_verified)
+
         open_heap: list[tuple[float, int, tuple, int]] = []
         counter = 0
         heapq.heappush(open_heap, (0.0, counter, start, 0))
@@ -146,10 +156,10 @@ class BoundedAStar:
         goal_state = None
 
         while open_heap:
-            if expanded >= self.budget.max_expansions:
+            if expanded >= budget.max_expansions:
                 status = "budget"
                 break
-            if 1e3 * (time.perf_counter() - t0) > self.budget.max_search_time_ms:
+            if 1e3 * (time.perf_counter() - t0) > budget.max_search_time_ms:
                 status = "timeout"
                 break
             cost, _, idx, j = heapq.heappop(open_heap)
@@ -157,8 +167,12 @@ class BoundedAStar:
                 continue
             expanded += 1
             if j == n - 1:
+                # h = 0，所以出堆即当前最优；只有优于历史路径才替换
+                if inc_valid and cost >= inc_cost - 1e-12:
+                    status = "warm"
+                    break
                 goal_state = (idx, j)
-                status = "ok"
+                status = "repaired" if inc_valid else "ok"
                 break
             for idx_next, action, _dgamma in self.graph.neighbors(idx, center):
                 edge = ev.evaluate(idx, idx_next, j, gdot_now)
@@ -175,7 +189,10 @@ class BoundedAStar:
 
         path: list[tuple[tuple, int]] = []
         edge_rows: list[dict] = []
-        if goal_state is not None:
+        if status == "warm" and inc_valid:
+            path = [(tuple(idx), int(j)) for j, idx in enumerate(incumbent or [])][:n]
+            edge_rows = inc_rows
+        elif goal_state is not None:
             s = goal_state
             while s is not None:
                 path.append(s)
@@ -184,27 +201,40 @@ class BoundedAStar:
             for s in path[1:]:
                 e = edge_info.get(s)
                 edge_rows.append(e.as_row() if e is not None else {})
+        elif inc_valid:
+            status = "warm"                       # 预算耗尽但历史路径仍可行 -> 复用它
+            path = [(tuple(idx), int(j)) for j, idx in enumerate(incumbent or [])][:n]
+            edge_rows = inc_rows
 
         gdot_ref = np.zeros(self.cmg.spec.n)
         verified = None
         verify_ms = 0.0
-        if status == "ok" and len(path) >= 2:
+        if status in ("ok", "repaired", "warm") and len(path) >= 2:
             tv = time.perf_counter()
             verified = self._verify_path(ev, path, gdot_now)
             verify_ms = 1e3 * (time.perf_counter() - tv)
             if verified:
-                gdot_ref = np.asarray(edge_info[path[1]].gdot_ref, dtype=float)
+                first = edge_info.get(path[1])
+                if status == "warm" or first is None:
+                    gdot_ref = np.asarray(self.graph.node_gamma(path[1][0])
+                                          - self.graph.node_gamma(path[0][0]), dtype=float)
+                    gdot_ref = gdot_ref / max(demand.dt, 1e-9)
+                else:
+                    gdot_ref = np.asarray(first.gdot_ref, dtype=float)
             else:
                 status = "unverified_path"        # 路径未通过精确复核 -> 不得执行（§7.3）
         time_ms = 1e3 * (time.perf_counter() - t0)
         total_ms = 1e3 * (time.perf_counter() - t_start)
         return SearchResult(
             status=status, gdot_ref=gdot_ref, path=path,
-            cost=float(best_cost.get(goal_state, float("inf"))) if goal_state else float("inf"),
+            cost=float(best_cost.get(goal_state, float("inf"))) if goal_state
+            else (inc_cost if inc_valid else float("inf")),
             expansions=expanded, time_ms=time_ms, demand_ms=demand_ms, total_ms=total_ms,
             diagnostics={
                 "start_index": list(start),
                 "start_gamma_deg": np.rad2deg(g0).tolist(),
+                "incumbent": {"provided": incumbent is not None, "valid": inc_valid,
+                              "cost": inc_cost},
                 "demand": demand.meta,
                 "graph": self.graph.describe(),
                 "edges": edge_rows,
@@ -215,6 +245,25 @@ class BoundedAStar:
                     self.cmg.jacobian(g0)))},
             },
         )
+
+    def _evaluate_incumbent(self, ev, incumbent, start, n, gdot_now, pre_verified=False):
+        """复核历史路径：必须从**当前真实构型**出发、逐边通过筛选层，再给出代价。"""
+        if not incumbent:
+            return float("inf"), False, []
+        inc = [tuple(idx) for idx in incumbent]
+        if len(inc) != n or inc[0] != tuple(start):
+            return float("inf"), False, []
+        total = 0.0
+        rows = []
+        for j, (idx, idx_next) in enumerate(zip(inc[:-1], inc[1:])):
+            e = ev.evaluate(idx, idx_next, j, gdot_now)
+            if not e.feasible:
+                return float("inf"), False, rows
+            total += e.cost
+            rows.append(e.as_row())
+        if pre_verified:
+            rows.append({"pre_verified": True})
+        return float(total), True, rows
 
     def _verify_path(self, ev, path, gdot_now) -> bool:
         """用精确分配 QP 逐边复核；任何一条边不过，整条路径作废（§7.3）。"""

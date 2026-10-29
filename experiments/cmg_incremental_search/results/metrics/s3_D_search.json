@@ -1,0 +1,20 @@
+{
+  "search_status_counts": {
+    "repaired": 1,
+    "ok": 1,
+    "warm": 298
+  },
+  "search_ms_mean": 58.95245833264198,
+  "search_ms_max": 69.2949999938719,
+  "search_nodes_mean": 51.9,
+  "search_nodes_max": 60.0,
+  "warm_start": {
+    "reuse_hits": 298,
+    "repairs": 1,
+    "full_replans": 1,
+    "invalid_paths": 0,
+    "reuse_rate": 0.9933333333333333,
+    "reuse_time_ms_mean": 59.174990941670366,
+    "replan_time_ms_mean": 86.52035001432523
+  }
+}

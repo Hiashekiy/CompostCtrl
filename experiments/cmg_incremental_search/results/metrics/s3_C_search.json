@@ -1,0 +1,11 @@
+{
+  "search_status_counts": {
+    "ok": 280,
+    "timeout": 5,
+    "unverified_path": 15
+  },
+  "search_ms_mean": 59.78066566710671,
+  "search_ms_max": 73.77710001310334,
+  "search_nodes_mean": 58.89333333333333,
+  "search_nodes_max": 60.0
+}

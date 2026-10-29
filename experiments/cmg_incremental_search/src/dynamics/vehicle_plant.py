@@ -48,6 +48,9 @@ class PlantSpec:
     inertia: Inertia = field(default_factory=Inertia)
     aero: AeroSpec = field(default_factory=AeroSpec)
     cmg: CMGSpec = field(default_factory=CMGSpec)
+    # A 组（仅舵面）用：CMG 在真值模型里**结构上不存在**——框架冻结、无力矩、无角动量，
+    # 不是在控制器里"选择不用"（与旧项目 A/B 的定义一致，见阶段 1 报告）。
+    cmg_on: bool = True
     _cluster: "PyramidCMG | None" = field(default=None, init=False, repr=False, compare=False)
 
     @property
@@ -71,7 +74,10 @@ def predicted_torque(x, delta, gamma, gdot, env: FlightEnv, spec: PlantSpec) -> 
 def torque_terms(x, env: FlightEnv, spec: PlantSpec) -> dict:
     """真实动力学里实际起作用的分项力矩（用于日志三路对照）。"""
     _, omega, delta, gamma, gdot = unpack(x)
-    H, Mc = spec.cluster.momentum_and_torque(gamma, gdot)
+    if spec.cmg_on:
+        H, Mc = spec.cluster.momentum_and_torque(gamma, gdot)
+    else:
+        H, Mc = np.zeros(3), np.zeros(3)
     Ma = aero_moment(x[0:4], omega, delta, env.V_ned, env.rho, spec.aero)
     return {"M_aero": Ma, "M_cmg": Mc, "M_cmg_momentum": H,
             "M_dist": np.asarray(env.M_dist, dtype=float), "M_total": Ma + Mc}
@@ -82,13 +88,18 @@ def dynamics(x, u, env: FlightEnv, spec: PlantSpec) -> np.ndarray:
     J = spec.inertia.J
     dx = np.empty(NX)
     dx[0:4] = 0.5 * quat_mul(q, np.array([0.0, omega[0], omega[1], omega[2]]))
-    Hc, Mc = spec.cluster.momentum_and_torque(gamma, gdot)
+    if spec.cmg_on:
+        Hc, Mc = spec.cluster.momentum_and_torque(gamma, gdot)
+        dx[10:14] = gdot
+        dx[14:18] = spec.cluster.gimbal_derivative(gdot, u[3:7])
+    else:
+        Hc, Mc = np.zeros(3), np.zeros(3)
+        dx[10:14] = 0.0
+        dx[14:18] = 0.0
     Mtot = (aero_moment(q, omega, delta, env.V_ned, env.rho, spec.aero)
             + Mc + np.asarray(env.M_dist, dtype=float))
     dx[4:7] = spec.inertia.Jinv @ (-np.cross(omega, J @ omega + Hc) + Mtot)
     dx[7:10] = (u[0:3] - delta) / spec.aero.tau_s
-    dx[10:14] = gdot
-    dx[14:18] = spec.cluster.gimbal_derivative(gdot, u[3:7])
     return dx
 
 
@@ -98,7 +109,10 @@ def limit_commands(x, u, spec: PlantSpec, dt: float) -> np.ndarray:
     cmg = spec.cluster
     out = np.array(u, dtype=float).reshape(NU)
     out[0:3] = limit_delta_command(delta, out[0:3], spec.aero)
-    out[3:7] = cmg.limit_gdot_command(gamma, gdot, out[3:7], dt)
+    if spec.cmg_on:
+        out[3:7] = cmg.limit_gdot_command(gamma, gdot, out[3:7], dt)
+    else:
+        out[3:7] = 0.0
     return out
 
 

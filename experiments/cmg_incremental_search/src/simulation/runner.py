@@ -52,6 +52,7 @@ def build_spec(cfg: dict) -> PlantSpec:
                            if k in Inertia.__dataclass_fields__}),
         aero=AeroSpec.from_dict(cfg.get("aero", {})),
         cmg=CMGSpec.from_dict(cfg.get("cmg", {})),
+        cmg_on=bool((cfg.get("actuators", {}) or {}).get("cmg_on", True)),
     )
 
 
