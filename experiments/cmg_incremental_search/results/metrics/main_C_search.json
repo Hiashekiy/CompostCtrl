@@ -1,0 +1,9 @@
+{
+  "search_status_counts": {
+    "warm": 300
+  },
+  "search_ms_mean": 75.4711703339126,
+  "search_ms_max": 91.08659997582436,
+  "search_nodes_mean": 87.55,
+  "search_nodes_max": 227.0
+}

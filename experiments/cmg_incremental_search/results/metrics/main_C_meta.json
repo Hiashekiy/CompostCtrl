@@ -1,7 +1,7 @@
 {
-  "name": "smoke_B",
-  "case": "high_altitude_maneuver",
-  "policy": "B",
+  "name": "main_C",
+  "case": "main_pitch10",
+  "policy": "C",
   "scenario": {
     "altitude_km": 100.0,
     "V_m_s": 4000.0,
@@ -30,11 +30,11 @@
       "axis": "pitch",
       "t0": 10.0,
       "duration": 20.0,
-      "delta_deg": 3.0
+      "delta_deg": 10.0
     }
   },
   "simulation": {
-    "T": 6,
+    "T": 60.0,
     "dt_ctrl": 0.2,
     "dt_plant": 0.005
   },
@@ -60,32 +60,36 @@
       1.0,
       1.0
     ],
-    "lambda_gamma": 0.0002,
+    "lambda_gamma": 0.002,
     "lambda_delta": 0.005,
-    "feas_tol": 0.001
+    "feas_tol": 0.001,
+    "null_gain": 0.35,
+    "sing_guard_frac": 1.0
   },
   "maneuver": {
     "axis": "pitch",
     "t0": 10.0,
     "duration": 20.0,
-    "delta_deg": 3.0
+    "delta_deg": 10.0
   },
   "search": {
-    "step_s": 0.5,
+    "step_s": 1.0,
     "horizon_s": 30.0,
     "max_expansions": 400,
     "max_search_time_ms": 60.0,
     "demand_refresh_s": 1.0,
     "predict_substeps": 2,
     "reuse_path": true,
-    "local_repair_budget_ratio": 0.8,
+    "local_repair_budget_ratio": 0.2,
     "exploration_budget_ratio": 0.2,
     "max_full_replans": 3,
     "lambda_move": 1.0,
     "lambda_sing": 2.0,
     "lambda_future": 4.0,
     "w_near": 1.0,
-    "w_far": 0.35
+    "w_far": 0.35,
+    "tau_scale": 60.0,
+    "feasibility_tol": 30.0
   },
   "tol_deg": 0.5
 }

@@ -28,6 +28,8 @@ search:
   lambda_future: 4.0
   w_near: 1.0                 # 近未来（机动窗口）权重
   w_far: 0.35                 # 远期权重的衰减下限
+  tau_scale: 60.0             # 缺口归一化尺度（≈保证力矩）
+  feasibility_tol: 30.0       # 只用来否掉"完全无力"的边；缺口本身进代价（阶段 7 结论）
 
 graph:
   angular_step_deg: 10.0      # 参考网格间距（不是单周期允许跳转的角度）

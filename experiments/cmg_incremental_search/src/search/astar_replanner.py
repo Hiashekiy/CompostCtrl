@@ -109,8 +109,28 @@ class BoundedAStar:
 
     # ---- 对外接口（与 runner 的 search 接口一致）-------------------------
     def step(self, x, t, ref, env, dt):
-        res = self.plan(x, t, ref)
+        """C 组入口：以"保持当前构型"作为初始可行解，在预算内寻找更优路径。
+
+        为什么给 hold 种子：h=0 的有界搜索在能力受限工况下会在同一层铺开很多兄弟节点，
+        60 ms 内常常完不成（阶段 7 实测 291/300 周期 timeout）。以 hold 路径作为 incumbent
+        可以先保证"有可行解可执行"，再把剩余预算用于改进——这仍然是有界 A*，
+        只是起点不是一个空解。D 组则用上一周期路径当 incumbent。
+        """
+        n_demand = None
+        dt_search = float(self.search_cfg.get("step_s", 0.5))
+        horizon = float(self.search_cfg.get("horizon_s", 30.0))
+        demand = self._get_demand(x, t, ref, dt_search, horizon)
+        n_demand = demand.n
+        start = self.graph.quantize(x[10:14])
+        seed = [start] * n_demand if n_demand > 0 else None
+        res = self.plan(x, t, ref, demand=demand, incumbent=seed)
         return res.gdot_ref, res.info
+
+    def _peek_n(self, t: float, ref) -> int:
+        """窗口层数（用于构造 hold 种子）；与 build_demand 的 n 保持一致。"""
+        dt_search = float(self.search_cfg.get("step_s", 0.5))
+        horizon = float(self.search_cfg.get("horizon_s", 30.0))
+        return max(1, int(round(horizon / dt_search)))
 
     # ---- 搜索 -----------------------------------------------------------
     def plan(self, x, t, ref, demand: FutureDemand | None = None,

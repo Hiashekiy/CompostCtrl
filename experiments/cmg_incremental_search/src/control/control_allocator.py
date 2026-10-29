@@ -36,6 +36,14 @@ class AllocatorWeights:
     lambda_gamma: float = 2.0e-4
     lambda_delta: float = 5.0e-3
     feas_tol: float = 1.0e-3     # 力矩残差范数（N m）超过即判不可行
+    # 奇异回避：把"远离奇异"的解析梯度方向做成空转（null motion）参考速率。
+    # 这是 A/B/C/D 共用的基础分配器行为（A 组没有 CMG，自然不起作用），
+    # 保证 B 组是一个"合格的" CMG 基线，而不是被奇异锁死的对照组。
+    null_gain: float = 0.35      # 空转速率上限 = null_gain * gdot_max
+    sing_guard_frac: float = 1.0  # 触发阈值 = sing_guard_frac * sigma_floor
+    # 框架角回中参考（等价于旧项目的 w_gamma 家位牵引）：gamma_dot_home = -home_gain * gamma。
+    # 没有它，框架角会在零空间里随机游走到 ±90° 行程并落到奇异（阶段 7 实测）。
+    home_gain: float = 0.20      # 1/s
 
     @classmethod
     def from_dict(cls, cfg: dict) -> "AllocatorWeights":
@@ -90,6 +98,18 @@ class ControlAllocator:
             hi[3:] = 0.0
         return np.minimum(lo, hi), np.maximum(lo, hi)
 
+    def _null_reference(self, gamma, gdot_ref) -> np.ndarray:
+        """把"回中 + 奇异回避"叠加到框架角速度参考上（不改变力矩项与约束）。"""
+        ref = np.asarray(gdot_ref, dtype=float).copy()
+        if not self.spec.cmg_on:
+            return ref
+        gamma = np.asarray(gamma, dtype=float)
+        floor = self.w.sing_guard_frac * float(self.spec.cmg.sigma_floor)
+        home = -self.w.home_gain * gamma
+        sing = self.cmg.singularity_avoiding_rate(gamma, self.w.null_gain, floor)
+        ref = ref + home + sing
+        return np.clip(ref, -self.spec.cmg.gdot_max, self.spec.cmg.gdot_max)
+
     def _design(self, x, env: FlightEnv):
         q, omega, delta, gamma, gdot = unpack(x)
         B_delta = aero_jacobian_delta(q, omega, env.V_ned, env.rho, self.spec.aero)
@@ -131,6 +151,7 @@ class ControlAllocator:
             gdot_ref = np.zeros(self.spec.cmg.n)
         M_aero0, B_delta, B_gdot = self._design(x, env)
         lo, hi = self.bounds(x, dt)
+        gdot_ref = self._null_reference(gamma, gdot_ref)
         try:
             delta_c, gdot_c, ok, msg = self._solve(M_aero0, B_delta, B_gdot, tau_req,
                                                    gdot_ref, lo, hi)

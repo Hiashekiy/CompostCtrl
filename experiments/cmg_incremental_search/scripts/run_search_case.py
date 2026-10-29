@@ -62,11 +62,13 @@ def build_searcher(cfg: dict, policy: str):
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--policy", default="C", choices=list("ABCD"))
+    ap.add_argument("--scenario", default="scenario_high_altitude_maneuver.yaml",
+                    help="场景配置（例如 scenario_main.yaml）")
     ap.add_argument("--name", default=None)
     ap.add_argument("--set", dest="overrides", action="append", default=[])
     args = ap.parse_args()
 
-    cfg = load_config("search.yaml", "scenario_high_altitude_maneuver.yaml")
+    cfg = load_config("search.yaml", args.scenario)
     cfg = apply_overrides(cfg, args.overrides)
     cfg["policy"] = args.policy
     if args.policy == "A":

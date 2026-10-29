@@ -62,9 +62,14 @@ control:
 
 allocation:
   w_tau: [1.0, 1.0, 1.0]
-  lambda_gamma: 2.0e-4  # 跟踪搜索参考框架角速度的权重
+  lambda_gamma: 2.0e-3  # 跟踪（含奇异回避空转）参考框架角速度的权重
   lambda_delta: 5.0e-3
   feas_tol: 1.0e-3      # N m，力矩残差超过即判不可行
+  # 奇异回避空转（A/B/C/D 共用的基础分配器行为）：
+  # 阶段 7 的可行性扫描发现，没有空转时 B 组四个框架会一路走到 ±90° 行程并落到
+  # sigma_min = 0（gimbal lock），CMG 完全失效——那不是"CMG 基线"而是坏对照。
+  null_gain: 0.35       # 空转速率上限 = 0.35 * gdot_max = 0.525 rad/s
+  sing_guard_frac: 1.0  # 触发阈值 = 1.0 * sigma_floor (12.25 N m s)
 
 metrics:
   tol_deg: 0.5          # 姿态误差容差（测地角）

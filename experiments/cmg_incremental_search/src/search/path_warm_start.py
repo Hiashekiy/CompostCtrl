@@ -137,7 +137,13 @@ class WarmStartReplanner:
                                 diagnostics={"warm_start": {"mode": "replan-capped",
                                                             "reason": reason}})
         t0 = time.perf_counter()
-        res = self.astar.plan(x, t, ref, demand=demand)
+        dt_search = float(self.cfg.get("step_s", 0.5))
+        if demand is None:
+            demand = self.astar._get_demand(x, t, ref, dt_search,
+                                            float(self.cfg.get("horizon_s", 30.0)))
+        # 完整重搜同样以"保持当前构型"为初始可行解，避免能力受限时整周期 timeout
+        start = self.astar.graph.quantize(x[10:14])
+        res = self.astar.plan(x, t, ref, demand=demand, incumbent=[start] * demand.n)
         self.stats.full_replans += 1
         self.stats.replan_time_ms += 1e3 * (time.perf_counter() - t0)
         if self._ok(res):

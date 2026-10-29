@@ -74,7 +74,8 @@ class FutureDemand:
 def build_demand(x, t0: float, ref, ctrl: AttitudeController, alloc: ControlAllocator,
                  spec: PlantSpec, dt_search: float, horizon_s: float,
                  w_near: float = 1.0, w_far: float = 0.35,
-                 predict_substeps: int = 5) -> FutureDemand:
+                 predict_substeps: int = 5, tau_cap: float = 180.0,
+                 trunc_err_deg: float = 30.0) -> FutureDemand:
     n = max(1, int(round(horizon_s / dt_search)))
     ts = t0 + dt_search * np.arange(n)
 
@@ -85,8 +86,13 @@ def build_demand(x, t0: float, ref, ctrl: AttitudeController, alloc: ControlAllo
     rho = np.zeros(n)
     V = np.zeros(n)
 
+    # 需求力矩上限（默认 3 倍保证力矩）：控制器在预测中发散时 τ_req 会打到 tau_max，
+    # 那不是"需求"而是预测失效的信号；截断并计数，避免一个发散样本污染整张图。
+    tau_cap = 180.0
+    clipped = 0
     xs = np.array(x, dtype=float)
     envs: list = []
+    truncated_at: int | None = None
     for j in range(n):
         env = ref.env(ts[j])
         envs.append(env)
@@ -96,9 +102,24 @@ def build_demand(x, t0: float, ref, ctrl: AttitudeController, alloc: ControlAllo
         q_ref[j] = ref.q_ref(ts[j])
         omega_ref[j] = ref.omega_ref(ts[j])
         tau_req[j] = ctrl.torque_request(xs, q_ref[j], omega_ref[j])
+        n_tau = float(np.linalg.norm(tau_req[j]))
+        if n_tau > tau_cap:
+            tau_req[j] *= tau_cap / n_tau
+            clipped += 1
+        if truncated_at is not None:
+            # 预测已失效：冻结在最后一个有效状态（不再积分，避免 NaN 污染整条链）
+            x_pred[j] = x_pred[truncated_at]
+            tau_req[j] = tau_req[truncated_at]
+            continue
         res = alloc.allocate(xs, tau_req[j], env, np.zeros(spec.cmg.n), dt_search)
         u = np.concatenate([res.delta_cmd, res.gdot_cmd])
         xs, _ = plant_step(xs, u, env, spec, dt_search, max(1, predict_substeps))
+        from ..dynamics.rigid_body import quat_geodesic
+
+        err_deg = float(np.rad2deg(quat_geodesic(q_ref[j], xs[0:4])))
+        if (not np.all(np.isfinite(xs))) or err_deg > trunc_err_deg:
+            truncated_at = j          # 当前位置仍有效，后续时间片冻结
+            xs = np.array(x_pred[j], dtype=float)
 
     # 时间权重：机动窗口内为 w_near，窗口外向 w_far 线性过渡，再归一化
     w = np.full(n, float(w_far))
@@ -123,5 +144,8 @@ def build_demand(x, t0: float, ref, ctrl: AttitudeController, alloc: ControlAllo
                         tau_req=tau_req, x_pred=x_pred, rho=rho, V=V, weight=w, envs=envs,
                         high_window=high,
                         meta={"horizon_s": float(horizon_s), "n": n, "w_near": w_near,
-                              "w_far": w_far, "t0": float(t0),
+                              "w_far": w_far, "t0": float(t0), "tau_cap": tau_cap,
+                              "tau_cap_clipped_steps": clipped,
+                              "prediction_truncated_at": truncated_at,
+                              "trunc_err_deg": float(trunc_err_deg),
                               "tau_req_peak": float(np.max(np.linalg.norm(tau_req, axis=1)))})

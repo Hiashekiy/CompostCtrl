@@ -97,6 +97,43 @@ class PyramidCMG:
         A = self.spec.h0 * _cross3(self.g_axis, s)
         return H, -A @ np.asarray(gdot, dtype=float)
 
+    def singularity_gradient(self, gamma) -> np.ndarray:
+        """d det(A A^T) / d gamma 的解析梯度（4 维，指向"远离奇异"方向）。
+
+        A[:,i] = h0 (g_i x s_i) 且 ds_i/dgamma_i = g_i x s_i，因此
+        dA_i/dgamma_i = -h0 s_i（因为 g_i 与 s_i 正交）。用 Jacobi 公式
+        d(det M) = det(M) tr(M^-1 dM) 得到
+
+            grad_i = 2 det(M) * a_i^T M^-1 (dA_i)
+
+        其中 M = A A^T、a_i = A[:,i]。一次 3x3 求逆即可，无需有限差分。
+        """
+        s = self.spin_axes(gamma)
+        A = self.spec.h0 * _cross3(self.g_axis, s)
+        M = A @ A.T
+        det = float(np.linalg.det(M))
+        grad = np.zeros(self.spec.n)
+        try:
+            Minv = np.linalg.inv(M)
+        except np.linalg.LinAlgError:
+            return grad
+        for i in range(self.spec.n):
+            dA = -self.spec.h0 * s[:, i]
+            grad[i] = 2.0 * det * float(A[:, i] @ Minv @ dA)
+        return grad
+
+    def singularity_avoiding_rate(self, gamma, gain: float, floor: float) -> np.ndarray:
+        """奇异回避的空转速率参考（只在与地板接近时起作用）。"""
+        sig = self.sigma_min(self.jacobian(gamma))
+        w = max(0.0, 1.0 - sig / max(floor, 1e-9))
+        if w <= 0.0:
+            return np.zeros(self.spec.n)
+        g = self.singularity_gradient(gamma)
+        n = float(np.linalg.norm(g))
+        if n < 1e-12:
+            return np.zeros(self.spec.n)
+        return (gain * self.spec.gdot_max * w) * g / n
+
     # ---- 性能指标 -------------------------------------------------------
     @staticmethod
     def sigma_min(A) -> float:

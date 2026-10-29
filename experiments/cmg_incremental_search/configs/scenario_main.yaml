@@ -1,0 +1,45 @@
+# 冻结主场景（阶段 7 可行性扫描的结论，2026-10-29 冻结）
+#
+# 依据 results/metrics/feasibility_scan.csv（100 km，俯仰机动，过渡 20 s，起点 t=10 s）：
+#   A（仅舵面）  10°: final 0.482°, peak 3.220°, rmse 1.582°, 回退 231  -> 明显控制困难
+#   A（仅舵面）  12°: final 2.116°, peak 4.612°                        -> 失败
+#   B（舵面+CMG）10°: final 0.000°, peak 1.269°, rmse 0.445°, 回退 35, sigma_min 0.07
+#                                                                     -> 完成但接近能力边界
+#   B（舵面+CMG）12°: final 0.000°, peak 2.230°, 残差 58.8 N m, sigma_min 0.28
+#                                                                     -> 边界（力矩缺口大）
+# 因此主场景取 10°：A 明显困难、B 仍能完成但裕度很小。12° 作为"能力边界"工况另存
+# （scenario_capability_edge.yaml），只用于失败机理分析，不能用来证明搜索优于普通 CMG。
+
+base: base.yaml
+
+case: main_pitch10
+
+scenario:
+  altitude_km: 100.0
+  V_m_s: 4000.0
+  heading_deg: 0.0
+  trim_euler_deg: [0.0, 0.0, 0.0]
+  M_dist: [0.0, 0.0, 0.0]
+  M_dist_amp: [0.0, 0.0, 0.0]
+  M_dist_freq: [0.0, 0.0, 0.0]
+  maneuver:
+    axis: pitch
+    t0: 10.0
+    duration: 20.0
+    delta_deg: 10.0     # 由可行性扫描确定，不是先验设定
+
+search:
+  step_s: 1.0           # 冻结：0.5 s 时最坏控制耗时 148.9 ms（1.34x 裕量），
+                        # 1.0 s 把层数减半（30 层），实测最坏 < 80 ms（见阶段 7 报告）
+  horizon_s: 30.0
+  max_expansions: 400
+  max_search_time_ms: 60.0
+  demand_refresh_s: 1.0
+  local_repair_budget_ratio: 0.2   # 冻结：80% 与 20% 在扫描场景轨迹相同，20% 省 60% 时间
+  exploration_budget_ratio: 0.2
+
+graph:
+  angular_step_deg: 10.0
+  max_neighbors: 9
+  local_graph_only: true
+  local_radius_deg: 60.0

@@ -42,7 +42,11 @@ class EdgeWeights:
     lambda_sing: float = 2.0
     lambda_future: float = 4.0
     tau_scale: float = 60.0        # N m，用于归一化力矩缺口（与保证力矩同量级）
-    feasibility_tol: float = 1.0   # N m，缺口超过即判边不可行
+    # 边的**硬可行性只由机械约束决定**（行程/角速度/角加速度）。力矩缺口是代价
+    # （J_track / J_future），不是可行性判据：能力受限工况下若把缺口当不可行，所有边
+    # 都会被判死（阶段 7 实测 C 组 252/300 周期 no_path），搜索退化为"停止迁移"，
+    # 也就无法检验"构型路径能否降低缺口"这一核心假设。
+    gap_hard_tol: float = 600.0    # 仅拦截病态缺口（10 倍保证力矩），默认几乎不生效
 
     @classmethod
     def from_dict(cls, cfg: dict) -> "EdgeWeights":
@@ -81,29 +85,65 @@ class EdgeEvaluator:
         self.demand = demand
         self._node_future: dict[tuple[int, ...], float] = {}
         self._edge_cache: dict[tuple, EdgeResult] = {}
+        self._A_cache: dict[tuple[int, ...], np.ndarray] = {}
+        self._sig_cache: dict[tuple[int, ...], float] = {}
+        # 每一时间层的量只与状态/参考有关，与候选构型无关 -> 按层缓存（每边省 ~90 µs）
+        self._level_cache: dict[int, tuple[np.ndarray, np.ndarray, float]] = {}
         self.sample_stride = max(1, demand.n // 3)
 
-    # ---- 支撑函数（筛选层） ---------------------------------------------
-    def support_mu(self, gamma, tau_hat, x_env) -> float:
-        q, omega, V_ned, rho = x_env
-        A = self.cmg.jacobian(gamma)
-        B = aero_jacobian_delta(q, omega, V_ned, rho, self.spec.aero)
+    # ---- 缓存的基础量 ---------------------------------------------------
+    def A_of(self, idx) -> np.ndarray:
+        key = tuple(idx)
+        A = self._A_cache.get(key)
+        if A is None:
+            A = self.cmg.jacobian(self.graph.node_gamma(idx))
+            self._A_cache[key] = A
+        return A
+
+    def sigma_of(self, idx) -> float:
+        key = tuple(idx)
+        sig = self._sig_cache.get(key)
+        if sig is None:
+            sig = self.cmg.sigma_min(self.A_of(idx))
+            self._sig_cache[key] = sig
+        return sig
+
+    def level(self, j: int) -> tuple[np.ndarray, np.ndarray, float]:
+        """(B_delta, tau_hat_res, tau_res 范数)，仅依赖时间层 j。"""
+        hit = self._level_cache.get(j)
+        if hit is not None:
+            return hit
+        env = self.demand.envs[j]
+        x = self.demand.x_pred[j]
+        B = aero_jacobian_delta(x[0:4], x[4:7], env.V_ned, env.rho, self.spec.aero)
+        trim = self.aero_trim(x[0:4], x[4:7], env.V_ned, env.rho)
+        tau_res = np.asarray(self.demand.tau_req[j], dtype=float) - trim
+        n = float(np.linalg.norm(tau_res))
+        tau_hat = tau_res / n if n > 1e-9 else np.zeros(3)
+        val = (B, tau_hat, n)
+        self._level_cache[j] = val
+        return val
+
+    def support_mu(self, idx, j: int) -> float:
+        A = self.A_of(idx)
+        B, tau_hat, n = self.level(j)
+        if n < 1e-9:
+            return 0.0
         gmax = self.cmg.spec.gdot_max
         dmax = self.spec.aero.delta_max
-        return float(np.sum(np.abs(A.T @ tau_hat)) * gmax + np.sum(np.abs(B.T @ tau_hat) * dmax))
+        return float(np.sum(np.abs(A.T @ tau_hat)) * gmax
+                     + np.sum(np.abs(B.T @ tau_hat) * dmax))
 
+    # ---- 支撑函数（筛选层） ---------------------------------------------
     def aero_trim(self, q, omega, V_ned, rho) -> np.ndarray:
         return aero_moment(q, omega, np.zeros(3), V_ned, rho, self.spec.aero)
 
-    def _support_gap(self, gamma, tau_req, j: int) -> tuple[float, float]:
-        env = self.demand.envs[j]
-        x = self.demand.x_pred[j]
-        tau_res = np.asarray(tau_req, dtype=float) - self.aero_trim(
-            x[0:4], x[4:7], env.V_ned, env.rho)
-        n = float(np.linalg.norm(tau_res))
+    def _support_gap(self, idx, j: int) -> tuple[float, float]:
+        """返回 (mu, gap)；mu 沿需求方向的精确支撑值，gap 为其不足量（只用缓存量）。"""
+        _B, _tau_hat, n = self.level(j)
         if n < 1e-9:
             return 0.0, 0.0
-        mu = self.support_mu(gamma, tau_res / n, (x[0:4], x[4:7], env.V_ned, env.rho))
+        mu = self.support_mu(idx, j)
         return mu, max(0.0, n - mu)
 
     # ---- 节点未来能力（缓存） -------------------------------------------
@@ -112,18 +152,17 @@ class EdgeEvaluator:
         hit = self._node_future.get(key)
         if hit is not None:
             return hit
-        gamma = self.graph.node_gamma(idx)
         total, wsum = 0.0, 0.0
         for j in range(0, self.demand.n, self.sample_stride):
-            _mu, gap = self._support_gap(gamma, self.demand.tau_req[j], j)
+            _mu, gap = self._support_gap(idx, j)
             total += self.demand.weight[j] * (gap / self.w.tau_scale) ** 2
             wsum += self.demand.weight[j]
         val = total / max(wsum, 1e-12)
         self._node_future[key] = val
         return val
 
-    def singularity_cost(self, gamma) -> float:
-        sig = self.cmg.sigma_min(self.cmg.jacobian(gamma))
+    def singularity_cost(self, idx) -> float:
+        sig = self.sigma_of(idx)
         floor = float(self.cmg.spec.sigma_floor)
         deficit = max(0.0, (floor - sig) / max(floor, 1e-9))
         return float(deficit ** 2)
@@ -136,7 +175,7 @@ class EdgeEvaluator:
             return hit
         mech = self.graph.edge_mechanics(idx, idx_next, gdot_now, self.demand.dt)
         gamma_next = self.graph.node_gamma(idx_next)
-        sing = self.singularity_cost(gamma_next)
+        sing = self.singularity_cost(idx_next)
         move = float(np.linalg.norm(mech.dgamma) / self.graph.step
                      + np.linalg.norm(mech.gdot_ref) / max(self.cmg.spec.gdot_max, 1e-9))
         if not mech.feasible:
@@ -148,16 +187,16 @@ class EdgeEvaluator:
             self._edge_cache[key] = out
             return out
 
-        mu, gap = self._support_gap(gamma_next, self.demand.tau_req[j], j)
+        mu, gap = self._support_gap(idx_next, j)
         track = (gap / self.w.tau_scale) ** 2
         future = self.node_future_gap(idx_next)
         cost = (self.demand.weight[j] * track
                 + self.w.lambda_move * move
                 + self.w.lambda_sing * sing
                 + self.w.lambda_future * future)
-        feasible = gap <= self.w.feasibility_tol
+        feasible = gap <= self.w.gap_hard_tol
         out = EdgeResult(feasible=feasible,
-                         reason="ok" if feasible else f"support_gap>{self.w.feasibility_tol:g}",
+                         reason="ok" if feasible else f"gap>{self.w.gap_hard_tol:g}",
                          cost=float(cost),
                          terms={"track": track, "move": move, "sing": sing, "future": future},
                          gdot_ref=mech.gdot_ref, residual_norm=gap, mechanics=mech,
@@ -177,9 +216,9 @@ class EdgeEvaluator:
         x = self.demand.x_pred[j].copy()
         x[10:14] = gamma_next
         alloc = self.alloc.allocate(x, self.demand.tau_req[j], env, res.gdot_ref, self.demand.dt)
-        out = EdgeResult(feasible=alloc.residual_norm <= self.w.feasibility_tol + 1e-9,
-                         reason="ok" if alloc.residual_norm <= self.w.feasibility_tol + 1e-9
-                         else f"qp_residual>{self.w.feasibility_tol:g}",
+        ok = bool(np.all(np.isfinite(alloc.delta_cmd)) and np.all(np.isfinite(alloc.gdot_cmd)))
+        out = EdgeResult(feasible=ok,
+                         reason="ok" if ok else "qp-nonfinite",
                          cost=res.cost, terms=res.terms, gdot_ref=res.gdot_ref,
                          residual_norm=alloc.residual_norm, mechanics=res.mechanics,
                          support_mu=res.support_mu, verified=True)
