@@ -1,0 +1,74 @@
+# 基础配置：飞行器 / 气动 / CMG / 控制器 / 分配器 / 仿真
+#
+# 参数来源（阶段 1 核验，见 docs/模型核验-CMG构型路径搜索基准.md）：
+#   * 惯量与全部气动系数是**代理参数**：旧项目 config.yaml 只把质量与 Iy 标为 example，
+#     Jx/Jz 与 Cl_*/Cn_*/Cm_* 无文献或试验出处。因此本实验只报告同一模型内部的相对结论。
+#   * CMG 机械参数（h0=50 N m s/台、gdot_max=1.5 rad/s、tau_g=0.03 s、6000 rpm）沿用旧项目
+#     的设计值；旧模型未实现的两项由本项目补齐并在此声明：
+#       - travel_deg: ±90° 有限机械行程（不绕回）——阶段 1 决策，非实测硬件值
+#       - gddot_max:  10 rad/s^2 作为**硬约束**，plant 与分配器 QP 同时生效——阶段 1 决策
+
+simulation:
+  T: 60.0
+  dt_ctrl: 0.2          # 底层控制周期 200 ms（指导实施文件 §11）
+  dt_plant: 0.005       # 积分步长，dt_ctrl / dt_plant = 40 子步 RK4
+
+vehicle:
+  Jx: 1200.0            # kg m^2（代理参数）
+  Jy: 8500.0
+  Jz: 9000.0
+
+aero:
+  S: 4.2                # m^2
+  b: 2.6                # m
+  cbar: 3.2             # m
+  Cm0: 0.0
+  Cm_alpha: -0.35
+  Cm_q: -12.0
+  Cm_de: 0.45
+  Cl_beta: -0.08
+  Cl_p: -0.40
+  Cl_r: 0.10
+  Cl_da: 0.12
+  Cl_dr: 0.02
+  Cn_beta: 0.12
+  Cn_p: -0.03
+  Cn_r: -0.15
+  Cn_da: 0.01
+  Cn_dr: -0.10
+  delta_max_deg: [25.0, 20.0, 20.0]
+  delta_dot_max_deg_s: [60.0, 60.0, 60.0]
+  tau_s: 0.05           # s 舵机一阶时间常数
+
+cmg:
+  n: 4
+  beta_deg: 54.7356     # arcsin(sqrt(2/3))
+  h0: 50.0              # N m s 每台
+  gdot_max: 1.5         # rad/s
+  gddot_max: 10.0       # rad/s^2 硬约束
+  tau_g: 0.03           # s
+  travel_deg: 90.0      # ±90° 有限行程（阶段 1 决策）
+  rotor_rpm: 6000.0
+
+control:
+  # 增益必须与实际力矩权限匹配：100 km 处 CMG 保证力矩 61 N m、气动约 11 N m。
+  # k_att=0.15, k_rate=0.55 对应 omega_n≈0.39 rad/s、zeta≈0.71；1° 俯仰误差只需
+  # 8500*0.15*0.0175≈22 N m，落在权限内。旧设定 0.6/1.6 在 1° 误差时就要 89 N m，
+  # 会持续饱和并让闭环在可达边界上震荡（阶段 3 实测，见报告）。
+  k_att: 0.15           # 1/s^2
+  k_rate: 0.55          # 1/s
+  tau_max: 1000.0       # N m 期望力矩饱和（数值保护）
+
+allocation:
+  w_tau: [1.0, 1.0, 1.0]
+  lambda_gamma: 2.0e-4  # 跟踪搜索参考框架角速度的权重
+  lambda_delta: 5.0e-3
+  feas_tol: 1.0e-3      # N m，力矩残差超过即判不可行
+
+metrics:
+  tol_deg: 0.5          # 姿态误差容差（测地角）
+
+logging:
+  save_raw_timeseries: true
+  save_search_tree_summary: true
+  save_config_snapshot: true

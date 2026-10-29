@@ -1,0 +1,34 @@
+# 构型图与搜索预算（指导实施文件 §5、§7、§12）
+#
+# max_expansions / max_search_time_ms 是**必填项**：缺失或为 null 时程序启动失败
+# （src/config.py:validate），不允许默认无限搜索。数值是初始候选，按 §11 的实时预算
+# 在阶段 5 用实测耗时收敛，收敛过程记录在 results/metrics/ 里。
+
+search:
+  # 时间展开图与离线搜索
+  step_s: 0.5                 # 搜索预测步长（§4.1 候选）
+  horizon_s: 30.0             # 预测窗口
+  max_expansions: 400         # 每周期节点展开上限
+  max_search_time_ms: 60.0    # 每周期搜索时间预算（控制周期 200 ms，留 140 ms 给分配与积分）
+
+  # 历史路径复用（D 组）
+  reuse_path: true
+  local_repair_budget_ratio: 0.8
+  exploration_budget_ratio: 0.2
+  max_full_replans: 3         # 连续修复失败后允许的完整重搜次数
+
+  # 代价权重（J = J_track + lambda_m J_move + lambda_s J_sing + lambda_f J_future）
+  lambda_move: 1.0
+  lambda_sing: 2.0
+  lambda_future: 4.0
+  w_near: 1.0                 # 近未来（机动窗口）权重
+  w_far: 0.35                 # 远期权重的衰减下限
+
+graph:
+  angular_step_deg: 10.0      # 参考网格间距（不是单周期允许跳转的角度）
+  max_neighbors: 9            # 保持 + 4 个框架角各正反向一步
+  local_graph_only: true
+  local_radius_deg: 60.0      # 局部图半径
+
+logging:
+  save_search_tree_summary: true

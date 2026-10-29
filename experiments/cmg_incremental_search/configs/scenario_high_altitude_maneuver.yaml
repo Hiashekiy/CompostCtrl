@@ -1,0 +1,28 @@
+# 主场景：已知未来机动的高空姿态控制（指导实施文件 §4.1 的候选初值）
+#
+# 高度 100 km、机动准备 10 s、过渡 20 s、搜索预测步长 0.5 s 都只是**候选初值**；
+# 目标机动幅度必须由阶段 7 的可行性扫描决定（A 组明显困难、B 组仍可行或接近边界），
+# 不得未经验证就指定大角度三轴机动。
+
+base: base.yaml
+
+case: high_altitude_maneuver
+
+scenario:
+  altitude_km: 100.0
+  V_m_s: 4000.0
+  heading_deg: 0.0
+  trim_euler_deg: [0.0, 0.0, 0.0]
+  # 扰动冻结为零，便于阶段 3 的基础闭环测试；扰动工况在阶段 8 单独定义。
+  M_dist: [0.0, 0.0, 0.0]
+  M_dist_amp: [0.0, 0.0, 0.0]
+  M_dist_freq: [0.0, 0.0, 0.0]
+  maneuver:
+    axis: pitch
+    t0: 10.0            # 机动准备时间
+    duration: 20.0      # 机动过渡时间
+    delta_deg: 3.0      # 待可行性扫描确认
+
+search:
+  step_s: 0.5           # 搜索预测步长
+  horizon_s: 30.0       # 覆盖准备阶段 + 机动主要过程
