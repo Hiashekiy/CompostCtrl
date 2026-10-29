@@ -1,0 +1,87 @@
+{
+  "t_end": 200.0,
+  "disturbance": {
+    "integral_Nms": 4000.0000000216,
+    "positive_Nms": 4000.0000000216,
+    "negative_Nms": 0.0,
+    "mean_Nm": 20.00000000010789,
+    "peak_Nm": 35.0,
+    "series_hash": 9771346.130407184
+  },
+  "cmg": {
+    "H_peak_Nms": 0.0,
+    "H_end_Nms": 0.0,
+    "H_x_range": [
+      0.0,
+      0.0
+    ],
+    "H_y_range": [
+      0.0,
+      0.0
+    ],
+    "H_z_range": [
+      0.0,
+      0.0
+    ],
+    "dHdt_peak_Nm": 0.0,
+    "dHdt_mean_Nm": 0.0,
+    "dHdt_peak_time_s": 0.0,
+    "torque_peak_Nm": 0.0,
+    "torque_mean_abs_y_Nm": 0.0,
+    "gimbal_rate_peak_rad_s": 0.0,
+    "sigma_min": 40.8248290463863
+  },
+  "events": {
+    "budget_trigger_s": null,
+    "sigma_below_floor_s": null,
+    "first_fallback_s": null,
+    "longest_fallback_run_steps": 0,
+    "fallback_steps": 0,
+    "fallback_frac": 0.0,
+    "n_steps": 1001
+  },
+  "tracking": {
+    "rmse_deg": 14.764117703972355,
+    "peak_deg": 43.47723959525912,
+    "rmse_pitch_deg": 14.764117661062752,
+    "rmse_roll_deg": 0.0009910093039940423,
+    "rmse_yaw_deg": 0.0004658218815752317,
+    "high_rmse_deg": 25.17328053630024,
+    "high_peak_deg": 43.47723959525912,
+    "high_window_s": [
+      90.4,
+      149.6
+    ]
+  },
+  "surfaces": {
+    "saturation_frac": 0.25774225774225773,
+    "travel_deg": 0.13783938051868916,
+    "peak_deg": [
+      24.999999999999986,
+      0.05504531322098683,
+      0.07692654186976482
+    ]
+  },
+  "solver": {
+    "qp_fail": 0,
+    "solve_mean_ms": 225.2863312683398,
+    "solve_p95_ms": 279.67340001487173,
+    "solve_max_ms": 323.4570999920834,
+    "max_violation": 3.5553598888959925e-05
+  },
+  "source_dir": "results\\c1_cmg_reproduction\\cmg\\c1\\A",
+  "description": "E1-A 仅舵面, M_d = 20 + 15 sin",
+  "meta": {
+    "code_commit": "c38310255f600110b4d7b677a829082964eda946",
+    "tag": "c1_ab_v1",
+    "actuator_mode": "surface_only",
+    "python": "3.14.7",
+    "wall_time_s": 248.19699299999047,
+    "high_window": [
+      90.4,
+      149.6
+    ],
+    "Md0_pitch": 20.0,
+    "Md_amp_pitch": 15.0
+  }
+}

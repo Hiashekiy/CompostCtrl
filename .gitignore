@@ -1,6 +1,7 @@
 __pycache__/
 *.py[cod]
 results/cmg_ab/_cache/
+results/cmg_maneuver/_cache/
 *.egg-info/
 .venv/
 tmp/

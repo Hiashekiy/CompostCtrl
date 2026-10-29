@@ -1,0 +1,2 @@
+raw artefacts: results\c1_cmg_reproduction\cmg\c1\B
+(not copied; the formal A/B data is read-only)

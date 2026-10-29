@@ -1,0 +1,16 @@
+{
+  "n_steps": 626,
+  "max_abs_diff": {
+    "omega": 4.912341367013795e-12,
+    "H_cmg": 4.997097846626275e-09,
+    "M_cmg": 4.966750566381961e-09,
+    "gimbal_deg": 3.9333514223471866e-08,
+    "gdot": 4.938867093073895e-10,
+    "delta_deg": 4.934062047823318e-09,
+    "err_norm_deg": 4.9999187012872426e-09,
+    "fallback": 0.0
+  },
+  "tolerance": 1e-08,
+  "note": "the recorded timeseries.csv is written with %.10g, so the replay can only agree to that print precision, not bit-for-bit",
+  "identical": false
+}

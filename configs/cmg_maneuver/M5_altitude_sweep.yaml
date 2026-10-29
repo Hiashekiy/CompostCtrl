@@ -1,0 +1,11 @@
+# M5 —— 90/100/110 km 同一 5° 机动（高度与气动权限）
+#
+# 本文件只是"工况指针"：全部参数（飞行器/大气/弹道/CMG/MPC 权重与约束）在
+# common.yaml 里，这里只声明本次要跑哪个 case，保证六个工况共用同一套环境与
+# 同一套 A/B 差异。
+#
+#   python scripts/run_cmg_maneuver_ab.py --config configs/cmg_maneuver/M5_altitude_sweep.yaml
+#
+base: common.yaml
+
+selected_case: M5_h90_pitch_5deg

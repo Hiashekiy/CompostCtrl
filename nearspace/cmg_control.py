@@ -197,6 +197,16 @@ class LTVMPCCMG2:
     def command_from_x(self, x):
         return np.asarray(x, dtype=float)[:NXP]
 
+    # ---- cost-shaping hooks (defaults reproduce the frozen A/B controller) --
+    def cmg_effort_weight(self, k, x_seq, t_seq, p_seq, traj):
+        """CMG torque cost at prediction node k."""
+        ek = np.linalg.norm(self._att_error(traj.q_ref(t_seq[k]), x_seq[k][0:4]))
+        return self.r_cmg_tr if ek > self.e_thresh else self.r_cmg_trim
+
+    def cmg_extra_cost(self, k, gamma_k, dt):
+        """Extra 3x3 CMG torque cost at node k (None = none)."""
+        return None
+
     # ---- failsafe --------------------------------------------------------
     def failsafe(self, x, t, traj):
         v, c = self.prm.veh, self.prm.cmg
@@ -237,10 +247,11 @@ class LTVMPCCMG2:
         v, c = self.prm.veh, self.prm.cmg
         nz = (NXP + NUP + 1) * N
         H = np.zeros((nz, nz)); g = np.zeros(nz)
-        rows, lbs, ubs = [], [], []
+        rows, lbs, ubs, rtags = [], [], [], []
 
         def add(coeffs, lb, ub):
             rows.append(coeffs); lbs.append(lb); ubs.append(ub)
+            rtags.append(self._row_tag)
 
         for k in range(1, N + 1):
             dt = self.dts[k - 1]; t = t_seq[k]
@@ -263,13 +274,18 @@ class LTVMPCCMG2:
                 g[qi + 10 + a] += 2.0 * self.W_H * dt * (Aref[:, a] @ (Href - Aref @ x_seq[k][10:14]))
         for k in range(N):
             dt = self.dts[k]; ui = self._ui(k)
-            # error-adaptive CMG effort: cheap during transients (CMG fires),
-            # expensive when trimmed (aero carries the sustained torque)
-            ek = np.linalg.norm(self._att_error(traj.q_ref(t_seq[k]), x_seq[k][0:4]))
-            r_cmg = (self.r_cmg_tr if ek > self.e_thresh else self.r_cmg_trim)
+            # CMG effort weight.  Default schedule: cheap during transients
+            # (CMG fires), expensive when trimmed (aero carries the sustained
+            # torque).  Subclasses may replace it (E2 diagnostic arm B1).
+            r_cmg = self.cmg_effort_weight(k, x_seq, t_seq, p_seq, traj)
             for a in range(3):
                 H[ui + a, ui + a] += 2.0 * self.R_delta[a, a] * dt
                 H[ui + 3 + a, ui + 3 + a] += 2.0 * r_cmg * dt
+            extra = self.cmg_extra_cost(k, x_seq[k][10:14], dt)
+            if extra is not None:
+                for a in range(3):
+                    for b in range(3):
+                        H[ui + 3 + a, ui + 3 + b] += 2.0 * extra[a, b] * dt
         for k in range(1, N):
             H[self._ui(k), self._ui(k)] += 2.0 * self.s_delta
             H[self._ui(k), self._ui(k - 1)] += -2.0 * self.s_delta
@@ -290,6 +306,7 @@ class LTVMPCCMG2:
 
         dmax, ddot = v.delta_max, v.delta_dot_max
 
+        self._row_tag = "dynamics"
         for k in range(N):
             Ad, Bd, d0 = discretize_eff(x_seq[k], u_seq[k], p_seq[k], self.prm, self.cluster, self.dts[k])
             for i in range(NXP):
@@ -308,8 +325,10 @@ class LTVMPCCMG2:
 
         for k in range(1, N + 1):
             qi = self._xi(k)
+            self._row_tag = "state_delta"
             for a in range(3):
                 add({qi + 7 + a: 1.0}, -dmax[a], dmax[a])
+            self._row_tag = "state_gimbal_rate"
             for a in range(4):
                 add({qi + 14 + a: 1.0}, -c.gdot_max, c.gdot_max)
             g_ref = x_seq[k][10:14]
@@ -320,6 +339,7 @@ class LTVMPCCMG2:
             for a in range(4):
                 coeff[qi + 10 + a] = -grad[a]
             # conservative: require sigma >= margin * floor along the linearisation
+            self._row_tag = "singularity"
             add(coeff, self.sing_margin * self.sigma_floor - (sig - grad @ g_ref), np.inf)
             # CMG momentum budget.  A component-wise *hard* box cannot be the
             # primary limit: once |H| is over budget (which one node step of
@@ -330,6 +350,7 @@ class LTVMPCCMG2:
             Href = self.cluster.momentum(g_ref)
             base = Href - Aref @ g_ref
             Hc = self.H_lim / np.sqrt(3.0)
+            self._row_tag = "momentum_box"
             for i in range(3):
                 lo = min(-Hc, float(Href[i])); hi = max(Hc, float(Href[i]))
                 add({qi + 10 + a: float(Aref[i, a]) for a in range(4)},
@@ -341,11 +362,14 @@ class LTVMPCCMG2:
             Aref = self.cluster.jacobian(g_ref)
             _, S = steering_matrix(self.cluster, g_ref)
             U, sv, _ = np.linalg.svd(Aref)
+            self._row_tag = "gimbal_rate_cmd"
             for i in range(4):                       # exact (linearised) rate limit
                 add({ui + 3 + j: float(S[i, j]) for j in range(3)}, -c.gdot_max, c.gdot_max)
+            self._row_tag = "torque_envelope"
             for i in range(3):                       # deliverable torque envelope
                 cap = self.torque_margin * sv[i] * np.sqrt(c.n) * c.gdot_max
                 add({ui + 3 + j: float(U[j, i]) for j in range(3)}, -cap, cap)
+            self._row_tag = "cmg_torque_box"
             for j in range(3):
                 add({ui + 3 + j: 1.0}, -self.M_box, self.M_box)
             # predictive momentum management, radial form:
@@ -362,13 +386,16 @@ class LTVMPCCMG2:
             rhs = min(rhs, self.unload_cap * self.M_box)
             coeff = {ui + 3 + j: float(Hk[j]) for j in range(3)}
             coeff[self._si(k)] = 1.0
+            self._row_tag = "momentum_radial"
             add(coeff, rhs, np.inf)
             # in thin air the aero surfaces cannot absorb what the CMG dumps,
             # so unloading is only permitted while the budget still holds
             qk = 0.5 * p_seq[k][0] * float(np.dot(p_seq[k][1:4], p_seq[k][1:4]))
             if qk < self.q_unload_min and 1e-6 < nHk <= self.H_lim:
+                self._row_tag = "no_unload_thin_air"
                 add({ui + 3 + j: float(Hk[j]) for j in range(3)}, -np.inf, 0.0)
             for a in range(3):
+                self._row_tag = "delta_rate"
                 if k == 0:
                     b0 = x0[7 + a]
                     add({ui + a: 1.0}, -np.inf, ddot[a] * v.tau_s + b0)
@@ -376,7 +403,9 @@ class LTVMPCCMG2:
                 else:
                     add({ui + a: 1.0, self._xi(k) + 7 + a: -1.0}, -np.inf, ddot[a] * v.tau_s)
                     add({ui + a: -1.0, self._xi(k) + 7 + a: 1.0}, -np.inf, ddot[a] * v.tau_s)
+                self._row_tag = "delta_box"
                 add({ui + a: 1.0}, -dmax[a], dmax[a])
+        self._row_tag = "slack_nonneg"
         for k in range(N):
             add({self._si(k): 1.0}, 0.0, np.inf)
 
@@ -384,6 +413,7 @@ class LTVMPCCMG2:
         for r, coeff in enumerate(rows):
             for cc, val in coeff.items():
                 A[r, cc] = val
+        self.row_tags = list(rtags)          # provenance for the E3 forensics only
         return H, g, A, np.array(lbs), np.array(ubs)
 
     @property

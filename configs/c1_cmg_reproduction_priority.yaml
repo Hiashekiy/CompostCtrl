@@ -1,0 +1,106 @@
+# =====================================================================
+# E2 诊断实验：执行机构分工（CMG 是否被过度使用/能否合理分配）
+# =====================================================================
+# 任务与 configs/c1_cmg_reproduction.yaml 完全相同（同一弹道、参考、扰动、
+# 初值、舵机、CMG 硬件、权重、预测时域、约束与统计窗口）；唯一新增的是
+# `mpc_priority` 段，它只被 nearspace/cmg_priority.LTVMPCPriority 读取：
+#
+#   enabled            : 打开 E2-B1 的两项代价整形机制
+#   aero_authority_frac: 把满偏气动力矩的 90% 视为可用权限（保守）
+#   H_soft_frac        : 角动量软拐点 = 0.75 × 控制器预算（45 N·m·s）
+#   r_growth_scale     : |H| 到预算时 CMG 代价放大倍数（1 + 1.0 = 2 倍）
+#   r_growth           : 沿 Ĥ 的"充电"二次惩罚权重，与 trim 代价同量级
+#
+# 这两个机制只改目标函数，**不新增、不放宽、不收紧任何约束**：
+# QP 的 A/lb/ub 与工厂控制器逐位相同（scripts/e2_actuator_allocation.py --check
+# 会在运行前断言这一点）。
+#
+#   python scripts/e2_actuator_allocation.py --check
+#   python scripts/e2_actuator_allocation.py --run
+#   python scripts/e2_actuator_allocation.py --analyze
+# =====================================================================
+base: ../config.yaml
+
+common:
+  environment:
+    backend: msis2
+  simulation:
+    dt_plant: 0.005
+    dt_ctrl: 0.2
+  trajectory:
+    h0: 30000.0
+    period: 240.0
+    V0: 4000.0
+    dVdt: 4.0
+    alpha_trim_deg: 2.0
+  trajectory3:
+    dist_scale_qinf: false
+    dist_pulse_amp: [0.0, 0.0, 0.0]
+    dist_pulse_start: 1.0e9
+    dist_pulse_duration: 1.5
+    heading_deg: 5.0
+    heading_amp_deg: 0.0
+    heading_period: 200.0
+    high_window_km: 90.0
+    maneuver: []
+  vehicle3:
+    Md0: [0.0, 20.0, 0.0]
+    Md_amp: [0.0, 15.0, 0.0]
+    Md_freq: [0.03, 0.05, 0.04]
+  cmg:
+    n: 4
+    beta_deg: 54.7356
+    h0: 50.0
+    gdot_max: 1.5
+    gddot_max: 10.0
+    tau_g: 0.03
+    sigma_floor_frac: 0.30
+  mpc_cmg:
+    q_att: 4000.0
+    q_rate: 50.0
+    r_delta: 1.0
+    r_cmg_transient: 0.05
+    r_cmg_trim: 0.50
+    e_thresh_deg: 0.5
+    M_cmg_box: 61.0
+    H_lim_frac: 0.30
+    H_planner_max: 50.0
+    w_gamma: 5.0
+    w_H: 3.0e-3
+    q_unload_min: 40.0
+    s_delta: 10.0
+    rho_sing: 10000.0
+    terminal_scale: 10.0
+    n_sqp: 2
+    k_att: 4.0
+    k_rate: 4.0
+    k_unload: 0.05
+    torque_margin: 0.8
+    sigma_margin: 1.15
+    horizon:
+      - {n: 6, dt: 0.2}
+      - {n: 4, dt: 0.5}
+      - {n: 4, dt: 1.0}
+  # E2-B1 唯一新增的控制目标项（不影响 B0）
+  mpc_priority:
+    enabled: true
+    aero_authority_frac: 0.9
+    H_soft_frac: 0.75
+    r_growth_scale: 1.0
+    r_growth: 0.5
+
+modes:
+  A:
+    label: "A 仅气动舵面（CMG 在真值模型中断开）"
+    actuators: {mode: surface_only}
+  B:
+    label: "B 气动舵面 + CMG（统一 MPC 联合优化）"
+    actuators: {mode: surface_cmg}
+
+cases:
+  c1:
+    label: "C1 任务：100 km 顶点，5 deg 俯仰余弦脉冲 @105 s / 10 s，M_d = 20+15sin N·m"
+    scenario: {name: c1, vertex_km: 100.0, T: 200.0}
+    trajectory3:
+      maneuver:
+        - {axis: pitch, start: 105.0, duration: 10.0, delta_deg: 5.0, shape: bump}

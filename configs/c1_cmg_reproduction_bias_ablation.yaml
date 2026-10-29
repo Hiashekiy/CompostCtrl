@@ -1,0 +1,104 @@
+# =====================================================================
+# E1 诊断实验：扰动偏置消融（持续 20 N·m 偏置是不是 CMG 失效的主要诱因？）
+# =====================================================================
+# 与 configs/c1_cmg_reproduction.yaml 完全相同，**只改俯仰扰动的常数项**：
+#
+#   c1        : M_d = 20 + 15 sin(2*pi*0.05 t)   净角冲量 4000 N·m·s（正式 A/B 的任务）
+#   c1_sin_only: M_d =      15 sin(2*pi*0.05 t)   200 s 内正弦整周期，净角冲量 0
+#
+# 参考姿态、初值、弹道、大气、舵机、CMG 硬件、控制器权重、预测时域、统计窗口
+# 一律不动；E1-A / E1-B 直接复用正式 A/B 已冻结的结果，不重跑、不覆盖。
+#
+#   python scripts/e1_bias_ablation.py --run      # 跑 E1-C（仅舵面）与 E1-D（舵面+CMG）
+#   python scripts/e1_bias_ablation.py --analyze  # 四组指标与记录
+# =====================================================================
+base: ../config.yaml
+
+common:
+  environment:
+    backend: msis2
+  simulation:
+    dt_plant: 0.005
+    dt_ctrl: 0.2
+  trajectory:
+    h0: 30000.0
+    period: 240.0
+    V0: 4000.0
+    dVdt: 4.0
+    alpha_trim_deg: 2.0
+  trajectory3:
+    dist_scale_qinf: false
+    dist_pulse_amp: [0.0, 0.0, 0.0]
+    dist_pulse_start: 1.0e9
+    dist_pulse_duration: 1.5
+    heading_deg: 5.0
+    heading_amp_deg: 0.0
+    heading_period: 200.0
+    high_window_km: 90.0
+    maneuver: []
+  vehicle3:
+    # 常数项由各 case 覆盖；这里给出正式 A/B 的任务值
+    Md0: [0.0, 20.0, 0.0]
+    Md_amp: [0.0, 15.0, 0.0]
+    Md_freq: [0.03, 0.05, 0.04]
+  cmg:
+    n: 4
+    beta_deg: 54.7356
+    h0: 50.0
+    gdot_max: 1.5
+    gddot_max: 10.0
+    tau_g: 0.03
+    sigma_floor_frac: 0.30
+  mpc_cmg:
+    q_att: 4000.0
+    q_rate: 50.0
+    r_delta: 1.0
+    r_cmg_transient: 0.05
+    r_cmg_trim: 0.50
+    e_thresh_deg: 0.5
+    M_cmg_box: 61.0
+    H_lim_frac: 0.30
+    H_planner_max: 50.0
+    w_gamma: 5.0
+    w_H: 3.0e-3
+    q_unload_min: 40.0
+    s_delta: 10.0
+    rho_sing: 10000.0
+    terminal_scale: 10.0
+    n_sqp: 2
+    k_att: 4.0
+    k_rate: 4.0
+    k_unload: 0.05
+    torque_margin: 0.8
+    sigma_margin: 1.15
+    horizon:
+      - {n: 6, dt: 0.2}
+      - {n: 4, dt: 0.5}
+      - {n: 4, dt: 1.0}
+
+modes:
+  A:
+    label: "A 仅气动舵面（CMG 在真值模型中断开）"
+    actuators: {mode: surface_only}
+  B:
+    label: "B 气动舵面 + CMG（统一 MPC 联合优化）"
+    actuators: {mode: surface_cmg}
+
+cases:
+  # 正式 A/B 的任务（求解方式与 c1 完全相同，仅用于一致性自检，不必运行）
+  c1_bias:
+    label: "E1-A/B 原始任务：M_d = 20 + 15 sin(2pi0.05t) N·m"
+    scenario: {name: c1_bias, vertex_km: 100.0, T: 200.0}
+    trajectory3:
+      maneuver:
+        - {axis: pitch, start: 105.0, duration: 10.0, delta_deg: 5.0, shape: bump}
+
+  # E1-C / E1-D：只把常数项去掉
+  c1_sin_only:
+    label: "E1-C/D 正弦扰动：M_d = 15 sin(2pi0.05t) N·m（净角冲量 0）"
+    scenario: {name: c1_sin_only, vertex_km: 100.0, T: 200.0}
+    vehicle3:
+      Md0: [0.0, 0.0, 0.0]
+    trajectory3:
+      maneuver:
+        - {axis: pitch, start: 105.0, duration: 10.0, delta_deg: 5.0, shape: bump}

@@ -53,17 +53,25 @@ class Maneuver:
 
     @property
     def peak_rate(self) -> float:
+        if self.shape == "step":
+            return float("inf")
         k = BUMP_PEAK_RATE if self.shape == "bump" else QUINTIC_PEAK_RATE
         return k * abs(self.delta) / self.Tm
 
     @property
     def peak_accel(self) -> float:
+        if self.shape == "step":
+            return float("inf")
         k = BUMP_PEAK_ACC if self.shape == "bump" else QUINTIC_PEAK_ACC
         return k * abs(self.delta) / self.Tm ** 2
 
     def value(self, t: float) -> float:
         if not self.enabled:
             return 0.0
+        if self.shape == "step":
+            # setpoint step: the commanded attitude jumps at t0 and is held.  The
+            # reference has no finite derivative at t0 (see Trajectory3D.omega_ref).
+            return self.delta if t >= self.t0 else 0.0
         s = (t - self.t0) / self.Tm
         if s <= 0.0 or s >= 1.0:
             return 0.0 if self.shape == "bump" else (0.0 if s <= 0.0 else self.delta)
@@ -136,17 +144,30 @@ class Trajectory3D:
                 + self.heading_amp * np.sin(2.0 * np.pi * t / self.heading_period))
 
     # ---- attitude reference ---------------------------------------------
-    def _man(self, t):
-        roll = pitch = yaw = 0.0
+    def _man_parts(self, t):
+        """Manoeuvre contributions split into (smooth, step).
+
+        A step manoeuvre is a *setpoint change*, not a trajectory: its
+        contribution is a constant offset, so it must not enter the reference
+        rate (see omega_ref).
+        """
+        smooth = [0.0, 0.0, 0.0]
+        step = [0.0, 0.0, 0.0]
+        idx = {"roll": 0, "pitch": 1, "yaw": 2}
         for mv in self.maneuvers:
-            v = mv.value(t)
-            if mv.axis == "roll":
-                roll += v
-            elif mv.axis == "pitch":
-                pitch += v
-            elif mv.axis == "yaw":
-                yaw += v
-        return roll, pitch, yaw
+            k = idx.get(mv.axis)
+            if k is None:
+                continue
+            (step if mv.shape == "step" else smooth)[k] += mv.value(t)
+        return smooth, step
+
+    def _man(self, t):
+        s, st = self._man_parts(t)
+        return s[0] + st[0], s[1] + st[1], s[2] + st[2]
+
+    @property
+    def has_step(self) -> bool:
+        return any(mv.shape == "step" and mv.enabled for mv in self.maneuvers)
 
     def roll_ref(self, t):
         return self._man(t)[0]
@@ -165,7 +186,29 @@ class Trajectory3D:
                                             self.yaw_ref(t)))
 
     def omega_ref(self, t, eps=2e-3):
-        dq = quat_mul(quat_conj(self.q_ref(t - 0.5 * eps)), self.q_ref(t + 0.5 * eps))
+        """Reference body rate.
+
+        For smooth manoeuvres this is the derivative of q_ref.  For a step
+        manoeuvre the commanded attitude jumps at t0, so the reference has no
+        finite derivative there; the physically meaningful target is "reach the
+        new attitude and stop", i.e. the step offset is frozen at its value at t
+        and only the smooth part (flight-path angle / heading) is differentiated.
+        """
+        if not self.has_step:
+            dq = quat_mul(quat_conj(self.q_ref(t - 0.5 * eps)), self.q_ref(t + 0.5 * eps))
+            if dq[0] < 0.0:
+                dq = -dq
+            return 2.0 * dq[1:4] / eps
+        smooth, step_now = self._man_parts(t)
+
+        def q(tau):
+            s, _ = self._man_parts(tau)
+            return quat_normalize(euler_to_quat(
+                s[0] + step_now[0],
+                self.gamma(tau) + self.alpha_trim + s[1] + step_now[1],
+                self.heading(tau) + s[2] + step_now[2]))
+
+        dq = quat_mul(quat_conj(q(t - 0.5 * eps)), q(t + 0.5 * eps))
         if dq[0] < 0.0:
             dq = -dq
         return 2.0 * dq[1:4] / eps

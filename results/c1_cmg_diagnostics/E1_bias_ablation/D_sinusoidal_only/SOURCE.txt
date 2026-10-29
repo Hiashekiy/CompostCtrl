@@ -1,0 +1,2 @@
+raw artefacts: results\c1_cmg_diagnostics\E1_bias_ablation\c1_sin_only\B
+(not copied; the formal A/B data is read-only)

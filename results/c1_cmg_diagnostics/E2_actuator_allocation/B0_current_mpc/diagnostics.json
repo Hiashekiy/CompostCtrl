@@ -1,0 +1,77 @@
+{
+  "arm": "E2-B0 当前统一 MPC",
+  "rmse": 69.4818438645126,
+  "peak": 178.30879270825903,
+  "high_rmse": 70.68459704287199,
+  "high_peak": 146.43415395674018,
+  "sat": 0.45754245754245754,
+  "travel": 1.0236515218753446,
+  "H_peak": 97.62437843838933,
+  "H_end": 80.40038928879883,
+  "H_growth_peak": 49.43045332499999,
+  "H_growth_time": 107.8,
+  "sigma": 2.759747736553519,
+  "torque_peak": 114.04320733812688,
+  "fb": 462,
+  "fb_longest": 462,
+  "solve_mean": 338.2467228772033,
+  "solve_p95": 600.6794999993872,
+  "solve_max": 1499.4978999893647,
+  "split_all": {
+    "window": [
+      0.0,
+      200.0
+    ],
+    "n_steps": 1001,
+    "mean_aero_opposing_Nm": 17.52138532,
+    "mean_cmg_opposing_Nm": -9.73659434e-07,
+    "share_aero": 0.9994459797741826,
+    "share_aero_mean": 0.9652361983729015,
+    "frac_cmg_useful": 0.209,
+    "share_cmg": 0.0005540202258174087
+  },
+  "split_high": {
+    "window": [
+      90.4,
+      149.6
+    ],
+    "n_steps": 297,
+    "mean_aero_opposing_Nm": 11.83657874,
+    "mean_cmg_opposing_Nm": 0.01610451626,
+    "share_aero": 0.9947196383649034,
+    "share_aero_mean": 0.9161802114264476,
+    "frac_cmg_useful": 0.18181818181818182,
+    "share_cmg": 0.005280361635096598
+  },
+  "split_post": {
+    "window": [
+      110.0,
+      200.0
+    ],
+    "n_steps": 451,
+    "mean_aero_opposing_Nm": 25.45402628,
+    "mean_cmg_opposing_Nm": 0.002082432379,
+    "share_aero": 0.9961350754442203,
+    "share_aero_mean": 0.9513579599361369,
+    "frac_cmg_useful": 0.3991130820399113,
+    "share_cmg": 0.003864924555779692
+  },
+  "balance_clean": {
+    "window": [
+      0.0,
+      105.0
+    ],
+    "residual_rms_Nm": 30.308080330453627,
+    "torque_rms_Nm": 30.356079176651647,
+    "max_abs_rate_deg_s": 0.6465627191606058
+  },
+  "balance_tail": {
+    "window": [
+      110.0,
+      200.0
+    ],
+    "residual_rms_Nm": 2894.1053547850106,
+    "torque_rms_Nm": 7646.929283074511,
+    "max_abs_rate_deg_s": 61.56630084393331
+  }
+}
