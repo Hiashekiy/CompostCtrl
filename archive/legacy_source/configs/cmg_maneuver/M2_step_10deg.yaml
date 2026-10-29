@@ -1,0 +1,12 @@
+# M2-step —— 100 km 顶点，10° 俯仰**阶跃**参考（核心对比）
+#
+# 阶跃参考版本：参考姿态在 t0 = 118 s 直接跳到 θ0+Δθ 并保持（没有斜坡），
+# 因此"机动完成时间"不再被参考斜坡卡住，可以直接比较两组的最快到位能力。
+# 参考在 t0 处不可导，控制器的参考角速度取"阶跃偏置冻结 + 只对平滑部分求导"
+# （nearspace/trajectory3.py::omega_ref），即目标是把新姿态稳住。
+#
+#   python scripts/run_cmg_maneuver_ab.py --config configs/cmg_maneuver/M2_step_10deg.yaml
+#
+base: common.yaml
+
+selected_case: M2_step_10deg
