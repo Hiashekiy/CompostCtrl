@@ -48,6 +48,14 @@ class PlantSpec:
     inertia: Inertia = field(default_factory=Inertia)
     aero: AeroSpec = field(default_factory=AeroSpec)
     cmg: CMGSpec = field(default_factory=CMGSpec)
+    _cluster: "PyramidCMG | None" = field(default=None, init=False, repr=False, compare=False)
+
+    @property
+    def cluster(self) -> "PyramidCMG":
+        """缓存的 CMG 模型（每周期要调用上千次，重复构造会拖慢 5–10 倍）。"""
+        if self._cluster is None:
+            self._cluster = PyramidCMG(self.cmg)
+        return self._cluster
 
 
 def unpack(x):
@@ -56,41 +64,38 @@ def unpack(x):
 
 def predicted_torque(x, delta, gamma, gdot, env: FlightEnv, spec: PlantSpec) -> np.ndarray:
     """给定被执行的实际偏角/框架角/框架角速度时的总力矩（分配器与 plant 共用）。"""
-    cmg = PyramidCMG(spec.cmg)
-    return (aero_moment(x[0:4], x[4:7], delta, env.V_ned, env.rho, spec.aero)
-            + cmg.torque(gamma, gdot))
+    _, Mc = spec.cluster.momentum_and_torque(gamma, gdot)
+    return (aero_moment(x[0:4], x[4:7], delta, env.V_ned, env.rho, spec.aero) + Mc)
 
 
 def torque_terms(x, env: FlightEnv, spec: PlantSpec) -> dict:
     """真实动力学里实际起作用的分项力矩（用于日志三路对照）。"""
     _, omega, delta, gamma, gdot = unpack(x)
-    cmg = PyramidCMG(spec.cmg)
+    H, Mc = spec.cluster.momentum_and_torque(gamma, gdot)
     Ma = aero_moment(x[0:4], omega, delta, env.V_ned, env.rho, spec.aero)
-    Mc = cmg.torque(gamma, gdot)
-    return {"M_aero": Ma, "M_cmg": Mc, "M_cmg_momentum": cmg.momentum(gamma),
+    return {"M_aero": Ma, "M_cmg": Mc, "M_cmg_momentum": H,
             "M_dist": np.asarray(env.M_dist, dtype=float), "M_total": Ma + Mc}
 
 
 def dynamics(x, u, env: FlightEnv, spec: PlantSpec) -> np.ndarray:
     q, omega, delta, gamma, gdot = unpack(x)
     J = spec.inertia.J
-    cmg = PyramidCMG(spec.cmg)
     dx = np.empty(NX)
     dx[0:4] = 0.5 * quat_mul(q, np.array([0.0, omega[0], omega[1], omega[2]]))
-    Hc = cmg.momentum(gamma)
+    Hc, Mc = spec.cluster.momentum_and_torque(gamma, gdot)
     Mtot = (aero_moment(q, omega, delta, env.V_ned, env.rho, spec.aero)
-            + cmg.torque(gamma, gdot) + np.asarray(env.M_dist, dtype=float))
+            + Mc + np.asarray(env.M_dist, dtype=float))
     dx[4:7] = spec.inertia.Jinv @ (-np.cross(omega, J @ omega + Hc) + Mtot)
     dx[7:10] = (u[0:3] - delta) / spec.aero.tau_s
     dx[10:14] = gdot
-    dx[14:18] = cmg.gimbal_derivative(gdot, u[3:7])
+    dx[14:18] = spec.cluster.gimbal_derivative(gdot, u[3:7])
     return dx
 
 
 def limit_commands(x, u, spec: PlantSpec, dt: float) -> np.ndarray:
     """把指令投影到当前周期的可达集（舵面幅值/速率、框架角速度/加速度/行程）。"""
     delta, gamma, gdot = x[7:10], x[10:14], x[14:18]
-    cmg = PyramidCMG(spec.cmg)
+    cmg = spec.cluster
     out = np.array(u, dtype=float).reshape(NU)
     out[0:3] = limit_delta_command(delta, out[0:3], spec.aero)
     out[3:7] = cmg.limit_gdot_command(gamma, gdot, out[3:7], dt)
@@ -101,7 +106,7 @@ def post_step(x, spec: PlantSpec) -> np.ndarray:
     out = np.array(x, dtype=float)
     out[0:4] = quat_normalize(out[0:4])
     out[7:10] = clamp_delta(out[7:10], spec.aero)
-    g, gd = PyramidCMG(spec.cmg).clamp_state(out[10:14], out[14:18])
+    g, gd = spec.cluster.clamp_state(out[10:14], out[14:18])
     out[10:14] = g
     out[14:18] = gd
     return out

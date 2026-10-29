@@ -9,7 +9,12 @@ search:
   step_s: 0.5                 # 搜索预测步长（§4.1 候选）
   horizon_s: 30.0             # 预测窗口
   max_expansions: 400         # 每周期节点展开上限
-  max_search_time_ms: 60.0    # 每周期搜索时间预算（控制周期 200 ms，留 140 ms 给分配与积分）
+  max_search_time_ms: 60.0    # 每周期**图搜索**时间预算（控制周期 200 ms）
+  # 实测代价模型（阶段 4，n=60 层）：约 1.0 ms/节点展开（9 邻居 × 支撑函数筛选），
+  # 到达第 60 层至少 60 次展开 ≈ 60 ms；带绕行的路径会超预算并报 timeout。
+  # 未来需求整链重算实测 40–56 ms，故按 demand_refresh_s 复用（见下）。
+  demand_refresh_s: 1.0       # 未来需求重算周期（已知参考，允许复用并前移窗口）
+  predict_substeps: 2         # 需求预测的积分子步（步长 0.5 s 内）
 
   # 历史路径复用（D 组）
   reuse_path: true

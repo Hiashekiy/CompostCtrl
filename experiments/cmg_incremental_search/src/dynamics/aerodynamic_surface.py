@@ -46,11 +46,15 @@ class AeroSpec:
 
     @property
     def delta_max(self) -> np.ndarray:
-        return np.deg2rad(np.asarray(self.delta_max_deg, dtype=float))
+        return self._delta_max
 
     @property
     def delta_dot_max(self) -> np.ndarray:
-        return np.deg2rad(np.asarray(self.delta_dot_max_deg_s, dtype=float))
+        return self._delta_dot_max
+
+    def __post_init__(self):
+        self._delta_max = np.deg2rad(np.asarray(self.delta_max_deg, dtype=float))
+        self._delta_dot_max = np.deg2rad(np.asarray(self.delta_dot_max_deg_s, dtype=float))
 
     @classmethod
     def from_dict(cls, cfg: dict) -> "AeroSpec":
@@ -96,8 +100,19 @@ def aero_coeffs(q, omega, delta, V_ned, rho, spec: AeroSpec):
 
 
 def aero_moment(q, omega, delta, V_ned, rho, spec: AeroSpec) -> np.ndarray:
-    Q = q_inf(rho, float(np.linalg.norm(np.asarray(V_ned, dtype=float))))
-    Cl, Cm, Cn = aero_coeffs(q, omega, delta, V_ned, rho, spec)
+    Vn = np.asarray(V_ned, dtype=float)
+    V = float(np.linalg.norm(Vn))
+    alpha, beta, V = flow_angles(q, omega, Vn)
+    p, qq, r = np.asarray(omega, dtype=float)
+    de, da, dr = np.asarray(delta, dtype=float)
+    chat = spec.cbar / (2.0 * max(V, 1.0))
+    bhat = spec.b / (2.0 * max(V, 1.0))
+    Cl = (spec.Cl_beta * beta + spec.Cl_p * p * bhat + spec.Cl_r * r * bhat
+          + spec.Cl_da * da + spec.Cl_dr * dr)
+    Cm = (spec.Cm0 + spec.Cm_alpha * alpha + spec.Cm_q * qq * chat + spec.Cm_de * de)
+    Cn = (spec.Cn_beta * beta + spec.Cn_p * p * bhat + spec.Cn_r * r * bhat
+          + spec.Cn_da * da + spec.Cn_dr * dr)
+    Q = 0.5 * rho * V * V
     return Q * spec.S * np.array([spec.b * Cl, spec.cbar * Cm, spec.b * Cn])
 
 

@@ -100,10 +100,15 @@ class Inertia:
     Jy: float = 8500.0
     Jz: float = 9000.0
 
+    def __post_init__(self):
+        # 热路径里每个动力学调用都要用 J / Jinv，构造一次即可
+        self._J = np.diag([self.Jx, self.Jy, self.Jz])
+        self._Jinv = np.diag([1.0 / self.Jx, 1.0 / self.Jy, 1.0 / self.Jz])
+
     @property
     def J(self) -> np.ndarray:
-        return np.diag([self.Jx, self.Jy, self.Jz])
+        return self._J
 
     @property
     def Jinv(self) -> np.ndarray:
-        return np.diag([1.0 / self.Jx, 1.0 / self.Jy, 1.0 / self.Jz])
+        return self._Jinv

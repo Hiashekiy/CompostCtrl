@@ -37,6 +37,16 @@ class CMGSpec:
     tau_g: float = 0.03         # s 框架角速度环时间常数
     travel_deg: float = 90.0    # 有限机械行程 ±90°
     rotor_rpm: float = 6000.0
+    sigma_floor_frac: float = 0.30   # 奇异地板占家位 sigma_min 的比例
+
+    @property
+    def home_sigma_min(self) -> float:
+        """家位（gamma=0）的解析奇异值 h0*sqrt(2/3)（beta=arcsin(sqrt(2/3)) 时精确）。"""
+        return float(self.h0 * np.sqrt(2.0 / 3.0))
+
+    @property
+    def sigma_floor(self) -> float:
+        return float(self.sigma_floor_frac * self.home_sigma_min)
 
     @property
     def beta(self) -> float:
@@ -79,6 +89,13 @@ class PyramidCMG:
 
     def torque(self, gamma, gdot) -> np.ndarray:
         return -self.jacobian(gamma) @ np.asarray(gdot, dtype=float)
+
+    def momentum_and_torque(self, gamma, gdot):
+        """一次算好 spin_axes，同时返回 (H, M)。热路径用，避免重复构造 (3,n) 数组。"""
+        s = self.spin_axes(gamma)
+        H = self.spec.h0 * s.sum(axis=1)
+        A = self.spec.h0 * _cross3(self.g_axis, s)
+        return H, -A @ np.asarray(gdot, dtype=float)
 
     # ---- 性能指标 -------------------------------------------------------
     @staticmethod

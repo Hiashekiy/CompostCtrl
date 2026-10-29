@@ -49,6 +49,7 @@ cmg:
   tau_g: 0.03           # s
   travel_deg: 90.0      # ±90° 有限行程（阶段 1 决策）
   rotor_rpm: 6000.0
+  sigma_floor_frac: 0.30   # 奇异地板 = 0.30 × 家位 sigma_min (40.82) = 12.25 N m s
 
 control:
   # 增益必须与实际力矩权限匹配：100 km 处 CMG 保证力矩 61 N m、气动约 11 N m。
