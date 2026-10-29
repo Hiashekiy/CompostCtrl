@@ -62,6 +62,7 @@ class WarmStartReplanner:
         self.last_verified: bool = False
         self.stats = WarmStartStats()
         self.max_full_replans = int(search_cfg.get("max_full_replans", 3))
+        self._consecutive_failures = 0
         self.repair_ratio = float(search_cfg.get("local_repair_budget_ratio", 0.8))
         self.explore_ratio = float(search_cfg.get("exploration_budget_ratio", 0.2))
         self.reuse_enabled = bool(search_cfg.get("reuse_path", True))
@@ -131,8 +132,10 @@ class WarmStartReplanner:
 
     # ---- 内部 -----------------------------------------------------------
     def _full_replan(self, x, t, ref, reason: str, demand=None) -> SearchResult:
-        if self.stats.full_replans >= self.max_full_replans and self.last_path is not None:
-            # 已达重搜上限：明确返回失败，由 runner 停迁移 + 安全回退（§7.3）
+        # 上限只针对**连续失败**的完整重搜；成功一次就清零，否则关掉路径复用后
+        # 前 3 个周期之后永远不允许重搜（阶段 8 消融实测：回退 297/300）。
+        if (self._consecutive_failures >= self.max_full_replans
+                and self.last_path is not None):
             return SearchResult(status="no_path", gdot_ref=np.zeros(self.astar.cmg.spec.n),
                                 diagnostics={"warm_start": {"mode": "replan-capped",
                                                             "reason": reason}})
@@ -147,7 +150,10 @@ class WarmStartReplanner:
         self.stats.full_replans += 1
         self.stats.replan_time_ms += 1e3 * (time.perf_counter() - t0)
         if self._ok(res):
+            self._consecutive_failures = 0
             self._remember(res, t)
+        else:
+            self._consecutive_failures += 1
         res.diagnostics["warm_start"] = {"mode": "full_replan", "reason": reason}
         return res
 

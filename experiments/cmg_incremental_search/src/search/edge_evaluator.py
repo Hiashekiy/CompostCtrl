@@ -47,6 +47,9 @@ class EdgeWeights:
     # 都会被判死（阶段 7 实测 C 组 252/300 周期 no_path），搜索退化为"停止迁移"，
     # 也就无法检验"构型路径能否降低缺口"这一核心假设。
     gap_hard_tol: float = 600.0    # 仅拦截病态缺口（10 倍保证力矩），默认几乎不生效
+    # 未来能力项的口径：support = 执行器约束下的力矩可实现性（本实验主张的做法）；
+    # sigma = 只用静态 sigma_min 替代（消融"去掉未来控制能力项"时用）
+    future_mode: str = "support"
 
     @classmethod
     def from_dict(cls, cfg: dict) -> "EdgeWeights":
@@ -153,6 +156,10 @@ class EdgeEvaluator:
         if hit is not None:
             return hit
         total, wsum = 0.0, 0.0
+        if self.w.future_mode == "sigma":       # 消融：用静态奇异值代替可实现性评估
+            deficit = self.singularity_cost(idx)
+            self._node_future[key] = float(deficit)
+            return float(deficit)
         for j in range(0, self.demand.n, self.sample_stride):
             _mu, gap = self._support_gap(idx, j)
             total += self.demand.weight[j] * (gap / self.w.tau_scale) ** 2

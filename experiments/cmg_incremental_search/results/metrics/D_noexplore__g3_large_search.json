@@ -1,0 +1,15 @@
+{
+  "search_status_counts": {
+    "repaired": 25,
+    "warm": 275
+  },
+  "warm_start": {
+    "reuse_hits": 274,
+    "repairs": 25,
+    "full_replans": 1,
+    "invalid_paths": 0,
+    "reuse_rate": 0.9133333333333333,
+    "reuse_time_ms_mean": 70.1970000004389,
+    "replan_time_ms_mean": 58.792857695012714
+  }
+}
