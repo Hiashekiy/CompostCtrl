@@ -1,0 +1,41 @@
+{
+  "plant": "P0",
+  "mode": "B0",
+  "t_start": 90.0,
+  "t_end": 150.0,
+  "dt_ctrl": 0.2,
+  "n_steps": 300,
+  "window": null,
+  "rmse_deg": {
+    "all": 0.07052469709289341,
+    "pre": null,
+    "maneuver": null,
+    "post": null
+  },
+  "max_err_deg": {
+    "all": 0.09040578353615858,
+    "pre": null,
+    "maneuver": null,
+    "post": null
+  },
+  "cpu_s": {
+    "mean": 0.06866944599950027,
+    "p95": 0.13433154999875122,
+    "max": 3.5002643000043463,
+    "total": 20.60083379985008
+  },
+  "fallback_steps": 1,
+  "fallback_ratio": 0.0033333333333333335,
+  "iterations": {
+    "mean": 15.426666666666666,
+    "max": 600
+  },
+  "max_violation": 2.8697964548703983e-05,
+  "tau_bound_used_mean": 0.0,
+  "H_norm_max": 2.9961760074402117,
+  "sigma_min_min": 40.30265507147126,
+  "status_counts": {
+    "Maximum_Iterations_Exceeded|previous": 1,
+    "Solve_Succeeded": 299
+  }
+}

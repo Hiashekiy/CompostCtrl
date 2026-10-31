@@ -233,7 +233,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cases", default=None, help="comma separated, default all")
     ap.add_argument("--plant", default=None)
+    ap.add_argument("--root", default="results/torque_gap")
+    ap.add_argument("--fig-root", default="figures/torque_gap")
     args = ap.parse_args()
+    global RES, FIG
+    RES = (ROOT / args.root) if not Path(args.root).is_absolute() else Path(args.root)
+    FIG = (ROOT / args.fig_root) if not Path(args.fig_root).is_absolute() \
+        else Path(args.fig_root)
     FIG.mkdir(parents=True, exist_ok=True)
     keep = {c.strip().upper() for c in args.cases.split(",")} if args.cases else None
 

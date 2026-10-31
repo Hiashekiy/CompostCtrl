@@ -45,7 +45,9 @@ def set_path(dst: dict, path: str, value):
 def build_config(args):
     from nearspace.config import read_yaml, _to_ns
     name = CASES.get(args.case.upper(), args.case)
-    path = ROOT / "configs" / "torque_gap" / "cases" / ("%s.yaml" % name)
+    path = Path(args.config_root) / ("%s.yaml" % name)
+    if not path.is_absolute():
+        path = ROOT / path
     if not path.exists():
         raise SystemExit("unknown case %r (%s)" % (args.case, path))
     raw = read_yaml(str(path))
@@ -79,6 +81,10 @@ def main():
                     help="extra config override key=value (repeatable)")
     ap.add_argument("--tag", default="")
     ap.add_argument("--out", default=None, help="explicit output directory")
+    ap.add_argument("--config-root", default="configs/torque_gap/cases",
+                    help="directory holding the case YAMLs")
+    ap.add_argument("--results-root", default="results/torque_gap",
+                    help="root directory for the run output")
     args = ap.parse_args()
 
     from nearspace.config import dump
@@ -93,7 +99,9 @@ def main():
     cl = ClosedLoop(scn, ocp=ocp, plant=args.plant)
     name = "%s_%s_%s%s" % (args.case.upper(), args.mode.upper(),
                            args.plant.upper(), ("_" + args.tag) if args.tag else "")
-    out_dir = Path(args.out) if args.out else ROOT / "results" / "torque_gap" / name
+    root = Path(args.results_root)
+    root = root if root.is_absolute() else ROOT / root
+    out_dir = Path(args.out) if args.out else root / name
     os.makedirs(out_dir, exist_ok=True)
     print("[run] %s  mode=%s plant=%s nodes=%d horizon=%.1fs steps=%d"
           % (name, scn.mode, cl.plant, ocp.N, scn.rel_times[-1], cl.n_steps))

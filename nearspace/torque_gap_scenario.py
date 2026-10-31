@@ -113,8 +113,17 @@ class Scenario:
         self.dt_ctrl = float(tg_cfg(cfg, "dt_ctrl", default=0.2))
         self.mode = str(tg_cfg(cfg, "mode", default="B0")).upper()
         self.lambda_cfg = float(tg_cfg(cfg, "lambda_cfg", default=1.0))
-        self.gamma_lim = (np.deg2rad(float(tg_cfg(cfg, "gamma_min_deg", default=-90.0))),
-                          np.deg2rad(float(tg_cfg(cfg, "gamma_max_deg", default=90.0))))
+        # gamma in R (unwrapped) or in [gamma_min, gamma_max]
+        gmode = str(tg_cfg(cfg, "gamma_limit", default="bounded")).lower()
+        self.gamma_limit_mode = "none" if gmode in ("none", "unbounded", "free",
+                                                    "inf", "continuous") else "bounded"
+        self.gamma_unbounded = self.gamma_limit_mode == "none"
+        if self.gamma_unbounded:
+            self.gamma_lim = (-np.inf, np.inf)
+        else:
+            self.gamma_lim = (
+                np.deg2rad(float(tg_cfg(cfg, "gamma_min_deg", default=-90.0))),
+                np.deg2rad(float(tg_cfg(cfg, "gamma_max_deg", default=90.0))))
         self.tau_rate_limit = tg_cfg(cfg, "tau_rate_limit", default=None)
         self.rho_fixed = None
         if str(self.auth.mode).lower() == "fixed":

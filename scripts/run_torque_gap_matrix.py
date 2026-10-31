@@ -40,15 +40,20 @@ CONFIGS = [("C1", mode, "P0", ["torque_gap.init.gamma0_deg=[60.0, -60.0, 60.0, -
             "g60") for mode in ("B0", "B1")] + \
           [("C1", mode, "P0", ["torque_gap.init.gamma0_deg=[0.0, 60.0, 0.0, 60.0]"],
             "g0p60") for mode in ("B0", "B1")]
+# unlimited-gimbal arm: same C cases, all three modes, P0
+UNLIMITED = [(c, m, "P0", [], "") for c in ("C0", "C1", "C2", "C3", "C4", "C5")
+             for m in ("B0", "B1", "B2")]
 GROUPS = dict(core=CORE, core_b2=CORE_B2, p1=P1, intensity=INTENSITY,
-              configurations=CONFIGS,
+              configurations=CONFIGS, unlimited=UNLIMITED,
               all=CORE + CORE_B2 + P1 + INTENSITY + CONFIGS)
 
 
-def run_dir(case, mode, plant, tag):
+def run_dir(case, mode, plant, tag, results_root):
     name = "%s_%s_%s%s" % (case.upper(), mode.upper(), plant.upper(),
                            ("_" + tag) if tag else "")
-    return ROOT / "results" / "torque_gap" / name
+    root = Path(results_root)
+    root = root if root.is_absolute() else ROOT / root
+    return root / name
 
 
 def main():
@@ -56,6 +61,9 @@ def main():
     ap.add_argument("--group", default="core", choices=sorted(GROUPS))
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--only", default=None, help="comma separated case names")
+    ap.add_argument("--config-root", default="configs/torque_gap/cases")
+    ap.add_argument("--results-root", default="results/torque_gap")
+    ap.add_argument("--log-tag", default="", help="suffix for matrix_log_<group>_<tag>.json")
     args = ap.parse_args()
     entries = GROUPS[args.group]
     if args.only:
@@ -64,12 +72,14 @@ def main():
     t_all = time.perf_counter()
     done = []
     for case, mode, plant, overrides, tag in entries:
-        out = run_dir(case, mode, plant, tag)
+        out = run_dir(case, mode, plant, tag, args.results_root)
         if (out / "metrics.json").exists() and not args.force:
             print("[skip] %s" % out.name)
             continue
         cmd = [sys.executable, str(ROOT / "scripts" / "run_torque_gap.py"),
-               "--case", case, "--mode", mode, "--plant", plant, "--tag", tag]
+               "--case", case, "--mode", mode, "--plant", plant, "--tag", tag,
+               "--config-root", args.config_root,
+               "--results-root", args.results_root]
         for o in overrides:
             cmd += ["--set", o]
         t0 = time.perf_counter()
@@ -83,7 +93,12 @@ def main():
         if not ok:
             print(proc.stdout[-2000:])
             print(proc.stderr[-3000:])
-    with open(ROOT / "results" / "torque_gap" / ("matrix_log_%s.json" % args.group), "w",
+    log_root = Path(args.results_root)
+    log_root = log_root if log_root.is_absolute() else ROOT / log_root
+    log_root.mkdir(parents=True, exist_ok=True)
+    log_name = "matrix_log_%s%s.json" % (args.group,
+                                         ("_" + args.log_tag) if args.log_tag else "")
+    with open(log_root / log_name, "w",
               encoding="utf-8") as fh:
         json.dump(dict(group=args.group, entries=done,
                        total_wall_s=time.perf_counter() - t_all), fh, indent=2)

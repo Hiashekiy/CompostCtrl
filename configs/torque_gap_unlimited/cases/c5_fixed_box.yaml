@@ -1,0 +1,8 @@
+# Unlimited-gimbal arm: identical to configs/torque_gap/cases/c5_fixed_box.yaml
+# except that the gimbal angle is a continuous, unwrapped variable (gamma in R).
+# EVERY other setting (vehicle, CMG rotor momentum, aero coefficients, reference
+# manoeuvre, disturbance, horizon, solver options, weights, modulation formula)
+# is inherited unchanged through the base chain.
+base: ../../torque_gap/cases/c5_fixed_box.yaml
+torque_gap:
+  gamma_limit: none

@@ -9,7 +9,7 @@ Multiple-shooting NLP over the 11-state model of nearspace.torque_gap_model:
     inequality           tau_min[k] <= tau_a[k] <= tau_max[k]
                          |nu_i[k]| <= gdot_max
                          |nu_i[k] - nu_i[k-1]| <= gddot_max * dt_k
-                         gamma_min <= gamma_i[k] <= gamma_max
+                         gamma is unwrapped: bounded (+-90 deg) or free in R
                          |v_i[k]| <= gdot_max              (capability probe only)
 
     J = J_att + lambda_cfg * J_cfg + J_reg
@@ -319,10 +319,14 @@ class TorqueGapOCP:
         # ---- bounds ----------------------------------------------------
         lbx = np.full(nz, -np.inf)
         ubx = np.full(nz, np.inf)
-        for k in range(N + 1):
-            base = k * nx
-            lbx[base + 7:base + 11] = self.gamma_lim[0]
-            ubx[base + 7:base + 11] = self.gamma_lim[1]
+        if scn.gamma_limit_mode != "none":
+            # gimbal travel is a *position* limit only in the bounded model;
+            # with gamma_limit: none the state stays a free, unwrapped angle and
+            # only the rate / acceleration limits below remain
+            for k in range(N + 1):
+                base = k * nx
+                lbx[base + 7:base + 11] = self.gamma_lim[0]
+                ubx[base + 7:base + 11] = self.gamma_lim[1]
         u_off = nx_tot
         for k in range(N):
             base = u_off + k * nu
@@ -408,8 +412,9 @@ class TorqueGapOCP:
                 X[:, k + 1] = rk4_step_tg(X[:, k], U[:, k], plan["cond"]["tau_d"][k],
                                           float(self.dts[k]), self.scn.prm,
                                           self.scn.cluster)
-                X[7:11, k + 1] = np.clip(X[7:11, k + 1], self.gamma_lim[0],
-                                         self.gamma_lim[1])
+                if not self.scn.gamma_unbounded:
+                    X[7:11, k + 1] = np.clip(X[7:11, k + 1], self.gamma_lim[0],
+                                             self.gamma_lim[1])
             if self._cfg_nodes:
                 # initialise the capability probe with the exact bounded least
                 # squares at the guess configuration (solver aid only)

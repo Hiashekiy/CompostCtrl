@@ -1,0 +1,36 @@
+{
+  "group": "unlimited",
+  "entries": [
+    {
+      "name": "C4_B0_P0",
+      "ok": true,
+      "wall_s": 6.372078799991868
+    },
+    {
+      "name": "C4_B1_P0",
+      "ok": true,
+      "wall_s": 11.09680610000214
+    },
+    {
+      "name": "C4_B2_P0",
+      "ok": true,
+      "wall_s": 6.438257900008466
+    },
+    {
+      "name": "C5_B0_P0",
+      "ok": true,
+      "wall_s": 74.47416569999768
+    },
+    {
+      "name": "C5_B1_P0",
+      "ok": true,
+      "wall_s": 248.22301070000685
+    },
+    {
+      "name": "C5_B2_P0",
+      "ok": true,
+      "wall_s": 83.5576810999919
+    }
+  ],
+  "total_wall_s": 430.16387289999693
+}

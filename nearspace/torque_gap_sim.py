@@ -119,7 +119,8 @@ class ClosedLoop:
             td = self._tau_d(t + (i + 0.5) * h)
             u = np.concatenate([tau_a, nu])
             x = rk4_step_tg(x, u, td, h, self.scn.prm, self.scn.cluster)
-            x[7:11] = np.clip(x[7:11], gamma_lim[0], gamma_lim[1])
+            if not self.scn.gamma_unbounded:
+                x[7:11] = np.clip(x[7:11], gamma_lim[0], gamma_lim[1])
         return x, tau_a.copy(), nu.copy()
 
     def _step_P1(self, x18, tau_a_des, nu_cmd, t):
@@ -147,8 +148,9 @@ class ClosedLoop:
         # limit, so it is applied here exactly as in the P0 plant.  Without this
         # the truth gimbal angle runs away (|gamma| >> pi/2), the measured state
         # leaves the optimiser's gimbal box and every subsequent NLP is infeasible.
-        lim = self.scn.gamma_lim
-        x18n[10:14] = np.clip(x18n[10:14], lim[0], lim[1])
+        if not self.scn.gamma_unbounded:
+            lim = self.scn.gamma_lim
+            x18n[10:14] = np.clip(x18n[10:14], lim[0], lim[1])
         tau_act = aero_moment6c(x18n, p, self.vp)
         return x18n, tau_act, u_act[3:7].copy(), np.asarray(delta_cmd, float), res
 
@@ -220,7 +222,8 @@ class ClosedLoop:
             t = scn.t_start + step * self.dt
             x11 = self._state11(x)
             # the optimiser's gimbal box must contain the measured configuration
-            g_clip = np.clip(x11[7:11], gamma_lim[0], gamma_lim[1])
+            g_clip = (np.clip(x11[7:11], gamma_lim[0], gamma_lim[1])
+                      if not scn.gamma_unbounded else x11[7:11])
             if np.any(g_clip != x11[7:11]):
                 self.gamma_clipped_steps = getattr(self, "gamma_clipped_steps", 0) + 1
                 x11 = x11.copy()
@@ -446,7 +449,9 @@ def write_run(out_dir, cl: ClosedLoop, metrics, cfg, extra_meta=None):
             authority_mode=str(cl.scn.auth.mode),
             authority_calibration=cl.scn.authority_calibration,
             weights=cl.scn.w.as_dict(),
-            gamma_limits_deg=list(np.rad2deg(cl.scn.gamma_lim)),
+            gamma_limit_mode=str(cl.scn.gamma_limit_mode),
+            gamma_limits_deg=(list(np.rad2deg(cl.scn.gamma_lim))
+                              if not cl.scn.gamma_unbounded else "unbounded"),
             c_mg=dict(h0=float(cl.scn.prm.cmg.h0),
                       gdot_max=float(cl.scn.prm.cmg.gdot_max),
                       gddot_max=float(cl.scn.prm.cmg.gddot_max),

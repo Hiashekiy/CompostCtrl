@@ -30,8 +30,10 @@ torque_gap:
     - {n: 4, dt: 1.0}
     - {n: 8, dt: 2.0}
 
-  # gimbal travel is a physical limit; +-90 deg is an explicit first-version
-  # assumption (the legacy CMGParams has no travel field)
+  # Gimbal travel.  `bounded` applies the +-90 deg first-version assumption
+  # (gamma_min_deg/gamma_max_deg); `none` makes gamma a continuous, unwrapped
+  # rotation variable gamma in R (only the rate/acceleration limits remain).
+  gamma_limit: bounded
   gamma_min_deg: -90.0
   gamma_max_deg: 90.0
 
