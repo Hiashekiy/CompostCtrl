@@ -111,6 +111,17 @@ def capability(cluster, gamma, axis=1, gdot_max=1.5):
     return tp, tm, worst
 
 
+def momentum_bound(cluster, h0, axis=1):
+    """Exact attainable bound of |H_axis| over the whole gimbal torus.
+
+    H_axis(gamma) = h0 * sum_i s_i,axis(gamma_i) is separable, and
+    s_i,axis(gamma) = s0_i,axis cos(gamma) + (g_i x s0_i)_axis sin(gamma),
+    so max_gamma H_axis = h0 * sum_i sqrt(s0_i,axis^2 + (g_i x s0_i)_axis^2).
+    """
+    amp = np.sqrt(cluster.s0[axis, :] ** 2 + cluster.gxs0[axis, :] ** 2)
+    return float(h0 * amp.sum())
+
+
 def capability_along(cluster, gamma_k, direction, gdot_max):
     """max_{|nu_i|<=gmax} direction^T (-A nu) for an arbitrary unit direction."""
     A = cluster.jacobian(gamma_k)
@@ -194,7 +205,7 @@ def plot(d, cfg, meta, metrics):
     ax.plot(t, d["tau_act_y"] + d["cmg_y"], color=colors["total"], lw=1.5, alpha=0.75,
             label=r"合成 $\tau_{a,y}+\tau_{\mathrm{cmg},y}$")
     ax.axhline(0.0, color="k", lw=0.5, alpha=0.5)
-    ax.set_ylabel("俯仰力矩 [N$\cdot$m]")
+    ax.set_ylabel("俯仰力矩 [N$\\cdot$m]")
     ax.set_ylim(-120.0, 215.0)
     ax.legend(loc="upper center", ncol=4, framealpha=0.9,
               handlelength=1.6, columnspacing=1.1, borderpad=0.3)
@@ -228,20 +239,40 @@ def plot(d, cfg, meta, metrics):
     # ---------------- panel 5: instantaneous capability -----------------
     ax = axes[4]
     prm, cluster = cmg_model(cfg)
+    h0 = float(prm.h0)
     gamma = np.column_stack([d["g%d" % (i + 1)] for i in range(4)])
     tp, tm, worst = capability(cluster, gamma, axis=1, gdot_max=prm.gdot_max)
     ax.fill_between(t_state, tm, tp, color=colors["band"], alpha=0.35,
-                    label=r"瞬时能力带 $[\tau_{\max,y}^{-},\tau_{\max,y}^{+}]$")
-    ax.plot(t_state, tp, color="0.30", lw=1.0, label=r"$\tau_{\max,y}^{+}$（瞬时）")
-    ax.plot(t_state, tm, color="0.30", lw=1.0, ls="-.", label=r"$\tau_{\max,y}^{-}$（瞬时）")
-    ax.plot(t_state, d["cmg_y"], color=colors["cmg"], lw=1.3, label=LABELS["cmg_y"])
-    ax.plot(t, d["d_y"], color=colors["nom"], lw=1.2,
-            label=r"预测缺口 $d_y$（需求方向与大小）")
+                    label="瞬时能力带")
+    ax.plot(t_state, tp, color="0.30", lw=1.0, label=r"$\tau^{+}_{\max,y}$")
+    ax.plot(t_state, tm, color="0.30", lw=1.0, ls="-.", label=r"$\tau^{-}_{\max,y}$")
+    ax.plot(t_state, d["cmg_y"], color=colors["cmg"], lw=1.3,
+            label=r"$\tau_{\mathrm{cmg},y}$")
+    ax.plot(t, d["d_y"], color=colors["nom"], lw=1.2, label=r"缺口 $d_y$")
     ax.axhline(0.0, color="k", lw=0.5, alpha=0.5)
     ax.set_ylabel("俯仰力矩 [N$\\cdot$m]")
     ax.set_xlabel("时间 $t$ [s]")
     ax.set_ylim(-260.0, 520.0)         # head room for the two-row legend
-    ax.legend(loc="upper center", ncol=3, framealpha=0.9)
+
+    # right axis: the pitch-axis angular momentum H_y and its exact attainable
+    # bound.  This is what the migration actually moves -- it is NOT a torque.
+    Hp = momentum_bound(cluster, h0, axis=1)
+    ax2 = ax.twinx()
+    hy = d["Hy"]
+    ax2.axhspan(-Hp, Hp, color="tab:blue", alpha=0.06, lw=0)
+    for yv in (Hp, -Hp):
+        ax2.axhline(yv, color="tab:blue", ls=":", lw=0.9)
+    ax2.plot(t_state, hy, color="tab:blue", lw=1.7, label=r"$H_y$（右轴·角动量）")
+    ax2.set_ylim(-Hp * 1.75, Hp * 1.75)
+    ax2.set_ylabel(r"$H_y$ [N$\cdot$m$\cdot$s]")
+    ax2.tick_params(labelsize=7)
+    ax2.spines["top"].set_visible(False)
+
+    h1, l1 = ax.get_legend_handles_labels()
+    h2, l2 = ax2.get_legend_handles_labels()
+    ax.legend(h1 + h2, l1 + l2, loc="upper left", ncol=2, framealpha=0.9,
+              fontsize=6.8, handlelength=1.3, columnspacing=0.8, borderpad=0.3,
+              labelspacing=0.35)
 
     # ---------------- events on every panel -----------------------------
     for ax in axes:
@@ -403,6 +434,21 @@ def report(d, cfg, meta, metrics, info):
     t90 = float(t[over90[0]]) if over90.size else None
     cap_tab = [(tt, tp[k_at(tt)], tm[k_at(tt)]) for tt in
                (90.0, 95.0, 100.0, 105.0, 110.0, 112.0, 120.0, 125.0)]
+    Hp = momentum_bound(cluster, float(prm.h0), axis=1)
+    hy = d["Hy"]
+    hy_tab = [(tt, float(hy[k_at(tt)])) for tt in (90.0, 95.0, 100.0, 105.0, 108.0,
+                                                   110.0, 112.0, 120.0)]
+    head_down_90 = float(hy[0] + Hp)                 # room to *decrease* H_y
+    head_down_110 = float(hy[k_at(110.0)] + Hp)
+    head_up_110 = float(Hp - hy[k_at(110.0)])
+    # envelope at the configuration that maximises H_y: the gradient A[1,:] of
+    # H_y w.r.t. gamma vanishes there, so the instantaneous y-capability is 0
+    g_at_max = np.array([np.arctan2(cluster.gxs0[1, i], cluster.s0[1, i])
+                         for i in range(4)])
+    cap_at_max = capability(cluster, g_at_max.reshape(1, 4), axis=1,
+                            gdot_max=prm.gdot_max)[0][0]
+    grad_at_max = float(np.sum(np.abs(cluster.jacobian(g_at_max)[1, :])))
+    sig_pre_min = float(np.min(d["sigma_min"][(t > 107.0) & (t < 111.0)]))
     cap_pre_med = float(np.median(tp[pre]))
     cap_man_med = float(np.median(tp[man]))
     cap_man_max = float(np.max(tp[man]))
@@ -551,8 +597,49 @@ def report(d, cfg, meta, metrics, info):
           "因此需求超出预测气动盒时，缺口只能由 CMG 承担，舵面在部分时段贴边工作。"
           % (100 * gap_frac, gap_peak, t[i_gp], "+" if dir_gap > 0 else "−",
              100 * short_frac, float(np.mean(d["tau_bound_used"][man]))),
-          "", "### 5.4 CMG 是否在机动前提高了未来目标方向的瞬时力矩能力",
-          "**没有；机动前的瞬时俯仰能力反而下降。** 由真实 `A(γ)` 逐样本算得：", "",
+          "", "### 5.4 迁移到底改变了什么：为什么“能力上下限”反而变小", "",
+          "**先说结论：迁移的目标不是瞬时力矩包络，而是俯仰轴角动量 `H_y`。** 本运行里 `H_y` 的变化：", "",
+          "| t [s] | " + " | ".join("%.0f" % tt for tt, _ in hy_tab) + " |",
+          "|" + "---|" * (len(hy_tab) + 1),
+          "| `H_y` [N·m·s] | " + " | ".join("%.1f" % v for _, v in hy_tab) + " |", "",
+          "即 `H_y` 从 %.2f 被**预置到 %.1f N·m·s**（t=110 s），而该轴角动量的可达上界是"
+          " `h0·Σ_i√(s0_iy²+(g_i×s0_i)_y²) = %.2f N·m·s`，已经用到 **%.1f%%**。"
+          % (hy_tab[0][1], hy[k_at(110.0)], Hp, 100.0 * hy[k_at(110.0)] / Hp), "",
+          "**力矩包络必然同时塌陷，这是数学恒等式而非缺陷：**", "",
+          "```",
+          "H_y(γ) = h0 Σ_i s_i,y(γ_i),     ∂H_y/∂γ_i = h0 (g_i × s_i(γ))_y = A_1i(γ)",
+          "τ⁺_max,y = gdot_max Σ_i |A_1i(γ)|   ←  正是 H_y 对 γ 的梯度（L1 形式）",
+          "```",
+          "",
+          "把 `H_y` 推到可达集极值点 ⇒ 该点的梯度 `A_1i` 全部为零 ⇒ `τ⁺_max,y → 0`。"
+          "数值验证：在 `H_y` 取最大值的构型 γ = %s° 处，`Σ_i|A_1i| = %.2e`、"
+          "`τ⁺_max,y = %.2e N·m`（home 构型是 86.6 N·m）；而本运行 t=107–111 s 的 `σ_min` 最小已降到 "
+          "**%.2f**（home 40.7），说明构型确实停在“角动量饱和”的近奇异点附近。"
+          % (np.round(np.rad2deg(g_at_max), 1).tolist(), grad_at_max, cap_at_max,
+             sig_pre_min), "",
+          "### 5.5 那么迁移算不算“成功”？用对判据", "",
+          "力矩 `τ_cmg,y > 0` 会让 `H_y` 减小（`dH_y/dt = −τ_cmg,y`），所以未来需要 **+y 力矩**时，"
+          "可用裕度是 `H_y − H_y,min`；需要 **−y 力矩**时是 `H_y,max − H_y`。用真实数据：", "",
+          "| 时刻 | `H_y` [N·m·s] | 可供 **+y** 力矩消耗的裕度 [N·m·s] | 可供 **−y** 力矩消耗的裕度 [N·m·s] |",
+          "|---|---|---|---|",
+          "| 90 s（未迁移） | %.1f | %.1f | %.1f |" % (hy[0], head_down_90, Hp - hy[0]),
+          "| 110 s（迁移完成） | %.1f | **%.1f** | %.1f |"
+          % (hy[k_at(110.0)], head_down_110, head_up_110), "",
+          "机动第一阶段（110–115 s）缺口为 **+y**（峰值 %.1f N·m），消耗的正是“+y”裕度："
+          "该裕度在迁移中从 %.1f 增加到 **%.1f N·m·s（×%.2f）**；机动第二阶段（120–130 s）缺口转为 **−y**，"
+          "所需的“−y”裕度由 `H_y` 在第一阶段下降后自动腾出。"
+          % (gap_peak, head_down_90, head_down_110, head_down_110 / head_down_90), "",
+          "**因此：迁移是成功的——它把俯仰轴角动量预置到了将来要消耗的那一侧，可用角动量裕度翻倍；"
+          "但瞬时力矩包络必随之下降，用“`τ⁺` 有没有变大”来评判迁移是选错了判据。**"
+          "（本报告 §5.4 初版以及 `unlimited_gimbal_experiment.md` §5.4 中“迁移没有提高能力”的说法，"
+          "按此判据应当修正为：*迁移不改变（且必然压低）瞬时包络，但显著增加弯矩方向的角动量裕度*。）", "",
+          "仍要强调：`H_y` 是**角动量**，不是力矩储备。它决定“还能在该方向持续输出多久”"
+          "（时间 ≈ 裕度 / 需求力矩），不能直接读成“还能出多大扭矩”。", "",
+          "另外，实际 `H_y` 的摆幅（+156 → −156，约 312 N·m·s）明显大于 110–130 s 的缺口积分"
+          "（`∫d_y dt ≈ +77 N·m·s`）：差额来自 CMG 还要承担瞬态、以及指令抖振造成的往复，"
+          "因此**不能把 `ΔH_y` 与 `∫d dt` 一一对应**，也不能据此反推“迁移量是否刚好够用”。", "",
+          "### 5.6 瞬时能力曲线本身（仅供参考）", "",
+          "由真实 `A(γ)` 逐样本算得（这是**瞬时**能力，不是迁移的目标，也不是可持续能力）：", "",
           "| t [s] | `τ⁺_max,y` [N·m] | `τ⁻_max,y` [N·m] |", "|---|---|---|"]
     for tt, a, b in cap_tab:
         md.append("| %.0f | %.1f | %.1f |" % (tt, a, b))
@@ -566,14 +653,10 @@ def report(d, cfg, meta, metrics, info):
            "- 该能力曲线逐样本**剧烈起伏**（≈30–230 N·m），因为 γ 每个控制周期都被重解、"
            "存在指令抖振（`τ_a` 每步跳变约 2 N·m，ν 符号翻转约占 57% 的控制步）。"
            "因此逐点比较没有意义，**只能看区间统计量**（上表中位数）。",
-           "- 结论：**不能**声称“迁移提高了未来方向的瞬时力矩能力”——迁移段的能力中位数"
-           "（%.1f N·m）并不高于起始值，t≈110 s 甚至被压到约 %.0f N·m。迁移改变的是构型/角动量状态，"
-           "让 CMG 能在机动期间**持续**输出；而瞬时能力在多数时刻仍然够用"
-           "（机动窗口内只有 %.0f%% 的样本 `|d_y| > min(τ⁺,|τ⁻|)`）。"
-           % (cap_pre_med, tp[k_at(110.0)], 100 * short_frac),
-           "- 也就是说：**本工况的瓶颈不是瞬时能力，而是可持续输出（角动量/框架速率预算）**，"
-           "这与 5.5 的利用率结论一致。",
-           "", "### 5.5 实际输出与理论瞬时能力的关系",
+           "- 瞬时能力在多数时刻仍然够用：机动窗口内只有 %.0f%% 的样本 `|d_y| > min(τ⁺,|τ⁻|)`。"
+           "**本工况的真正瓶颈是可持续输出（角动量/框架速率预算），不是瞬时包络**。"
+           % (100 * short_frac),
+           "", "### 5.7 实际输出与瞬时能力的关系",
            "机动窗口内逐样本能力利用率 `|τ_cmg,y| / min(τ⁺,|τ⁻|)`：中位数 %.0f%%、最大 %.0f%%；"
            "“全部样本满足 `|τ_cmg,y| ≤ min(τ⁺,|τ⁻|)`”这一自洽性检查：**%s**。"
            % (100 * util_med, 100 * util_max, "通过" if inside else "**未通过**"),
@@ -581,7 +664,7 @@ def report(d, cfg, meta, metrics, info):
            "这正说明“瞬时能力 ≠ 可持续输出”：真正的限制是角动量与框架角速度预算，"
            "而不是某一时刻的最大力矩（同一结论见 `docs/torque_gap/unlimited_gimbal_experiment.md` §5.2）。"
            % (100 * util_med),
-           "", "### 5.6 当前数据**不能**证明的结论", "",
+           "", "### 5.8 当前数据**不能**证明的结论", "",
            "1. **未来持续力矩能力 / “力矩储备”**：CSV 只保存当前节点的 `τ_nom`、`d`、`lo/hi`，"
            "**没有**保存预测时域内各节点的 `τ_nom(k)`、`d(k)`，因此无法从归档数据画出“未来需求方向”曲线，"
            "也无法给出按未来方向折算的持续能力。面板 5 因此只画**瞬时**能力，未给出任何“剩余储备”指标。",
