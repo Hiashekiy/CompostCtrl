@@ -111,8 +111,6 @@ class Scenario:
         self.t_start = float(tg_cfg(cfg, "start", default=0.0))
         self.t_end = float(tg_cfg(cfg, "end", default=100.0))
         self.dt_ctrl = float(tg_cfg(cfg, "dt_ctrl", default=0.2))
-        self.mode = str(tg_cfg(cfg, "mode", default="B0")).upper()
-        self.lambda_cfg = float(tg_cfg(cfg, "lambda_cfg", default=1.0))
         # gamma in R (unwrapped) or in [gamma_min, gamma_max]
         gmode = str(tg_cfg(cfg, "gamma_limit", default="bounded")).lower()
         self.gamma_limit_mode = "none" if gmode in ("none", "unbounded", "free",

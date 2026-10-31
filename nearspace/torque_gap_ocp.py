@@ -2,7 +2,7 @@
 
 Multiple-shooting NLP over the 11-state model of nearspace.torque_gap_model:
 
-    decision variables   X[11, k=0..N], U[7, k=0..N-1], V[4, k=0..N]
+    decision variables   X[11, k=0..N], U[7, k=0..N-1]
     equality             X[:,k+1] = RK4(X[:,k], U[:,k], tau_d[k], dt_k)
                          || q_k || = 1
                          X[:,0] = x_measured
@@ -10,15 +10,15 @@ Multiple-shooting NLP over the 11-state model of nearspace.torque_gap_model:
                          |nu_i[k]| <= gdot_max
                          |nu_i[k] - nu_i[k-1]| <= gddot_max * dt_k
                          gamma is unwrapped: bounded (+-90 deg) or free in R
-                         |v_i[k]| <= gdot_max              (capability probe only)
 
-    J = J_att + lambda_cfg * J_cfg + J_reg
+    J = J_att + J_reg
 
-`V` is the auxiliary configuration-capability probe of the method: it is *not***
-the CMG command, it only measures how well the candidate configuration gamma_k
-could deliver the predicted gap d_k.  With lambda_cfg = 0 (mode B0) the probe is
-dropped from the objective but kept in the constraint set as a bounded variable,
-so the NLP structure is identical in every arm.
+The predicted torque-gap modulation term (J_cfg with its auxiliary capability
+probe `V`) has been REMOVED: measured over the whole C0-C5 x B1/B2 matrix it gave
+no tracking benefit and cost 3x the solver time (see
+docs/torque_gap/modulation_removed_report.md).  tau_nom, R+/R- and d are still
+computed and logged by the scenario layer as **diagnostics only** -- they no
+longer enter the objective, so nothing in this NLP depends on them.
 
 Every cost term is made dimensionless with explicit scales (Weights), and node
 costs are weighted by dt_k / horizon so that refining the grid cannot inflate a
@@ -98,19 +98,17 @@ class OCPResult:
     u0: np.ndarray                 # first applied [tau_a(3), nu(4)]
     X: np.ndarray                  # (11, N+1)
     U: np.ndarray                  # (7, N)
-    V: np.ndarray                  # (4, N+1)
     objective: float
     iter_count: int
     cpu_s: float
     n_vars: int
     n_cons: int
     max_violation: float
-    E_gap: np.ndarray = field(default_factory=lambda: np.zeros(0))
     message: str = ""
 
 
 class TorqueGapOCP:
-    """One CasADi graph per (scenario, grid, mode); re-solved every control step."""
+    """One CasADi graph per (scenario, grid); re-solved every control step."""
 
     def __init__(self, scn):
         ca = _casadi()
@@ -119,10 +117,6 @@ class TorqueGapOCP:
         self.dts = np.asarray(scn.dts, float)
         self.N = int(self.dts.size)
         self.w = scn.w
-        self.mode = str(scn.mode).upper()
-        self.lambda_cfg = 0.0 if self.mode == "B0" else float(scn.lambda_cfg)
-        if not getattr(scn, "cmg_enabled", True):
-            self.lambda_cfg = 0.0      # E_k(v) has no meaning with the CMG frozen
         self.solver_cfg = SolverConfig.from_config(scn.cfg)
         self.gamma_lim = scn.gamma_lim
         self.tau_rate_limit = scn.tau_rate_limit
@@ -133,7 +127,7 @@ class TorqueGapOCP:
         ca = self.ca
         scn = self.scn
         N = self.N
-        nx, nu, nv = 11, 7, 4
+        nx, nu = 11, 7
         prm = scn.prm
         J = np.asarray(prm.J, float)
         Jinv = np.asarray(prm.Jinv, float)
@@ -202,29 +196,26 @@ class TorqueGapOCP:
         # ---- decision vector ------------------------------------------
         nx_tot = nx * (N + 1)
         nu_tot = nu * N
-        nv_tot = nv * (N + 1)
-        nz = nx_tot + nu_tot + nv_tot
+        nz = nx_tot + nu_tot
         Z = ca.SX.sym("Z", nz)
         # CasADi reshape is column-major: Z[s*n + i] is entry i of node s.  The
         # numpy side must therefore reshape with order="F" (see _warm_start/solve).
         X = ca.reshape(Z[0:nx_tot], nx, N + 1)
         U = ca.reshape(Z[nx_tot:nx_tot + nu_tot], nu, N)
-        V = ca.reshape(Z[nx_tot + nu_tot:], nv, N + 1)
 
         # ---- parameters ------------------------------------------------
         p_qref = ca.SX.sym("qref", 4, N + 1)
         p_wref = ca.SX.sym("wref", 3, N)
         p_lo = ca.SX.sym("lo", 3, N)
         p_hi = ca.SX.sym("hi", 3, N)
-        p_d = ca.SX.sym("d", 3, N + 1)
         p_td = ca.SX.sym("td", 3, N)
         p_nuprev = ca.SX.sym("nuprev", 4)
         p_tauprev = ca.SX.sym("tauprev", 3)
         p_xinit = ca.SX.sym("xinit", nx)
         P = ca.vertcat(ca.vec(p_qref), ca.vec(p_wref), ca.vec(p_lo), ca.vec(p_hi),
-                       ca.vec(p_d), ca.vec(p_td), p_nuprev, p_tauprev, p_xinit)
+                       ca.vec(p_td), p_nuprev, p_tauprev, p_xinit)
         self._p_shapes = dict(qref=(4, N + 1), wref=(3, N), lo=(3, N), hi=(3, N),
-                              d=(3, N + 1), td=(3, N), nuprev=(4,), tauprev=(3,),
+                              td=(3, N), nuprev=(4,), tauprev=(3,),
                               xinit=(nx,))
 
         W = self.w
@@ -290,23 +281,6 @@ class TorqueGapOCP:
         J += t_term
         J_terms.append(("terminal", t_term))
 
-        # configuration-capability term
-        cfg_nodes = []
-        if self.lambda_cfg > 0.0:
-            if self.mode == "B2":
-                cfg_nodes = [0]                      # current gap only
-            else:
-                cfg_nodes = list(range(1, N + 1))    # predicted future gaps
-        self._cfg_nodes = cfg_nodes
-        for k in cfg_nodes:
-            wk = (float(self.dts[k]) / H_horizon if k < N else float(self.dts[-1]) / H_horizon)
-            Ak = ca.horzcat(*[h0 * ca.cross(ca.SX(g_axis[:, i]),
-                                           ca.SX(s0[:, i]) * ca.cos(X[7 + i, k])
-                                           + ca.SX(gxs0[:, i]) * ca.sin(X[7 + i, k]))
-                               for i in range(4)])
-            rk = -ca.mtimes(Ak, V[:, k]) - p_d[:, k]
-            J += self.lambda_cfg * wk * ca.dot(rk, rk) / W.d_scale ** 2
-
         # unit-norm quaternion equality at every node
         for k in range(N + 1):
             g_terms.append(ca.dot(X[0:4, k], X[0:4, k]))
@@ -342,7 +316,7 @@ class TorqueGapOCP:
         lbx[v_off:] = -vmax
         ubx[v_off:] = vmax
         self._tau_idx = (u_off, nu, N)
-        self._nz, self._nx_tot, self._nu_tot, self._nv_tot = nz, nx_tot, nu_tot, nv_tot
+        self._nz, self._nx_tot, self._nu_tot = nz, nx_tot, nu_tot
         self._lbx_template = lbx
         self._ubx_template = ubx
         self._g_lb = np.asarray(g_lb, float)
@@ -373,12 +347,11 @@ class TorqueGapOCP:
     # ------------------------------------------------------------------
     def _param_vector(self, plan, x_init, nu_prev, tau_prev):
         N = self.N
-        cond, box, mods = plan["cond"], plan["box"], plan["mod"]
+        cond, box = plan["cond"], plan["box"]
         vals = [np.asarray(cond["q_ref"], float).T,                     # (4, N+1)
                 np.asarray(cond["omega_ref"], float)[:N].T,             # (3, N)
                 np.asarray(box["tau_min"], float)[:N].T,                # (3, N)
                 np.asarray(box["tau_max"], float)[:N].T,                # (3, N)
-                np.asarray(mods["d"], float).T,                         # (3, N+1)
                 np.asarray(cond["tau_d"], float)[:N].T,                 # (3, N)
                 np.asarray(nu_prev, float).reshape(4),
                 np.asarray(tau_prev, float).reshape(3),
@@ -402,7 +375,6 @@ class TorqueGapOCP:
         z = np.zeros(self._nz)
         X = z[0:self._nx_tot].reshape(11, self.N + 1, order="F")
         U = z[self._nx_tot:self._nx_tot + self._nu_tot].reshape(7, self.N, order="F")
-        V = z[self._nx_tot + self._nu_tot:].reshape(4, self.N + 1, order="F")
         if warm is None:
             # cold start: propagate the measured state with the feed-forward torque
             # guess so that the initial guess satisfies the shooting defects
@@ -411,7 +383,6 @@ class TorqueGapOCP:
             tau_guess = np.asarray(plan["mod"]["tau_nom"], float).T   # (3, N+1)
             U[0:3, :] = tau_guess[:, :self.N]
             U[3:7, :] = np.asarray(nu_prev, float)[:, None]
-            V[:, :] = 0.0
             for k in range(self.N):
                 X[:, k + 1] = rk4_step_tg(X[:, k], U[:, k], plan["cond"]["tau_d"][k],
                                           float(self.dts[k]), self.scn.prm,
@@ -419,24 +390,13 @@ class TorqueGapOCP:
                 if not self.scn.gamma_unbounded:
                     X[7:11, k + 1] = np.clip(X[7:11, k + 1], self.gamma_lim[0],
                                              self.gamma_lim[1])
-            if self._cfg_nodes:
-                # initialise the capability probe with the exact bounded least
-                # squares at the guess configuration (solver aid only)
-                from .torque_gap_modulation import capability_residual
-                vmax = float(self.scn.prm.cmg.gdot_max)
-                for k in self._cfg_nodes:
-                    _, v = capability_residual(X[7:11, k], plan["mod"]["d"][k],
-                                               self.scn.cluster, vmax)
-                    V[:, k] = v
         else:
             # shift the previous solution by one node and repeat the last action
-            Xw, Uw, Vw = warm
+            Xw, Uw = warm
             X[:, :-1] = Xw[:, 1:]
             X[:, -1] = Xw[:, -1]
             U[:, :-1] = Uw[:, 1:] if Uw.shape[1] > 1 else Uw[:, :1]
             U[:, -1] = Uw[:, -1]
-            V[:, :-1] = Vw[:, 1:]
-            V[:, -1] = Vw[:, -1]
         # honour the bounds (they change every step)
         x0 = np.asarray(x_init, float)
         X[:, 0] = x0
@@ -473,11 +433,10 @@ class TorqueGapOCP:
 
         X = zsol[0:self._nx_tot].reshape(11, self.N + 1, order="F")
         U = zsol[self._nx_tot:self._nx_tot + self._nu_tot].reshape(7, self.N, order="F")
-        V = zsol[self._nx_tot + self._nu_tot:].reshape(4, self.N + 1, order="F")
         viol = self._max_violation(lbx, ubx, zsol, gsol)
         cpu = time.perf_counter() - t0
         return OCPResult(ok=ok, status=status, u0=U[:, 0].copy(), X=X.copy(),
-                         U=U.copy(), V=V.copy(), objective=obj, iter_count=it,
+                         U=U.copy(), objective=obj, iter_count=it,
                          cpu_s=cpu, n_vars=self.n_vars, n_cons=self.n_cons,
                          max_violation=viol, message=message)
 
@@ -488,13 +447,3 @@ class TorqueGapOCP:
             vc = max(float(np.max(G - self._g_ub)), float(np.max(self._g_lb - G)))
             v = max(v, vc)
         return float(v)
-
-    # ------------------------------------------------------------------
-    def gap_capability(self, X, d):
-        """E_k(gamma_k) per node from the exact bounded inner solve (reporting)."""
-        from .torque_gap_modulation import capability_residual
-        vmax = float(self.scn.prm.cmg.gdot_max)
-        out = np.zeros(self.N + 1)
-        for k in range(self.N + 1):
-            out[k] = capability_residual(X[7:11, k], d[k], self.scn.cluster, vmax)[0]
-        return out

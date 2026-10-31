@@ -252,7 +252,7 @@ def main():
         exp = meta.get("experiment", {})
         case = meta.get("case", "")
         plant = exp.get("plant", "P0")
-        mode = exp.get("mode", "")
+        mode = exp.get("mode") or "ctl"
         parts = d.name.split("_")
         tag = "_".join(parts[3:]) if len(parts) > 3 else ""
         if keep and case.upper() not in keep:

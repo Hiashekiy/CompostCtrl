@@ -24,33 +24,27 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 # ---- matrices -------------------------------------------------------------
-CORE = [(c, m, "P0", [], "") for c in ("C0", "C1", "C2", "C3", "C4", "C5")
-        for m in ("B0", "B1")]
-CORE_B2 = [(c, "B2", "P0", [], "") for c in ("C0", "C1", "C2")]
-P1 = [("C1", m, "P1", [], "") for m in ("B0", "B1")] + \
-     [("C2", m, "P1", [], "") for m in ("B0", "B1")]
-# gap intensity scan: 10 deg and 20 deg (the 30 deg arm is C1 itself).  The
-# feasibility scan showed E_k(gamma) == 0 for >98% of configurations at 10 deg,
-# ~4% at 20 deg and ~12% at 30 deg.
-INTENSITY = [("C1", mode, "P0", ["trajectory3.maneuver.delta_deg=%s" % amp],
-              "amp%s" % amp.replace(".", "p"))
-             for amp in ("10", "20") for mode in ("B0", "B1")]
-# three initial configurations x two modes (10 deg pitch case)
-CONFIGS = [("C1", mode, "P0", ["torque_gap.init.gamma0_deg=[60.0, -60.0, 60.0, -60.0]"],
-            "g60") for mode in ("B0", "B1")] + \
-          [("C1", mode, "P0", ["torque_gap.init.gamma0_deg=[0.0, 60.0, 0.0, 60.0]"],
-            "g0p60") for mode in ("B0", "B1")]
-# unlimited-gimbal arm: same C cases, all three modes, P0
-UNLIMITED = [(c, m, "P0", [], "") for c in ("C0", "C1", "C2", "C3", "C4", "C5")
-             for m in ("B0", "B1", "B2")]
-GROUPS = dict(core=CORE, core_b2=CORE_B2, p1=P1, intensity=INTENSITY,
+# Entry format: (case, plant, overrides, tag).  The B0/B1/B2 modulation modes are
+# gone: the J_cfg cost was removed from the optimiser (see
+# docs/torque_gap/modulation_removed_report.md), so there is only one controller.
+VERIFY = [("C1", "P0", [], "")]
+CORE = [(c, "P0", [], "") for c in ("C0", "C1", "C2", "C3", "C4", "C5")]
+P1 = [(c, "P1", [], "") for c in ("C1", "C2")]
+# gap intensity scan (the 30 deg arm is C1 itself)
+INTENSITY = [("C1", "P0", ["trajectory3.maneuver.delta_deg=%s" % amp],
+              "amp%s" % amp.replace(".", "p")) for amp in ("10", "20")]
+# alternative initial gimbal configurations
+CONFIGS = [("C1", "P0", ["torque_gap.init.gamma0_deg=[60.0, -60.0, 60.0, -60.0]"], "g60"),
+           ("C1", "P0", ["torque_gap.init.gamma0_deg=[0.0, 60.0, 0.0, 60.0]"], "g0p60")]
+# unlimited-gimbal arm: same C cases, P0
+UNLIMITED = [(c, "P0", [], "") for c in ("C0", "C1", "C2", "C3", "C4", "C5")]
+GROUPS = dict(verify=VERIFY, core=CORE, p1=P1, intensity=INTENSITY,
               configurations=CONFIGS, unlimited=UNLIMITED,
-              all=CORE + CORE_B2 + P1 + INTENSITY + CONFIGS)
+              all=CORE + P1 + INTENSITY + CONFIGS)
 
 
-def run_dir(case, mode, plant, tag, results_root):
-    name = "%s_%s_%s%s" % (case.upper(), mode.upper(), plant.upper(),
-                           ("_" + tag) if tag else "")
+def run_dir(case, plant, tag, results_root):
+    name = "%s_%s%s" % (case.upper(), plant.upper(), ("_" + tag) if tag else "")
     root = Path(results_root)
     root = root if root.is_absolute() else ROOT / root
     return root / name
@@ -71,13 +65,13 @@ def main():
         entries = [e for e in entries if e[0].upper() in keep]
     t_all = time.perf_counter()
     done = []
-    for case, mode, plant, overrides, tag in entries:
-        out = run_dir(case, mode, plant, tag, args.results_root)
+    for case, plant, overrides, tag in entries:
+        out = run_dir(case, plant, tag, args.results_root)
         if (out / "metrics.json").exists() and not args.force:
             print("[skip] %s" % out.name)
             continue
         cmd = [sys.executable, str(ROOT / "scripts" / "run_torque_gap.py"),
-               "--case", case, "--mode", mode, "--plant", plant, "--tag", tag,
+               "--case", case, "--plant", plant, "--tag", tag,
                "--config-root", args.config_root,
                "--results-root", args.results_root]
         for o in overrides:

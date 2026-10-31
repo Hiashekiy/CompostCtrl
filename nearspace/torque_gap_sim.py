@@ -236,7 +236,7 @@ class ClosedLoop:
             if ok:
                 u_cmd = res.u0.copy()
                 status = res.status
-                warm = (res.X, res.U, res.V)
+                warm = (res.X, res.U)
             else:
                 u_cmd, why = self._fallback(plan, x11, nu_prev, tau_prev)
                 status = "%s|%s" % (res.status, why)
@@ -336,7 +336,7 @@ class ClosedLoop:
             post=((t > win[1])) if win else np.zeros_like(t, bool),
         )
         out = dict(
-            plant=self.plant, mode=scn.mode,
+            plant=self.plant, modulation="removed",
             t_start=scn.t_start, t_end=scn.t_end, dt_ctrl=self.dt,
             n_steps=len(rows),
             window=list(win) if win else None,
@@ -443,8 +443,8 @@ def write_run(out_dir, cl: ClosedLoop, metrics, cfg, extra_meta=None):
         platform=platform.platform(),
         config=dump(cfg),
         experiment=dict(
-            mode=cl.scn.mode, plant=cl.plant, case=getattr(cl.scn, "case", ""),
-            lambda_cfg=(0.0 if cl.scn.mode == "B0" else cl.scn.lambda_cfg),
+            plant=cl.plant, case=getattr(cl.scn, "case", ""),
+            modulation="removed (diagnostics only)",
             horizon_nodes=int(cl.ocp.N), horizon_s=float(cl.scn.rel_times[-1]),
             horizon_dts=list(map(float, cl.scn.dts)),
             grid_times=list(map(float, cl.scn.rel_times)),

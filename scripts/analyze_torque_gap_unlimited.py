@@ -60,7 +60,7 @@ def run_dirs(root):
             continue
         meta = json.loads((d / "meta.json").read_text(encoding="utf-8"))
         exp = meta.get("experiment", {})
-        key = (meta.get("case", ""), exp.get("mode", ""), exp.get("plant", "P0"))
+        key = (meta.get("case", ""), exp.get("mode", "") or "ctl", exp.get("plant", "P0"))
         h0 = float(meta.get("experiment", {}).get("c_mg", {}).get("h0", 50.0))
         out[key] = dict(dir=d, meta=meta, h0=h0,
                         metrics=json.loads((d / "metrics.json").read_text(encoding="utf-8")))

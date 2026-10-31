@@ -165,47 +165,55 @@ def main():
     for m in runs:
         md.append("| " + " | ".join([m["run"]] + [fmt(f[1](m)) for f in FIELDS]) + " |")
 
-    # ---- paired deltas ----
-    md += ["", "## Paired B0 -> B1 comparison (same case/plant/tag)", "",
-           "| pair | dRMSE_all | dRMSE_man | dmax_man | dsettle_s | dpre_travel | "
-           "dH_max | dgap_res | dfallback | config diff |",
-           "|---|---|---|---|---|---|---|---|---|---|"]
-    by_key = {}
-    for m in runs:
-        key = (m["case"], m["plant"], m["tag"])
-        by_key.setdefault(key, {})[m["mode"]] = m
+    # ---- paired deltas (only meaningful for archives that still contain the
+    # removed modulation modes B1/B2) ----
+    # ---- paired deltas (only for archives that still contain the removed
+    # modulation modes B1/B2; new runs have a single controller) -----------
     pair_keys = []
-    for key, modes in sorted(by_key.items()):
-        if "B0" in modes and "B1" in modes:
-            a, b = modes["B0"], modes["B1"]
-            diffs, bad = pair_diff(a["_meta"], b["_meta"])
-            md.append("| %s/%s/%s | %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
-                key[0], key[1], key[2] or "-",
-                fmt(None if a["rmse_deg"]["all"] is None or b["rmse_deg"]["all"] is None
-                    else b["rmse_deg"]["all"] - a["rmse_deg"]["all"]),
-                fmt(None if a["rmse_deg"]["maneuver"] is None or b["rmse_deg"]["maneuver"] is None
-                    else b["rmse_deg"]["maneuver"] - a["rmse_deg"]["maneuver"]),
-                fmt(_d(a, b, ("max_err_deg", "maneuver"))),
-                fmt(_d(a, b, ("settle_time_s",))),
-                fmt(_d(a, b, ("pre_gimbal_travel_rad",))),
-                fmt(_d(a, b, ("H_norm_max",))),
-                fmt(_d(a, b, ("gap_residual_maneuver_mean",))),
-                fmt(None if a["fallback_ratio"] is None else
-                    b["fallback_ratio"] - a["fallback_ratio"]),
-                ("only mode/lambda: " + ", ".join(sorted(diffs))) if not bad
-                else "**UNEXPECTED: " + ", ".join(sorted(bad)) + "**"))
-            pair_keys.append((key, diffs, bad))
+    if any(m["mode"] for m in runs):
+        md += ["", "## Paired B0 -> B1 comparison (same case/plant/tag)", "",
+               "| pair | dRMSE_all | dRMSE_man | dmax_man | dsettle_s | dpre_travel | "
+               "dH_max | dgap_res | dfallback | config diff |",
+               "|---|---|---|---|---|---|---|---|---|---|"]
+        by_key = {}
+        for m in runs:
+            by_key.setdefault((m["case"], m["plant"], m["tag"]), {})[m["mode"]] = m
+        for key, modes in sorted(by_key.items()):
+            if "B0" in modes and "B1" in modes:
+                a, b = modes["B0"], modes["B1"]
+                diffs, bad = pair_diff(a["_meta"], b["_meta"])
+                md.append("| %s/%s/%s | %s | %s | %s | %s | %s | %s | %s | %s | %s |" % (
+                    key[0], key[1], key[2] or "-",
+                    fmt(None if a["rmse_deg"]["all"] is None or b["rmse_deg"]["all"] is None
+                        else b["rmse_deg"]["all"] - a["rmse_deg"]["all"]),
+                    fmt(None if a["rmse_deg"]["maneuver"] is None
+                        or b["rmse_deg"]["maneuver"] is None
+                        else b["rmse_deg"]["maneuver"] - a["rmse_deg"]["maneuver"]),
+                    fmt(_d(a, b, ("max_err_deg", "maneuver"))),
+                    fmt(_d(a, b, ("settle_time_s",))),
+                    fmt(_d(a, b, ("pre_gimbal_travel_rad",))),
+                    fmt(_d(a, b, ("H_norm_max",))),
+                    fmt(_d(a, b, ("gap_residual_maneuver_mean",))),
+                    fmt(None if a["fallback_ratio"] is None else
+                        b["fallback_ratio"] - a["fallback_ratio"]),
+                    ("only mode/lambda: " + ", ".join(sorted(diffs))) if not bad
+                    else "**UNEXPECTED: " + ", ".join(sorted(bad)) + "**"))
+                pair_keys.append((key, diffs, bad))
 
     md += ["", "## Fairness check", "",
-           "Every B0/B1 pair must differ only in `mode` / `lambda_cfg`.  Pairs with "
-           "other differences are flagged in the table above and repeated here:", ""]
+           "Every B0/B1 pair must differ only in `mode` / `lambda_cfg` (only the "
+           "archived ±90°/unlimited arms contain both; the modulation mechanism has "
+           "since been removed, so new runs have a single controller).  Pairs with "
+           "other differences are flagged:", ""]
     flagged = [(k, bad) for k, _, bad in pair_keys if bad]
     if flagged:
         for k, bad in flagged:
             md.append("- **%s/%s/%s**: unexpected differences %s"
                       % (k[0], k[1], k[2], sorted(bad)))
-    else:
+    elif pair_keys:
         md.append("- none: all pairs differ only in the modulation switch.")
+    else:
+        md.append("- no B0/B1 pairs in this root (single-controller runs).")
 
     # ---- optional paired comparison against another result root ----------
     if args.compare_root:

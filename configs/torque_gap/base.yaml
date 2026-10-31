@@ -19,8 +19,8 @@ torque_gap:
   dt_ctrl: 0.2
   plant: P0                 # P0 virtual-torque plant | P1 18-state surface truth
   plant_substeps: 8         # P0 truth integrator substeps per control interval
-  mode: B0                  # B0 | B1 | B2 | B3
-  lambda_cfg: 1.0           # only used by B1/B2/B3
+  # The predicted-gap modulation cost (J_cfg / mode B1 / B2) has been REMOVED.
+  # tau_nom, R+/R- and d are still computed and logged as diagnostics only.
   seed: 0
 
   # non-uniform multiple-shooting prediction grid: 22 nodes, 23.2 s

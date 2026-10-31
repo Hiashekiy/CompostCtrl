@@ -9,3 +9,9 @@ tmp/
 # site-packages write access on this host, so casadi lives in ./.pydeps
 .pydeps/
 .piptmp/
+# empty temp dirs left behind by a failed `pip install` on this host; their ACLs
+# deny access, so keep them out of the index
+pip-build-tracker-*/
+pip-ephem-wheel-cache-*/
+pip-install-*/
+pip-unpack-*/
