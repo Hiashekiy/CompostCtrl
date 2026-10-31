@@ -1,4 +1,0 @@
-t0,osqp_status,osqp_iters,osqp_violation,lp_t_star,lp_feasible,lp_total_raw_slack,lp_max_raw_slack,lp_relax_eq_t_star,lp_relax_eq_feasible,lp_method
-107.6,solved,17100,0.0014909391984225806,1.7404674334611104e-16,True,7.147060721024445e-15,9.91460823965458e-09,3.283517480599078e-08,True,verdict from the row-scaled Chebyshev minimax LP
-107.8,primal infeasible,175,323348895473.72504,0.32873082282232413,False,444.5014008052613,13.420377904678226,0.10768876747289172,False,verdict from the row-scaled Chebyshev minimax LP
-109.0,primal infeasible,225,323348895473.72504,1.5338915285594048,False,1842.2954211786187,62.62085142307548,0.5029919751528451,False,verdict from the row-scaled Chebyshev minimax LP

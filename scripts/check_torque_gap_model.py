@@ -15,10 +15,10 @@ Checks performed (all numeric, all reported):
   T6  11-state RK4 against an independent high-accuracy integrator
   T7  attitude error conventions (short arc, q ~ -q)
 
-Writes:  results/torque_gap/model_checks.json
+Writes:  results/model_checks_bounded.json, docs/torque_gap/model_validation.md
          docs/torque_gap/model_validation.md
-         figures/torque_gap/authority_vs_time.png
-         figures/torque_gap/modulation_3axis.png
+         figures/model_validation/authority_vs_time.png
+         figures/model_validation/modulation_3axis.png
 
 Usage:  python scripts/check_torque_gap_model.py [--case C1] [--no-plot]
 """
@@ -376,7 +376,7 @@ def main():
 
     npass = sum(1 for c in CHECKS if c["passed"])
     ok = npass == len(CHECKS)
-    res_dir = ROOT / "results" / "torque_gap"
+    res_dir = ROOT / "results"                      # the bounded arm itself was pruned
     res_dir.mkdir(parents=True, exist_ok=True)
     payload = dict(case=args.case, config=str(cfg_path), passed=ok,
                    n_checks=len(CHECKS), n_pass=npass,
@@ -386,11 +386,11 @@ def main():
                    vehicle=dict(Jx=prm.veh.Jx, Jy=prm.veh.Jy, Jz=prm.veh.Jz,
                                 delta_max_deg=np.rad2deg(prm.veh.delta_max).tolist()),
                    checks=CHECKS)
-    with open(res_dir / "model_checks.json", "w", encoding="utf-8") as fh:
+    with open(res_dir / "model_checks_bounded.json", "w", encoding="utf-8") as fh:
         json.dump(payload, fh, indent=2, ensure_ascii=False)
 
     if not args.no_plot:
-        make_figures(scn, ROOT / "figures" / "torque_gap")
+        make_figures(scn, ROOT / "figures" / "model_validation")
 
     # ---- markdown summary ----------------------------------------------
     docs = ROOT / "docs" / "torque_gap"
@@ -417,8 +417,8 @@ def main():
     for r in rows:
         if "Q" in r:
             lines.append("| %.3g | %.4f | %.2e |" % (r["Q"], r["fraction"], r["worst_rel"]))
-    lines += ["", "Figures: `figures/torque_gap/authority_vs_time.png`, "
-              "`figures/torque_gap/modulation_3axis.png`."]
+    lines += ["", "Figures: `figures/model_validation/authority_vs_time.png`, "
+              "`figures/model_validation/modulation_3axis.png`."]
     with open(docs / "model_validation.md", "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")
 

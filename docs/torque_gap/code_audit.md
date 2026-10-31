@@ -20,6 +20,8 @@
 - `results/cmg_ab/**`、`results/cmg_maneuver/**`、`results/c1_cmg_*`、`figures/**` 中既有成果
 - `config.yaml`（新实验通过 `configs/torque_gap/base.yaml` 的 `base:` 继承，不改原文件）
 
+> 说明：本文件是实施前的历史快照。其中提到的第一版实验臂 `results/torque_gap/`、`figures/torque_gap/` 已在后续精简中移除，当前保留内容见 `README.md`。
+
 新增内容全部位于 `nearspace/torque_gap_*.py`、`configs/torque_gap/`、`scripts/*torque_gap*`、`results/torque_gap/`、`figures/torque_gap/`、`docs/torque_gap/`、`tests/test_torque_gap_*.py`、`requirements-ocp.txt`。
 
 ## 2. 运行环境

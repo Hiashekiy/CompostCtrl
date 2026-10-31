@@ -275,7 +275,7 @@ def report(a, b, ma, mb, meta_a, meta_b, png, pdf):
           "而是物理权限不够；反过来，有 CMG 的一臂在尾部（>%.0f s）出现 %d 次回退、%.1f° 尖峰，"
           "属未解决项。" % (row(2, mb["cpu_s"]["mean"]), T_WIN[1], post_a[2], post_a[1]), "",
           "> 说明：P0 是虚拟力矩植物，`τ_a` 是理想气动力矩。真实舵面的实现能力见 P1"
-          "（`results/torque_gap_unlimited/C1_B0_P1/`），本对比不涉及舵偏角速率/伺服滞后。",
+          "（P1 真实舵偏运行已随仓库精简移除），本对比不涉及舵偏角速率/伺服滞后。",
           ]
     DOC.mkdir(parents=True, exist_ok=True)
     path = DOC / "C1_surface_only_comparison.md"

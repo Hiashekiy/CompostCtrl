@@ -67,4 +67,4 @@ Final conservative box scale: **0.774** (calibrated offline: the largest uniform
 | 2.01e+03 | 1.0000 | 2.06e-15 |
 | 8e+03 | 1.0000 | 1.51e-15 |
 
-Figures: `figures/torque_gap/authority_vs_time.png`, `figures/torque_gap/modulation_3axis.png`.
+Figures: `figures/model_validation/authority_vs_time.png`, `figures/model_validation/modulation_3axis.png`.

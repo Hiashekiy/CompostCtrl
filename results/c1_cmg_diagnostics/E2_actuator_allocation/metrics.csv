@@ -1,3 +1,0 @@
-arm,rmse,peak,high_rmse,high_peak,sat,travel,H_peak,H_end,H_growth_peak,H_growth_time,sigma,torque_peak,fb,fb_longest,solve_mean,solve_p95,solve_max,share_aero_all,share_aero_high,share_aero_post,mean_aero_opp_high,mean_cmg_opp_high
-E2-B0 当前统一 MPC,69.4818,178.309,70.6846,146.434,0.457542,1.02365,97.6244,80.4004,49.4305,107.8,2.75975,114.043,462,462,338.247,600.679,1499.5,0.999446,0.99472,0.996135,11.8366,0.0161045
-E2-B1 舵面优先 + 动量管理,66.8748,177.304,73.1906,147.893,0.461538,0.963588,92.1296,90.5538,50.8616,106.8,0.901902,107.621,467,467,303.301,535.683,1467.4,0.999452,0.990051,0.993428,11.6272,0.0456966

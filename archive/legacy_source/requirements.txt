@@ -1,6 +1,0 @@
-numpy
-scipy
-osqp
-pyyaml
-matplotlib
-pymsis

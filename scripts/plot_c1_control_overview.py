@@ -489,7 +489,7 @@ def report(d, cfg, meta, metrics, info):
           % worst_nom,
           "2. **`lo_y`/`hi_y` 是俯仰方向舵面可实现的总气动力矩上下界。** `y` 为机体俯仰轴；"
           "盒由 `nat_ref ± 0.774·hull(Q,δ_max)` 给出，0.774 是 "
-          "`results/torque_gap/model_checks.json` 标定的保守比例（≥99%% 盒内样本可被有界舵偏实现）。"
+          "`results/model_checks_bounded.json` 标定的保守比例（≥99%% 盒内样本可被有界舵偏实现）。"
           "t=90 s 时 `[%.2f, %.2f] N·m`，与面板 3 灰带一致。" % (d["lo_y"][0], d["hi_y"][0]),
           "3. **`tau_act_y` 是实际气动力矩、`cmg_y` 是实际 CMG 力矩。** 本运行是 **P0 虚拟力矩植物**："
           "舵面被抽象为理想力矩执行器，因此 `tau_act_y ≡ tauc_cmd_y`（最大偏差 %.1e N·m）；"
@@ -634,7 +634,7 @@ def report(d, cfg, meta, metrics, info):
           % (gap_peak, head_down_90, head_down_110, head_down_110 / head_down_90), "",
           "**因此：迁移是成功的——它把俯仰轴角动量预置到了将来要消耗的那一侧，可用角动量裕度翻倍；"
           "但瞬时力矩包络必随之下降，用“`τ⁺` 有没有变大”来评判迁移是选错了判据。**"
-          "（本报告 §5.4 初版以及 `unlimited_gimbal_experiment.md` §5.4 中“迁移没有提高能力”的说法，"
+          "（本报告 §5.4 初版曾按“瞬时能力”这一判据认为“迁移没有提高能力”，"
           "按此判据应当修正为：*迁移不改变（且必然压低）瞬时包络，但显著增加弯矩方向的角动量裕度*。）", "",
           "仍要强调：`H_y` 是**角动量**，不是力矩储备。它决定“还能在该方向持续输出多久”"
           "（时间 ≈ 裕度 / 需求力矩），不能直接读成“还能出多大扭矩”。", "",
@@ -665,7 +665,7 @@ def report(d, cfg, meta, metrics, info):
            % (100 * util_med, 100 * util_max, "通过" if inside else "**未通过**"),
            "即实际输出始终落在瞬时能力带内，但**中位数只用到 %.0f%%**——"
            "这正说明“瞬时能力 ≠ 可持续输出”：真正的限制是角动量与框架角速度预算，"
-           "而不是某一时刻的最大力矩（同一结论见 `docs/torque_gap/unlimited_gimbal_experiment.md` §5.2）。"
+           "而不是某一时刻的最大力矩（角动量储备与瞬时包络的区别见 `docs/torque_gap/prediction_mechanism_experiment.md` §5、§9）。"
            % (100 * util_med),
            "", "### 5.8 当前数据**不能**证明的结论", "",
            "1. **未来持续力矩能力 / “力矩储备”**：CSV 只保存当前节点的 `τ_nom`、`d`、`lo/hi`，"
@@ -676,10 +676,10 @@ def report(d, cfg, meta, metrics, info):
            % (4 * prm.h0),
            "3. **真实舵偏角实现**：本运行是 P0（理想力矩执行器），`tau_act_y ≡ tauc_cmd_y`，"
            "不能据此断言真实舵面可达到同样力矩；对应结论须用 P1 运行"
-           "（`results/torque_gap_unlimited/C1_B0_P1/`，本次未画）。",
+           "（P1 真实舵偏运行已随仓库精简移除）。",
            "4. **因果性**：本图是单次闭环运行的时序，不构成“提前迁移导致跟踪改善”的因果证据；"
            "该判断依赖 B0/B1/B2 与 C4 对照"
-           "（`docs/torque_gap/unlimited_gimbal_experiment.md`、`results/torque_gap_unlimited/summary.md`）。",
+           "（见 `docs/torque_gap/prediction_mechanism_experiment.md` §8）。",
            "", "## 6. 图中约定", "",
            "- 竖直参考线（五面板统一）：红色点线 = 提前构型迁移开始（%.1f s）；黑色虚线 = 主机动开始（110 s）；"
            "蓝色点划线 = 预测缺口首次非零（%s）。"

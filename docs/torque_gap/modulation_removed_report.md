@@ -84,7 +84,8 @@ python scripts/check_torque_gap_unlimited.py --no-plot → 32/32 checks passed
   P0/P1 两套植物、`cmg_enabled` 开关、结果/图的目录结构。
 - **改变**：NLP 少 92 个变量；控制器不再“看见”缺口；`meta.json` 不再有 `mode/lambda_cfg`
   （改为 `modulation: "removed (diagnostics only)"`）；输出目录名不再带 `_B0`。
-- **历史数据全部保留**：`results/torque_gap/`、`results/torque_gap_unlimited/`、
+- **（后续更新）** 仓库随后做了精简：`results/torque_gap/` 与 `torque_gap_unlimited/` 的 19 次运行已移除，仅保留 `torque_gap_unlimited/C1_B0_P0`（见 `README.md`）。本报告结论基于当时的归档，仍可从 git 历史 `7ee44e1` 复核。
+- **历史数据（精简前）**：`results/torque_gap/`、`results/torque_gap_unlimited/`、
   `results/torque_gap_m50/`、`results/torque_gap_noCMG/` 未改动；新结果在 `results/torque_gap_noMod/`。
 
 ## 7. 复现命令
