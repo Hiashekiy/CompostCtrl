@@ -1,0 +1,12 @@
+# C1 with the published Honeywell M50 gimbal limits instead of the previous
+# first-version assumptions.  Everything else is inherited unchanged through the
+# base chain (same vehicle, same h0 = 50 N m s per unit = M50 momentum, same
+# reference manoeuvre, disturbance, aero box, horizon, solver, weights, and the
+# unlimited (unwrapped) gimbal travel).
+#
+#   previous assumption : |gdot| <= 1.5 rad/s,  |gddot| <= 10.0 rad/s^2
+#   M50 literature      : |gdot| <= 1.0 rad/s,  |gddot| <=  3.0 rad/s^2
+base: ../../torque_gap_unlimited/cases/c1_pitch30.yaml
+cmg:
+  gdot_max: 1.0
+  gddot_max: 3.0

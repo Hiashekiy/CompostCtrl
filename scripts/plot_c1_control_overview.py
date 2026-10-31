@@ -58,7 +58,8 @@ LABELS = {
 # --------------------------------------------------------------------------
 # data / model
 # --------------------------------------------------------------------------
-def load_run(run=RUN):
+def load_run(run=None):
+    run = Path(run) if run is not None else RUN
     ts = run / "timeseries.csv"
     if not ts.exists():
         raise SystemExit("missing %s" % ts)
@@ -306,8 +307,9 @@ def plot(d, cfg, meta, metrics):
         fontsize=10, pad=17)
 
     FIG.mkdir(parents=True, exist_ok=True)
-    png = FIG / "C1_control_overview.png"
-    pdf = FIG / "C1_control_overview.pdf"
+    stem = getattr(plot, "stem", "C1_control_overview")
+    png = FIG / (stem + ".png")
+    pdf = FIG / (stem + ".pdf")
     fig.savefig(png, dpi=300)
     fig.savefig(pdf)
     plt.close(fig)
@@ -458,10 +460,11 @@ def report(d, cfg, meta, metrics, info):
     md = [f"# C1 工况控制过程总图分析（{meta.get('case','C1')} / "
           f"{meta.get('experiment',{}).get('mode','B0')} / "
           f"{meta.get('experiment',{}).get('plant','P0')}，无框架角行程限制）", "",
-          "数据来源：`results/torque_gap_unlimited/C1_B0_P0/`（`timeseries.csv`、"
-          "`config_resolved.yaml`、`meta.json`、`metrics.json`）。"
-          "绘图脚本：`scripts/plot_c1_control_overview.py`；"
-          "图：`figures/torque_gap_unlimited/C1_control_overview.png` / `.pdf`。", "",
+          "数据来源：`%s`（`timeseries.csv`、`config_resolved.yaml`、`meta.json`、"
+          "`metrics.json`）。" % Path(RUN).relative_to(ROOT).as_posix(),
+          "绘图脚本：`scripts/plot_c1_control_overview.py`；图：`%s` / `.pdf`。"
+          % (Path(FIG).relative_to(ROOT) / getattr(plot, "stem", "C1_control_overview")).as_posix(),
+          "",
           "## 1. 数据与代码核查", "",
           "### 1.1 CSV 字段的物理含义（以代码实际定义为准）", "",
           "| 字段 | 含义 | 单位/坐标 | 来源代码 |", "|---|---|---|---|",
@@ -686,12 +689,25 @@ def report(d, cfg, meta, metrics, info):
            "PDF 以 Type-42 内嵌字体；PNG 300 dpi。",
            ]
     DOC.mkdir(parents=True, exist_ok=True)
-    path = DOC / "C1_control_overview_analysis.md"
+    path = DOC / getattr(report, "doc_name", "C1_control_overview_analysis.md")
     path.write_text("\n".join(md) + "\n", encoding="utf-8")
     return path
 
 
 def main():
+    global RUN, FIG, DOC
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--run", default=str(RUN), help="run directory to plot")
+    ap.add_argument("--fig-root", default=None)
+    ap.add_argument("--stem", default="C1_control_overview")
+    ap.add_argument("--doc", default=None, help="markdown file name")
+    args = ap.parse_args()
+    RUN = Path(args.run) if Path(args.run).is_absolute() else ROOT / args.run
+    if args.fig_root:
+        FIG = Path(args.fig_root) if Path(args.fig_root).is_absolute() else ROOT / args.fig_root
+    plot.stem = args.stem
+    report.doc_name = args.doc or ("%s_analysis.md" % args.stem)
     d, cfg, meta, metrics = load_run()
     info = plot(d, cfg, meta, metrics)
     path = report(d, cfg, meta, metrics, info)
