@@ -91,11 +91,9 @@ python scripts/run_torque_gap.py --case c1_pitch30 --plant P0 `
 - `.pydeps/`（230 MB）是**必需依赖**：它装着本地解包的 `casadi 3.8.2` 与 IPOPT 插件，
   因为本机不允许写 site-packages。验证：不带 `PYTHONPATH=.pydeps` 时
   `import casadi` 直接 `ModuleNotFoundError`；带上则一切正常。**不要删**。
-- `.piptmp/`（原 57.3 MB 的 `casadi.whl` 与 `x.whl` **已删除**）与 `tmp/`（7 个早期调试脚本 /
-  提交信息草稿，约 84 KB）都是历史残留，**不参与版本控制**（见 `.gitignore`）。
-  它们剩下的空目录与文件因 NTFS 权限（`tmp/` 下连新建文件都被拒）无法在本会话删除；
-  如需彻底清除，用**管理员权限**的资源管理器或命令提示符删除即可：
-  `rmdir /s /q "D:\项目\飞轮\.piptmp" "D:\项目\飞轮\tmp"`。
+- `.piptmp/`（含 57.3 MB 的 `casadi.whl`）、`tmp/`（早期调试脚本与提交信息草稿）以及
+  4 个 `pip-*` 临时目录都是历史残留，**已在精简中删除**；它们本就不参与版本控制
+  （见 `.gitignore` 中的 `.pydeps/`、`.piptmp/`、`tmp/`、`pip-*/` 条目）。
 - 部分早期报告在删除前引用了彼此（例如 `C1_control_overview_analysis.md` 曾引用
   `unlimited_gimbal_experiment.md` §5.2/§5.4）。这些引用已改为指向现存文档，
   相关结论（角动量储备 vs 瞬时力矩包络）现在见 `prediction_mechanism_experiment.md` §5、§9。
