@@ -18,7 +18,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-RES = ROOT / "results" / "torque_gap_no_cmg_comparison"
+RES = ROOT / "results" / "torque_gap_no_cmg_comparison"   # overridden by --root
 PHASES = ("P0", "P1")
 SCENARIO_ORDER = ["S00_pitch30", "S01_pitch_minus30", "S02_pitch10", "S03_pitch45",
                   "S04_roll30", "S05_yaw30", "S06_pitch30_roll20", "S07_sequential"]
@@ -226,7 +226,16 @@ def pairs(rows, phase, seeds=(0,)):
     return out
 
 
-def main():
+def main(argv=None):
+    global RES
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--root", default=None)
+    ap.add_argument("--out-suffix", default="")
+    args = ap.parse_args(argv)
+    if args.root:
+        RES = (ROOT / args.root) if not Path(args.root).is_absolute() else Path(args.root)
+        print("[summary] root =", RES)
     rows = [row_of(r) for r in load_runs()]
     rows.sort(key=lambda r: (r["phase"], SCENARIO_ORDER.index(r["scenario"])
                              if r["scenario"] in SCENARIO_ORDER else 99,
@@ -393,10 +402,10 @@ def main():
                 verdict = "B 组未改善（需查看失败/饱和情况）"
             L.append("- [%s] %s：%s；%s。" % (phase, sc, "；".join(parts), verdict))
 
-    (RES / "summary.md").write_text("\n".join(L) + "\n", encoding="utf-8")
-    print("wrote", (RES / "summary.csv").relative_to(ROOT),
+    (RES / ("summary%s.md" % args.out_suffix)).write_text("\n".join(L) + "\n", encoding="utf-8")
+    print("wrote", (RES / ("summary%s.csv" % args.out_suffix)),
           "(%d runs)" % len(rows))
-    print("wrote", (RES / "summary.md").relative_to(ROOT))
+    print("wrote", (RES / ("summary%s.md" % args.out_suffix)))
     return 0
 
 

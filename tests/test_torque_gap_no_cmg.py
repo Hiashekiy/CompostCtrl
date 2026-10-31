@@ -378,7 +378,7 @@ def test_per_manoeuvre_windows_do_not_include_the_hold_phase():
         cl.rows.append(dict(t=tt - cl.dt, t_next=tt, att_err_deg=0.0, rate_err=0.0,
                             err_x=0.0, err_y=0.0, err_z=0.0, tau_act_x=0.0,
                             tau_act_y=0.0, tau_act_z=0.0, tau_bound_used=0.0,
-                            fallback=0, cpu_s=0.0, iters=0, viol=0.0,
+                            fallback=0, accepted=0, cpu_s=0.0, iters=0, viol=0.0,
                             status="synthetic", g1=0.0, g2=0.0, g3=0.0, g4=0.0,
                             nu1=0.0, nu2=0.0, nu3=0.0, nu4=0.0, H_norm=0.0,
                             sigma_min=1.0, Hx=0.0, Hy=0.0, Hz=0.0,

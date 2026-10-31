@@ -307,3 +307,35 @@ python tests/test_atmosphere_real.py                   # 大气后端回归
 | `summary.csv`、`summary.md` | `results/torque_gap_no_cmg_comparison/` |
 | 自动化测试结果 | `results/torque_gap_no_cmg_comparison/test_report.txt` |
 | 实验报告与 Git 提交 | 本文件；提交见 `git log` |
+
+---
+
+## 14. 附：求解速度优化（本轮追加工作）
+
+原实现的 B 组求解耗时（均值 0.24–1.39 s、P95 最高 4.84 s）远超 0.2 s 控制周期。
+后续在**不改变 A/B 对照定义**的前提下做了三层优化，完整报告见
+`docs/torque_gap/mpc_solver_speedup.md`，数据见
+`results/torque_gap_mpc_speed/` 与 `results/torque_gap_no_cmg_comparison_{fast,rti}/`。
+
+| 后端 | B 组机动 RMSE（8 场景均值） | 均值耗时 | P95 | 进入 0.2 s 的场景 |
+|---|---|---:|---:|---:|
+| baseline（本文主体结果） | 0.733° | 781 ms | 2973 ms | 0/8 |
+| Tier 1：同求解器改用法（tol、采纳可行解、保留热启动） | 0.740° | 252 ms | 648 ms | 0/8 |
+| Tier 3：HPIPM 实时迭代（GN-QP，12 次/步） | 1.821° | **79 ms** | **128 ms** | **8/8** |
+
+要点：
+
+1. **本文的 A/B 结论在这三个后端下都成立**：A 组均值 6.26–6.28° 不变，B 组
+   0.73–1.82°，CMG 的收益量级（数倍到百倍）不受求解器选择影响。
+2. Tier 1（`fast` profile）是零风险收益：约 3x 提速、跟踪不降；
+   `results/torque_gap_no_cmg_comparison_fast/` 是完整重跑的 34 次矩阵。
+3. RTI 后端把**每一步**都压进 0.2 s 周期（P95 ≤ 152 ms），代价是
+   **能力受限场景**（S03 俯仰 45°、S05 偏航 30°）跟踪退化 2–4x，
+   其余场景持平或更好。原因见速度报告 §2：长视界上的 GN 线性化在
+   σmin→0 的近奇异构型附近失效。
+4. 缩短预测视界（Tier 2）**不可行**：视界 23.2 s → 9.2 s 虽快 7.5x，但
+   B 组 RMSE 全面崩塌（S00 0.096→2.31°）。因为 B 组的构型迁移平均提前
+   17–19 s 开始，9 s 视界在物理上看不到需要预置的机动——**长视界是
+   本方案预置机制的功能性前提**，不是求解器的浪费。
+5. 去掉冗余的四元数范数等式（`quat_norm: n0`）可再提速 1.2–3.8x 且多数场景精度
+   略升，但偏航轴退化（S05 3.20→4.61°），因此仅作为可选开关，默认不变。

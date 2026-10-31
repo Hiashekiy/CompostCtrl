@@ -67,7 +67,7 @@ COMMON_COLUMNS = (
     + ["Rp_x", "Rp_y", "Rp_z", "Rm_x", "Rm_y", "Rm_z", "d_x", "d_y", "d_z"]
     + ["lo_x", "lo_y", "lo_z", "hi_x", "hi_y", "hi_z"]
     + ["tau_bound_used"]
-    + ["cpu_s", "iters", "viol", "fallback", "status"]
+    + ["cpu_s", "iters", "viol", "fallback", "accepted", "status"]
 )
 
 # Columns that only exist when the vehicle carries a CMG (B group).  They are
@@ -328,6 +328,21 @@ class ClosedLoop:
         return np.concatenate([tau_a, np.asarray(nu, float)]), "stabiliser"
 
     # ---- main loop -------------------------------------------------
+    @staticmethod
+    def _shift_warm(warm):
+        """Advance a stored solution by one prediction node."""
+        X, U = warm
+        Xn = np.empty_like(X)
+        Xn[:, :-1] = X[:, 1:]
+        Xn[:, -1] = X[:, -1]
+        Un = np.empty_like(U)
+        if U.shape[1] > 1:
+            Un[:, :-1] = U[:, 1:]
+            Un[:, -1] = U[:, -1]
+        else:
+            Un[:, :] = U
+        return Xn, Un
+
     def run(self):
         scn, ocp = self.scn, self.ocp
         x = self._init_plant()
@@ -355,16 +370,27 @@ class ClosedLoop:
             plan = scn.plan(t, x_opt)
             res = ocp.solve(plan, x_opt, nu_prev, tau_prev, warm)
             fallback = 0
-            ok = (res.ok and res.max_violation <= 1e-4
-                  and res.cpu_s <= self.solver_cfg.max_cpu_s)
+            accepted = 0
+            feasible = (res.max_violation <= self.solver_cfg.accept_feasible_viol
+                        and np.isfinite(res.objective))
+            in_time = res.cpu_s <= self.solver_cfg.max_cpu_s
+            ok = bool(res.ok and feasible and in_time)
+            if not ok and self.solver_cfg.accept_feasible and feasible and in_time:
+                # non-converged but admissible (IPOPT stopped at the iteration cap
+                # or at an acceptable level): use it instead of throwing the step
+                # away, and keep the honest solver status in the log
+                ok = True
+                accepted = 1
             if ok:
                 u_cmd = res.u0.copy()
-                status = res.status
+                status = res.status if not accepted else "%s|accepted" % res.status
                 warm = (res.X, res.U)
             else:
                 u_cmd, why = self._fallback(plan, x_opt, nu_prev, tau_prev)
                 status = "%s|%s" % (res.status, why)
                 fallback = 1
+                if self.solver_cfg.warm_shift_on_fallback and warm is not None:
+                    warm = self._shift_warm(warm)
             # execution-side actuator limits (independent of the optimiser)
             lo, hi = plan["box"]["tau_min"][0], plan["box"]["tau_max"][0]
             tau_a_cmd = np.clip(u_cmd[0:3], lo, hi)
@@ -389,12 +415,13 @@ class ClosedLoop:
             self.rows.append(self._log_row(step, t, t_next, x, plan, res, tau_a_cmd,
                                            tau_act, nu_cmd, nu_act, delta_cmd,
                                            alloc_res, cmg_avg, cmg_end, fallback,
-                                           status))
+                                           accepted, status))
         return self._summary()
 
     # ---- logging ---------------------------------------------------
     def _log_row(self, step, t, t_next, x, plan, res, tau_a_cmd, tau_act, nu_cmd,
-                 nu_act, delta_cmd, alloc_res, cmg_avg, cmg_end, fallback, status):
+                 nu_act, delta_cmd, alloc_res, cmg_avg, cmg_end, fallback, accepted,
+                 status):
         scn = self.scn
         traj = scn.traj
         # state and reference both belong to t_next (implementation guide §9.1)
@@ -434,7 +461,7 @@ class ClosedLoop:
             **{("hi_%s" % ax): hi[i] for i, ax in enumerate("xyz")},
             tau_bound_used=float(at_bound),
             cpu_s=res.cpu_s, iters=res.iter_count, viol=res.max_violation,
-            fallback=fallback, status=status,
+            fallback=fallback, accepted=accepted, status=status,
         )
         if self.cmg_present:
             A = scn.cluster.jacobian(gamma)
@@ -565,8 +592,13 @@ class ClosedLoop:
             realtime_met=bool(np.percentile(arr("cpu_s"), 95) <= self.dt),
             fallback_steps=int(arr("fallback").sum()),
             fallback_ratio=float(np.mean(arr("fallback"))),
+            accepted_steps=int(arr("accepted").sum()),
+            accepted_ratio=float(np.mean(arr("accepted"))),
             iterations=dict(mean=float(np.mean(arr("iters"))),
-                            max=int(np.max(arr("iters")))),
+                            max=int(np.max(arr("iters"))),
+                            total=float(np.sum(arr("iters")))),
+            ms_per_iteration=(float(1000.0 * np.sum(arr("cpu_s"))
+                                    / max(np.sum(arr("iters")), 1.0))),
             max_violation=float(np.max(arr("viol"))),
             status_counts={s: int(sum(1 for r in rows if r["status"] == s))
                            for s in sorted({r["status"] for r in rows})},
@@ -691,7 +723,12 @@ def write_run(out_dir, cl: ClosedLoop, metrics, cfg, extra_meta=None):
             log_conventions=cl.log_conventions,
             columns=list(cl.columns),
             solver=dict(max_iter=cl.solver_cfg.max_iter, tol=cl.solver_cfg.tol,
-                        linear_solver="mumps", engine="casadi-ipopt"),
+                        linear_solver="mumps", engine="casadi-ipopt",
+                        hessian_approximation=cl.solver_cfg.hessian,
+                        max_cpu_s=cl.solver_cfg.max_cpu_s,
+                        accept_feasible=cl.solver_cfg.accept_feasible,
+                        accept_feasible_viol=cl.solver_cfg.accept_feasible_viol,
+                        warm_shift_on_fallback=cl.solver_cfg.warm_shift_on_fallback),
         ),
     )
     if extra_meta:

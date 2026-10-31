@@ -35,7 +35,7 @@ sys.path.insert(0, str(ROOT))
 from nearspace.cmg import CMGCluster, CMGParams          # noqa: E402
 from nearspace.config import load_config                # noqa: E402
 
-RES = ROOT / "results" / "torque_gap_no_cmg_comparison"
+RES = ROOT / "results" / "torque_gap_no_cmg_comparison"   # overridden by --root
 FIG = ROOT / "figures" / "torque_gap_no_cmg_comparison"
 SCENARIO_ORDER = ["S00_pitch30", "S01_pitch_minus30", "S02_pitch10", "S03_pitch45",
                   "S04_roll30", "S05_yaw30", "S06_pitch30_roll20", "S07_sequential"]
@@ -383,13 +383,19 @@ def fig_cross(rows, phase):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--phase", default="all", choices=["P0", "P1", "all"])
+    ap.add_argument("--root", default=None)
+    ap.add_argument("--tag", default="")
     args = ap.parse_args()
+    global RES
+    if args.root:
+        RES = (ROOT / args.root) if not Path(args.root).is_absolute() else Path(args.root)
+        print("[plot] root =", RES)
     phases = ["P0", "P1"] if args.phase == "all" else [args.phase]
     for phase in phases:
         rows = collect(phase)
         print("[%s] scenarios with both arms: %d" % (phase, len(rows)))
         for sc, a, b in rows:
-            out = FIG / phase / ("%s_AB.png" % sc)
+            out = FIG / (phase + args.tag) / ("%s_AB.png" % sc)
             out.parent.mkdir(parents=True, exist_ok=True)
             fig_scenario(phase, sc, a, b, out)
             print("   ", out.relative_to(ROOT))

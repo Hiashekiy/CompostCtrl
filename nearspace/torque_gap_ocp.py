@@ -88,6 +88,25 @@ class SolverConfig:
     max_cpu_s: float = 4.0
     acceptable: tuple = ("Solve_Succeeded", "Solved_To_Acceptable_Level")
     hessian: str = "exact"              # exact | limited-memory (LM was far worse here)
+    # --- closed-loop acceptance policy -------------------------------------
+    # A receding-horizon step is re-measured every control period, so a solution
+    # that is merely *feasible* (small constraint violation) is usable even when
+    # IPOPT stopped at the iteration cap.  Rejecting it wastes the whole step and
+    # forces the fallback (measured: 34/300 wasted steps in S03, 26/450 in S07).
+    accept_feasible: bool = True
+    accept_feasible_viol: float = 1e-4
+    # keep the shifting warm start alive through a fallback (a cold start costs
+    # 1.5 s / 279 iterations versus 0.3-0.6 s from a warm start)
+    warm_shift_on_fallback: bool = True
+    # Where to impose the unit-norm quaternion equality.
+    #   "all"  every node (historical behaviour)
+    #   "n0"   only the first node
+    #   "none" no explicit constraint
+    # The multiple-shooting defect X[:,k+1] = RK4(X[:,k], ...) already contains a
+    # renormalisation, so once the defect holds the quaternion is unit norm at
+    # every node: the other N constraints are redundant and only cost Jacobian
+    # entries.  "all" stays the default so historical runs reproduce exactly.
+    quat_norm: str = "all"
 
     @classmethod
     def from_config(cls, cfg):
@@ -102,6 +121,10 @@ class SolverConfig:
                    print_level=int(g("print_level", 0)),
                    max_cpu_s=float(g("max_cpu_s", 4.0)),
                    hessian=str(g("hessian", "exact")),
+                   accept_feasible=bool(g("accept_feasible", True)),
+                   accept_feasible_viol=float(g("accept_feasible_viol", 1e-4)),
+                   warm_shift_on_fallback=bool(g("warm_shift_on_fallback", True)),
+                   quat_norm=str(g("quat_norm", "all")),
                    acceptable=tuple(g("acceptable_status",
                                       ["Solve_Succeeded",
                                        "Solved_To_Acceptable_Level"])))
@@ -317,8 +340,10 @@ class TorqueGapOCP:
         Jc += t_term
         J_terms.append(("terminal", t_term))
 
-        # unit-norm quaternion equality at every node
-        for k in range(N + 1):
+        # unit-norm quaternion equality (see SolverConfig.quat_norm)
+        knorm = self.solver_cfg.quat_norm.lower()
+        nodes = list(range(N + 1)) if knorm == "all" else ([0] if knorm == "n0" else [])
+        for k in nodes:
             g_terms.append(ca.dot(X[0:4, k], X[0:4, k]))
             g_lb.append(1.0)
             g_ub.append(1.0)

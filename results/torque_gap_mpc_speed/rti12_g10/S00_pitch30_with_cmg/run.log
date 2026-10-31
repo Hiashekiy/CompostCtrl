@@ -1,0 +1,2 @@
+[run] rti12_g10__S00_pitch30_with_cmg    plant=P0 backend=rti cmg_present=True nx=11 nu=7 nlp=191/191 steps=300
+[done] rti12_g10__S00_pitch30_with_cmg    wall=7.6s rmse={'man0': 4.718, 'combined': 4.718, 'pre': 0.003, 'post': 0.568, 'all': 2.75} fb=0.000 cpu_mean=0.021

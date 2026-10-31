@@ -1,0 +1,2 @@
+[run] baseline__S00_pitch30_no_cmg       plant=P0 backend=ipopt cmg_present=False nx=7 nu=3 nlp=227/184 steps=300
+[done] baseline__S00_pitch30_no_cmg       wall=17.4s rmse={'man0': 4.664, 'combined': 4.664, 'pre': 2.513, 'post': 2.434, 'all': 3.244} fb=0.000 cpu_mean=0.051

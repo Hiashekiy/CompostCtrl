@@ -41,9 +41,31 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from nearspace.config import deep_merge                     # noqa: E402
+
 CFG = ROOT / "configs" / "torque_gap_no_cmg_comparison"
 OUT = ROOT / "results" / "torque_gap_no_cmg_comparison"
 PY = sys.executable
+
+# Solver profiles.  `baseline` is exactly what the first experiment used; `fast`
+# is the Tier-1 speed profile.  Both arms of a scenario always share one profile,
+# so the A/B comparison stays fair.
+SOLVER_PROFILES = {
+    "baseline": {},
+    # 3.8x faster on S00/B with no tracking loss (manoeuvre RMSE 0.096 -> 0.090);
+    # the win comes from accepting feasible non-converged solutions and keeping
+    # the warm start alive, not from the looser tolerance.
+    "fast": {"torque_gap": {"solver": {"tol": 1e-4, "max_iter": 200,
+                                       "accept_feasible": True,
+                                       "accept_feasible_viol": 1e-4,
+                                       "warm_shift_on_fallback": True}}},
+    # extreme end of the speed/quality trade-off: no further speed-up on S00/B
+    # and 4x worse manoeuvre RMSE, kept as evidence, not as a default.
+    "fastest": {"torque_gap": {"solver": {"tol": 1e-3, "max_iter": 150,
+                                          "accept_feasible": True,
+                                          "accept_feasible_viol": 1e-4,
+                                          "warm_shift_on_fallback": True}}},
+}
 
 S0 = ["S00_pitch30", "S01_pitch_minus30", "S02_pitch10", "S03_pitch45",
       "S04_roll30", "S05_yaw30", "S06_pitch30_roll20"]
@@ -60,18 +82,25 @@ def case_path(scenario, arm):
     raise SystemExit("missing case file for %s/%s" % (scenario, arm))
 
 
-def specs(phase):
+def specs(phase, root=None, solver_profile="baseline", backend="ipopt", qp_iters=12):
     out = []
+    root = Path(root) if root else OUT
+    if not root.is_absolute():
+        root = ROOT / root
+    profile = SOLVER_PROFILES[solver_profile]
 
     def add(sub, scenario, arm, plant, seed=0, randomize=False, extra=None):
         rid = "%s_%s" % (scenario, arm)
         if randomize:
             rid += "_seed%d" % seed
+        ov = deep_merge(profile, extra or {})
         out.append(dict(run_id=rid, phase=sub, scenario=scenario, arm=arm,
                         case=str(case_path(scenario, arm).relative_to(ROOT)),
                         plant=plant, seed=int(seed), seed_randomize=bool(randomize),
-                        out_dir=str((OUT / sub / rid).relative_to(ROOT)),
-                        overrides=extra or {}))
+                        out_dir=str((root / sub / rid).relative_to(ROOT)),
+                        solver_profile=solver_profile,
+                        backend=backend, qp_iters=int(qp_iters),
+                        overrides=ov))
 
     if phase in ("smoke", "all_smoke"):
         for sc in ("S00_pitch30", "S01_pitch_minus30", "S04_roll30"):
@@ -114,11 +143,16 @@ def run_one(spec):
     cfg = _to_ns(raw)
     scn = Scenario(cfg)
     scn.case = spec["run_id"]
-    ocp = TorqueGapOCP(scn)
+    backend = spec.get("backend", "ipopt")
+    if backend == "rti":
+        from nearspace.torque_gap_rti import TorqueGapRTI
+        ocp = TorqueGapRTI(scn, qp_iters=int(spec.get("qp_iters", 12)))
+    else:
+        ocp = TorqueGapOCP(scn)
     cl = ClosedLoop(scn, ocp=ocp, plant=spec["plant"])
     out_dir = ROOT / spec["out_dir"]
-    print("[run] %-34s plant=%s cmg_present=%s nx=%d nu=%d nlp=%d/%d steps=%d"
-          % (spec["run_id"], cl.plant, cl.cmg_present, scn.nx, scn.nu,
+    print("[run] %-34s plant=%s backend=%s cmg_present=%s nx=%d nu=%d nlp=%d/%d steps=%d"
+          % (spec["run_id"], cl.plant, backend, cl.cmg_present, scn.nx, scn.nu,
              ocp.n_vars, ocp.n_cons, cl.n_steps), flush=True)
     t0 = time.perf_counter()
     metrics = cl.run()
@@ -129,6 +163,8 @@ def run_one(spec):
                                      config_path=spec["case"],
                                      overrides=ov.get("torque_gap", {}),
                                      wall_clock_s=wall,
+                                     backend=backend,
+                                     qp_iters=int(spec.get("qp_iters", 0)),
                                      command="scripts/run_no_cmg_matrix.py --run-one"))
     (out_dir / "config_resolved.yaml").write_text(
         yaml.safe_dump(raw, allow_unicode=True, sort_keys=False), encoding="utf-8")
@@ -139,12 +175,13 @@ def run_one(spec):
     return meta
 
 
-def driver(phase, jobs, force, only):
-    todo = [s for s in specs(phase)
+def driver(phase, jobs, force, only, root=None, solver_profile="baseline",
+           backend="ipopt", qp_iters=12):
+    todo = [s for s in specs(phase, root, solver_profile, backend, qp_iters)
             if (only is None or s["scenario"] in only)
             and (force or not (ROOT / s["out_dir"] / "metrics.json").exists())]
     print("[matrix] phase=%s runs=%d (of %d planned) jobs=%d"
-          % (phase, len(todo), len(specs(phase)), jobs), flush=True)
+          % (phase, len(todo), len(specs(phase, root, solver_profile, backend, qp_iters)), jobs), flush=True)
     running = []
     done, failed = [], []
     while todo or running:
@@ -192,18 +229,26 @@ def main():
     ap.add_argument("--only", default=None,
                     help="comma separated scenario ids to restrict the phase")
     ap.add_argument("--run-one", default=None)
+    ap.add_argument("--results-root", default=None,
+                    help="results directory (default results/torque_gap_no_cmg_comparison)")
+    ap.add_argument("--solver-profile", default="baseline",
+                    choices=sorted(SOLVER_PROFILES))
+    ap.add_argument("--backend", default="ipopt", choices=["ipopt", "rti"])
+    ap.add_argument("--qp-iters", type=int, default=12)
     ap.add_argument("--list", action="store_true")
     args = ap.parse_args()
     if args.run_one:
         run_one(json.loads(args.run_one))
         return 0
     if args.list:
-        for s in specs(args.phase):
+        for s in specs(args.phase, args.results_root, args.solver_profile,
+                       args.backend, args.qp_iters):
             done = (ROOT / s["out_dir"] / "metrics.json").exists()
             print("%-40s %s %s" % (s["run_id"], s["plant"], "done" if done else "-"))
         return 0
     only = set(x.strip() for x in args.only.split(",")) if args.only else None
-    return driver(args.phase, max(int(args.jobs), 1), args.force, only)
+    return driver(args.phase, max(int(args.jobs), 1), args.force, only,
+                  args.results_root, args.solver_profile, args.backend, args.qp_iters)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,2 @@
+[run] fast__S05_yaw30_with_cmg           plant=P0 backend=ipopt cmg_present=True nx=11 nu=7 nlp=407/364 steps=300
+[done] fast__S05_yaw30_with_cmg           wall=108.2s rmse={'man0': 3.205, 'combined': 3.205, 'pre': 0.645, 'post': 0.294, 'all': 1.881} fb=0.000 cpu_mean=0.352

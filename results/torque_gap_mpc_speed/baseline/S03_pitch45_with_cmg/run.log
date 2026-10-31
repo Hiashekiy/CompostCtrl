@@ -1,0 +1,2 @@
+[run] baseline__S03_pitch45_with_cmg     plant=P0 backend=ipopt cmg_present=True nx=11 nu=7 nlp=407/364 steps=300
+[done] baseline__S03_pitch45_with_cmg     wall=184.1s rmse={'man0': 2.237, 'combined': 2.237, 'pre': 0.471, 'post': 16.331, 'all': 9.519} fb=0.007 cpu_mean=0.605
