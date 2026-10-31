@@ -1,0 +1,164 @@
+{
+  "pairs": [
+    {
+      "pair": "A vs B",
+      "diffs": [
+        [
+          "torque_gap.horizon",
+          "[{\"dt\": 0.2, \"n\": 6}, {\"dt\": 0.5, \"n\": 4}, {\"dt\": 1.0, \"n\": 4}, {\"dt\": 2.0, \"n\": 8}]",
+          "[{\"dt\": 0.2, \"n\": 25}]"
+        ]
+      ],
+      "unexpected": []
+    },
+    {
+      "pair": "A vs C",
+      "diffs": [
+        [
+          "trajectory3.maneuver.delta_deg",
+          30.0,
+          0.0
+        ]
+      ],
+      "unexpected": []
+    },
+    {
+      "pair": "B vs C",
+      "diffs": [
+        [
+          "torque_gap.horizon",
+          "[{\"dt\": 0.2, \"n\": 25}]",
+          "[{\"dt\": 0.2, \"n\": 6}, {\"dt\": 0.5, \"n\": 4}, {\"dt\": 1.0, \"n\": 4}, {\"dt\": 2.0, \"n\": 8}]"
+        ],
+        [
+          "trajectory3.maneuver.delta_deg",
+          30.0,
+          0.0
+        ]
+      ],
+      "unexpected": []
+    }
+  ],
+  "grids": {
+    "A": {
+      "n_steps": 22,
+      "horizon_s": 23.2,
+      "dts": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "dt_first": 0.2,
+      "maneuver_window": [
+        110.0
+      ],
+      "maneuver_delta_deg": [
+        29.999999999999996
+      ],
+      "gamma_limit_mode": "none",
+      "gdot_max": 1.0,
+      "gddot_max": 3.0,
+      "h0": 50.0,
+      "cmg_enabled": true
+    },
+    "B": {
+      "n_steps": 25,
+      "horizon_s": 5.000000000000002,
+      "dts": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2
+      ],
+      "dt_first": 0.2,
+      "maneuver_window": [
+        110.0
+      ],
+      "maneuver_delta_deg": [
+        29.999999999999996
+      ],
+      "gamma_limit_mode": "none",
+      "gdot_max": 1.0,
+      "gddot_max": 3.0,
+      "h0": 50.0,
+      "cmg_enabled": true
+    },
+    "C": {
+      "n_steps": 22,
+      "horizon_s": 23.2,
+      "dts": [
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "dt_first": 0.2,
+      "maneuver_window": [],
+      "maneuver_delta_deg": [],
+      "gamma_limit_mode": "none",
+      "gdot_max": 1.0,
+      "gddot_max": 3.0,
+      "h0": 50.0,
+      "cmg_enabled": true
+    }
+  },
+  "complaints": []
+}

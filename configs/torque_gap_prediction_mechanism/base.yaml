@@ -1,0 +1,11 @@
+# Mechanism-validation experiment: does the ≈23 s prediction horizon (i.e.
+# the visibility of the future 30 deg pitch manoeuvre) drive the pre-manoeuvre
+# configuration migration and the pitch-axis momentum pre-loading?
+#
+# Inherits the frozen M50 C1 case unchanged (P0 plant, B0, unwrapped gimbal,
+# gdot <= 1.0 rad/s, gddot <= 3.0 rad/s^2, h0 = 50 N m s, same weights/solver).
+# Only the two experimental variables are overridden per case:
+#   A -> nothing                (23.2 s horizon, full manoeuvre)   baseline
+#   B -> torque_gap.horizon     (5.0 s horizon,  full manoeuvre)   prediction test
+#   C -> trajectory3.maneuver.delta_deg = 0  (23.2 s horizon, no manoeuvre)
+base: ../torque_gap_m50/cases/c1_pitch30.yaml

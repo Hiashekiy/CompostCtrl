@@ -1,0 +1,12 @@
+# C: same 23.2 s horizon, but the 30 deg pitch manoeuvre is removed from the
+# task reference (delta_deg = 0 disables the Maneuver object).  The base flight
+# path, heading, atmosphere, disturbance, aero box and CMG stay untouched, so the
+# aircraft still tracks its nominal flight attitude -- it is not frozen.
+base: ../base.yaml
+trajectory3:
+  maneuver:
+    axis: pitch
+    start: 110.0
+    duration: 20.0
+    delta_deg: 0.0
+    shape: hold

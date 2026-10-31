@@ -1,0 +1,2 @@
+# A: full-horizon baseline -- identical to the frozen M50 C1 case.
+base: ../base.yaml
