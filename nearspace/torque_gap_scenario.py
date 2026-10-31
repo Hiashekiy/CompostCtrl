@@ -16,7 +16,8 @@ from .atmosphere_factory import make_atmosphere
 from .config import load_config
 from .model6 import euler_to_quat, quat_normalize
 from .torque_gap_authority import AuthorityConfig, build_boxes
-from .torque_gap_model import TorquePlantParams, pack_state
+from .torque_gap_model import (TorquePlantParams, input_dim, pack_state,
+                               state_dim)
 from .torque_gap_modulation import (ModulationConfig, gap_by_axis_onset,
                                     gap_onset_time, modulation, nominal_demand)
 from .trajectory3 import Trajectory3D
@@ -101,8 +102,6 @@ class Scenario:
         self.atm = make_atmosphere(cfg)
         self.traj = Trajectory3D(cfg, self.atm)
         self.prm = TorquePlantParams.from_config(cfg)
-        self.cluster = self.prm.cluster()
-        self.veh = self.prm.veh
         self.w = Weights.from_config(cfg)
         self.auth = AuthorityConfig.from_config(cfg)
         self.mod = ModulationConfig.from_config(cfg)
@@ -111,28 +110,71 @@ class Scenario:
         self.t_start = float(tg_cfg(cfg, "start", default=0.0))
         self.t_end = float(tg_cfg(cfg, "end", default=100.0))
         self.dt_ctrl = float(tg_cfg(cfg, "dt_ctrl", default=0.2))
+        # ---------------------------------------------------------------
+        # CMG presence / activity.
+        #
+        #   cmg_present: false                    -> A group.  The CMG does not
+        #       exist: no gimbal state, no gimbal-rate input, no CMG torque, no
+        #       rotor momentum and no CMG gyroscopic coupling anywhere in the
+        #       optimiser or the truth plant (7 states / 3 inputs in P0).
+        #   cmg_present: true,  cmg_enabled: false -> CMG installed but locked.
+        #       Diagnostic arm only; NOT the A group of this experiment.
+        #   cmg_present: true,  cmg_enabled: true  -> B group, joint control.
+        # `cmg_present: false` together with `cmg_enabled: true` is rejected.
+        # ---------------------------------------------------------------
+        self.cmg_present = bool(tg_cfg(cfg, "cmg_present", default=True))
+        cmg_enabled_raw = bool(tg_cfg(cfg, "cmg_enabled", default=True))
+        if self.cmg_present:
+            self.cmg_enabled = cmg_enabled_raw
+        else:
+            if cmg_enabled_raw:
+                raise ValueError(
+                    "torque_gap.cmg_present: false requires cmg_enabled: false; "
+                    "a vehicle without CMG has no gimbal rate to command")
+            self.cmg_enabled = False
+        self.cluster = self.prm.cluster() if self.cmg_present else None
+        self.nx = state_dim(self.cmg_present)
+        self.nu = input_dim(self.cmg_present)
+        self.veh = self.prm.veh
         # gamma in R (unwrapped) or in [gamma_min, gamma_max]
         gmode = str(tg_cfg(cfg, "gamma_limit", default="bounded")).lower()
         self.gamma_limit_mode = "none" if gmode in ("none", "unbounded", "free",
                                                     "inf", "continuous") else "bounded"
         self.gamma_unbounded = self.gamma_limit_mode == "none"
-        if self.gamma_unbounded:
+        if not self.cmg_present:
+            self.gamma_unbounded = True          # no gimbal, hence no travel limit
+            self.gamma_lim = (0.0, 0.0)
+        elif self.gamma_unbounded:
             self.gamma_lim = (-np.inf, np.inf)
         else:
             self.gamma_lim = (
                 np.deg2rad(float(tg_cfg(cfg, "gamma_min_deg", default=-90.0))),
                 np.deg2rad(float(tg_cfg(cfg, "gamma_max_deg", default=90.0))))
         self.tau_rate_limit = tg_cfg(cfg, "tau_rate_limit", default=None)
-        # CMG assist on/off.  With cmg_enabled: false the gimbal rates are frozen
-        # at zero everywhere (optimiser bounds AND both truth plants), so the
-        # vehicle is driven by the aerodynamic surfaces alone.  Everything else
-        # (reference, disturbance, box, horizon, solver, weights) is unchanged.
-        self.cmg_enabled = bool(tg_cfg(cfg, "cmg_enabled", default=True))
+        self._apply_seed()
         self.rho_fixed = None
         if str(self.auth.mode).lower() == "fixed":
             self.rho_fixed = float(self.atm.rho(self.auth.fixed_h_km * 1000.0))
         if self.auth.calibrate:
             self._calibrate_authority()
+
+    # ---- seed ------------------------------------------------------------
+    def _apply_seed(self):
+        """Optional seeded disturbance phase (multi-seed robustness study).
+
+        The baseline disturbance is deterministic, so `seed` alone changes
+        nothing.  With `torque_gap.seed_randomize: true` the seed draws a phase
+        offset for the sinusoidal disturbance components carried by the
+        reference trajectory.  A and B of the same scenario share the seed, so
+        they see exactly the same external torque time history.
+        """
+        self.seed = int(tg_cfg(self.cfg, "seed", default=0))
+        self.seed_randomize = bool(tg_cfg(self.cfg, "seed_randomize", default=False))
+        self.dist_phase = np.zeros(3)
+        if self.seed_randomize:
+            rng = np.random.default_rng(self.seed)
+            self.dist_phase = rng.uniform(0.0, 2.0 * np.pi, size=3)
+            self.traj.dist_phase = self.dist_phase.copy()
 
     # ---- authority calibration -----------------------------------------
     def _calibrate_authority(self):
@@ -202,9 +244,16 @@ class Scenario:
         """Everything the optimiser needs at one control step."""
         cond = self.cond(self.abs_times(t0))
         box = self.boxes(cond)
-        gamma_now = x[7:11] if x is not None else self.initial_state()[2]
-        H_nom = self.cluster.momentum(gamma_now) if self.mod.h_nom == "freeze" \
-            else np.zeros(3)
+        if not self.cmg_present:
+            # no rotor momentum exists, so the nominal demand is written without
+            # any H(gamma) term (zeros, not "frozen at the current gamma").
+            H_nom = np.zeros(3)
+        elif x is not None:
+            H_nom = (self.cluster.momentum(x[7:11])
+                     if self.mod.h_nom == "freeze" else np.zeros(3))
+        else:
+            H_nom = (self.cluster.momentum(self.initial_state()[7:11])
+                     if self.mod.h_nom == "freeze" else np.zeros(3))
         tau_nom = self.demand(cond, H_nom)
         modul = self.modulation_sequence(tau_nom, box)
         modul["H_nom"] = H_nom
@@ -225,6 +274,8 @@ class Scenario:
             w = np.asarray(self.traj.omega_ref(t), float)
         else:
             w = np.asarray(w, float)
+        if not self.cmg_present:
+            return pack_state(q, w)                       # 7 states, no gamma
         g = np.deg2rad(np.asarray(tg_cfg(self.cfg, "init", "gamma0_deg",
                                          default=[0.0, 0.0, 0.0, 0.0]), float))
         return pack_state(q, w, g)

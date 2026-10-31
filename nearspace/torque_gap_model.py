@@ -1,11 +1,26 @@
 """Predicted torque-gap joint attitude/CMG model -- P0 virtual-torque plant.
 
-State  x = [q(4), omega(3), gamma(4)]                                 (11)
-Input  u = [tau_a(3), nu(4)]                                          (7)
+Two plant variants, selected by the configuration flag `torque_gap.cmg_present`:
 
-    q_dot        = 0.5 q (x) [0, omega]
-    J omega_dot  = tau_a - A(gamma) nu + tau_d - omega x (J omega + H(gamma))
-    gamma_dot    = nu
+B group (``cmg_present: true``) -- 11 states, 7 inputs
+
+    State  x = [q(4), omega(3), gamma(4)]                             (11)
+    Input  u = [tau_a(3), nu(4)]                                      (7)
+        q_dot        = 0.5 q (x) [0, omega]
+        J omega_dot  = tau_a - A(gamma) nu + tau_d - omega x (J omega + H(gamma))
+        gamma_dot    = nu
+
+A group (``cmg_present: false``) -- 7 states, 3 inputs, NO CMG
+
+    State  x = [q(4), omega(3)]                                        (7)
+    Input  u = [tau_a(3)]                                              (3)
+        q_dot        = 0.5 q (x) [0, omega]
+        J omega_dot  = tau_a + tau_d - omega x (J omega)
+
+The A-group model has no gimbal angle, no gimbal rate, no rotor momentum H, no
+CMG torque A(gamma) nu and therefore no CMG gyroscopic coupling.  It is not the
+B model with the gimbal rates pinned to zero -- the variables themselves do not
+exist (see docs/CMG多场景姿态机动对照实验指导书_无CMG对照版.md §1, §3.1, §14.1).
 
 `tau_a` is the *total* three-axis aerodynamic moment [N m] produced by the
 aerodynamic surfaces (natural + damping + surface terms, see
@@ -33,30 +48,53 @@ from .cmg import CMGCluster, CMGParams
 from .model6 import (VehicleParams, quat_conj, quat_mul, quat_normalize,
                      quat_to_R, euler_to_quat, flow_angles)
 
-NX_TG, NU_TG = 11, 7
+NX_TG, NU_TG = 11, 7                     # cmg_present: true
+NX_TG_NOCMG, NU_TG_NOCMG = 7, 3          # cmg_present: false
+
+
+def state_dim(cmg_present):
+    return NX_TG if cmg_present else NX_TG_NOCMG
+
+
+def input_dim(cmg_present):
+    return NU_TG if cmg_present else NU_TG_NOCMG
 
 
 # --------------------------------------------------------------------------
 # packed state helpers
 # --------------------------------------------------------------------------
-def pack_state(q, omega, gamma):
-    return np.concatenate([np.asarray(q, float).ravel()[:4],
-                           np.asarray(omega, float).ravel()[:3],
-                           np.asarray(gamma, float).ravel()[:4]])
+def pack_state(q, omega, gamma=None):
+    """[q(4), omega(3)] for a CMG-free vehicle, [q(4), omega(3), gamma(4)] otherwise."""
+    base = np.concatenate([np.asarray(q, float).ravel()[:4],
+                           np.asarray(omega, float).ravel()[:3]])
+    if gamma is None:
+        return base
+    return np.concatenate([base, np.asarray(gamma, float).ravel()[:4]])
 
 
 def split_state(x):
+    """Split an 11-state vector into (q, omega, gamma)."""
     x = np.asarray(x, float)
     return x[0:4].copy(), x[4:7].copy(), x[7:11].copy()
 
 
-def pack_input(tau_a, nu):
-    return np.concatenate([np.asarray(tau_a, float).ravel()[:3],
-                           np.asarray(nu, float).ravel()[:4]])
+def split_state_nocmg(x):
+    """Split a 7-state vector into (q, omega).  There is no gamma."""
+    x = np.asarray(x, float)
+    return x[0:4].copy(), x[4:7].copy()
+
+
+def pack_input(tau_a, nu=None):
+    base = np.asarray(tau_a, float).ravel()[:3]
+    if nu is None:
+        return base
+    return np.concatenate([base, np.asarray(nu, float).ravel()[:4]])
 
 
 def split_input(u):
     u = np.asarray(u, float)
+    if u.size == NU_TG_NOCMG:
+        return u[0:3].copy(), None
     return u[0:3].copy(), u[3:7].copy()
 
 
@@ -123,7 +161,7 @@ def rk4_step_tg(x, u, tau_d, dt, prm: TorquePlantParams, cluster: CMGCluster,
     return xn
 
 
-def plant_step_tg(x, u_cmd, tau_d, dt, prm: TorquePlantParams, cluster: CMGCluster,
+def plant_step_tg(x, u_cmd, tau_d, dt, prm: TorquePlantParams, cluster,
                   substeps=4, gamma_lim=None):
     """Advance the P0 truth plant one control interval with held input.
 
@@ -140,6 +178,48 @@ def plant_step_tg(x, u_cmd, tau_d, dt, prm: TorquePlantParams, cluster: CMGClust
     x[7:11] = np.clip(x[7:11], -prm.cmg.gdot_max, prm.cmg.gdot_max)
     if gamma_lim is not None:
         x[7:11] = np.clip(x[7:11], gamma_lim[0], gamma_lim[1])
+    return x, u
+
+
+# --------------------------------------------------------------------------
+# A group: no CMG at all -- 7 states, 3 inputs
+# --------------------------------------------------------------------------
+def dynamics_tg_nocmg(x, u, tau_d, prm: TorquePlantParams):
+    """Time derivative of the 7 CMG-free states with u = [tau_a(3)].
+
+    J omega_dot = tau_a + tau_d - omega x (J omega)
+
+    There is deliberately no H(gamma) term and no A(gamma) nu term: the vehicle
+    carries no rotor momentum, so the gyroscopic coupling of the CMG cluster
+    cannot appear here.
+    """
+    q, w = split_state_nocmg(x)
+    tau_a = np.asarray(u, float).ravel()[:3]
+    dx = np.empty(NX_TG_NOCMG)
+    dx[0:4] = 0.5 * quat_mul(q, np.array([0.0, w[0], w[1], w[2]]))
+    dx[4:7] = prm.Jinv @ (tau_a + np.asarray(tau_d, float) - np.cross(w, prm.J @ w))
+    return dx
+
+
+def rk4_step_tg_nocmg(x, u, tau_d, dt, prm: TorquePlantParams, normalize=True):
+    """Classic RK4 step of the 7-state CMG-free model (quaternion renormalised)."""
+    k1 = dynamics_tg_nocmg(x, u, tau_d, prm)
+    k2 = dynamics_tg_nocmg(x + 0.5 * dt * k1, u, tau_d, prm)
+    k3 = dynamics_tg_nocmg(x + 0.5 * dt * k2, u, tau_d, prm)
+    k4 = dynamics_tg_nocmg(x + dt * k3, u, tau_d, prm)
+    xn = x + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+    if normalize:
+        xn[0:4] = quat_normalize(xn[0:4])
+    return xn
+
+
+def plant_step_tg_nocmg(x, u_cmd, tau_d, dt, prm: TorquePlantParams, substeps=4):
+    """Advance the CMG-free P0 truth plant one control interval with held input."""
+    x = np.asarray(x, float).copy()
+    u = np.asarray(u_cmd, float).ravel()[:3].copy()
+    h = dt / float(max(int(substeps), 1))
+    for i in range(int(max(substeps, 1))):
+        x = rk4_step_tg_nocmg(x, u, tau_d if np.ndim(tau_d) == 1 else tau_d[i], h, prm)
     return x, u
 
 

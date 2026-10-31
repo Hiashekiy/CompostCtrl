@@ -97,6 +97,10 @@ class Trajectory3D:
         self.heading_amp = np.deg2rad(float(getattr(t3, "heading_amp_deg", 3.0)))
         self.heading_period = float(getattr(t3, "heading_period", 200.0))
         self.dist_scale_qinf = bool(getattr(t3, "dist_scale_qinf", False))
+        # optional phase offset of the sinusoidal disturbance components (drawn
+        # from the run seed by the scenario layer when seed_randomize is on; all
+        # zeros -- the historical deterministic disturbance -- by default)
+        self.dist_phase = np.zeros(3)
         self.pulse_amp = np.array(getattr(t3, "dist_pulse_amp", [0.0, 0.0, 0.0]), dtype=float)
         self.pulse_start = float(getattr(t3, "dist_pulse_start", 1.0e9))
         self.pulse_dur = float(getattr(t3, "dist_pulse_duration", 1.0))
@@ -226,7 +230,8 @@ class Trajectory3D:
         With dist_scale_qinf the aerodynamic part scales with dynamic pressure,
         which is the physically consistent behaviour across a skip trajectory.
         """
-        base = prm.Md0 + prm.Md_amp * np.sin(2.0 * np.pi * prm.Md_freq * t)
+        base = prm.Md0 + prm.Md_amp * np.sin(2.0 * np.pi * prm.Md_freq * t
+                                            + np.asarray(self.dist_phase, float))
         if self.dist_scale_qinf:
             s = self.qinf(t) / max(self.qinf_ref, 1e-9)
             base = prm.Md0 + (base - prm.Md0) * s

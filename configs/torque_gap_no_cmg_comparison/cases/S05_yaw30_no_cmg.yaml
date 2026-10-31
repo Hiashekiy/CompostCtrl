@@ -1,0 +1,10 @@
+# A arm of S05_yaw30 (Yaw +30 deg, hold).
+# A group: the vehicle carries NO CMG.  There is no gimbal state, no gimbal
+# rate input, no CMG torque and no rotor-momentum gyroscopic coupling in
+# either the optimiser or the truth plant (7 states / 3 inputs).
+# Everything else is inherited from scenarios/S05_yaw30.yaml; see
+# scripts/audit_no_cmg_configs.py for the automatic A/B difference audit.
+base: ../scenarios/S05_yaw30.yaml
+torque_gap:
+  cmg_present: false
+  cmg_enabled: false

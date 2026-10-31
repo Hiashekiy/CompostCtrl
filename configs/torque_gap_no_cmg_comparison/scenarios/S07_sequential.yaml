@@ -1,0 +1,12 @@
+# Pitch +30 deg then Pitch -30 deg  --  S07_sequential
+# The single definition of this scenario: window 90-180 s and the
+# reference manoeuvre(s).  The A/B case files are generated from this file, so
+# both arms share the physics byte for byte.
+base: ../base.yaml
+torque_gap:
+  start: 90.0
+  end: 180.0
+trajectory3:
+  maneuver:
+    - {axis: pitch, start: 110.0, duration: 20.0, delta_deg: 30.0, shape: hold}
+    - {axis: pitch, start: 150.0, duration: 20.0, delta_deg: -30.0, shape: hold}

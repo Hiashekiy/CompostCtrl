@@ -1,0 +1,2 @@
+[run] S06_pitch30_roll20_no_cmg_seed2    plant=P0 cmg_present=False nx=7 nu=3 nlp=227/184 steps=300
+[done] S06_pitch30_roll20_no_cmg_seed2    wall=32.4s rmse={'man0': 4.914, 'man1': 4.914, 'combined': 4.914, 'pre': 1.744, 'post': 6.069, 'all': 4.58} fb=0.000 cpu_mean=0.093

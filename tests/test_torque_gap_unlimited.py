@@ -92,12 +92,13 @@ def test_no_clamp_in_either_plant():
     q = np.array([1.0, 0.0, 0.0, 0.0])
     g0 = np.deg2rad([100.0, -120.0, 150.0, 210.0])
     nu = np.ones(4)
-    x1, _, _ = cl._step_P0(pack_state(q, np.zeros(3), g0), np.zeros(3), nu, scn.t_start)
+    x1, _, _, _, _ = cl._step_P0(pack_state(q, np.zeros(3), g0), np.zeros(3), nu,
+                                 scn.t_start)
     assert np.all(x1[7:11] > g0)
     x18 = np.zeros(18)
     x18[0:4] = q
     x18[10:14] = g0
-    x18n, _, _, _, _ = cl._step_P1(x18, np.zeros(3), nu, scn.t_start)
+    x18n, _, _, _, _, _, _ = cl._step_P1(x18, np.zeros(3), nu, scn.t_start)
     assert np.all(x18n[10:14] > g0)
 
 
@@ -107,8 +108,8 @@ def test_bounded_config_still_clamps():
     cl = ClosedLoop(scn, plant="P0")
     q = np.array([1.0, 0.0, 0.0, 0.0])
     g0 = np.deg2rad([85.0, 0.0, 0.0, 0.0])
-    x1, _, _ = cl._step_P0(pack_state(q, np.zeros(3), g0), np.zeros(3), np.ones(4),
-                           scn.t_start)
+    x1, _, _, _, _ = cl._step_P0(pack_state(q, np.zeros(3), g0), np.zeros(3),
+                                 np.ones(4), scn.t_start)
     assert x1[7] <= np.pi / 2 + 1e-12                      # the old arm is unchanged
 
 

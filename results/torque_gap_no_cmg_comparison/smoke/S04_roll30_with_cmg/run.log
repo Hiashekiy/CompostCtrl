@@ -1,0 +1,2 @@
+[run] S04_roll30_with_cmg                plant=P0 cmg_present=True nx=11 nu=7 nlp=407/364 steps=100
+[done] S04_roll30_with_cmg                wall=60.8s rmse={'man0': 0.017, 'combined': 0.017, 'pre': 0.01, 'all': 0.014} fb=0.040 cpu_mean=0.593

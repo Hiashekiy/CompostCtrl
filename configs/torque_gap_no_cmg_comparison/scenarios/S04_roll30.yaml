@@ -1,0 +1,15 @@
+# Roll +30 deg, hold  --  S04_roll30
+# The single definition of this scenario: window 90-150 s and the
+# reference manoeuvre(s).  The A/B case files are generated from this file, so
+# both arms share the physics byte for byte.
+base: ../base.yaml
+torque_gap:
+  start: 90.0
+  end: 150.0
+trajectory3:
+  maneuver:
+    axis: roll
+    start: 110.0
+    duration: 20.0
+    delta_deg: 30.0
+    shape: hold

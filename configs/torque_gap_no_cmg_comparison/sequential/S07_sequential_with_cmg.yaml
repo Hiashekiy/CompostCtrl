@@ -1,0 +1,9 @@
+# B arm of S07_sequential (Pitch +30 deg then Pitch -30 deg).
+# B group: the vehicle carries the 4-unit pyramid CMG and the surfaces and
+# the CMG are optimised jointly (11 states / 7 inputs).
+# Everything else is inherited from scenarios/S07_sequential.yaml; see
+# scripts/audit_no_cmg_configs.py for the automatic A/B difference audit.
+base: ../scenarios/S07_sequential.yaml
+torque_gap:
+  cmg_present: true
+  cmg_enabled: true

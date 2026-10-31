@@ -1,0 +1,27 @@
+# Common physics of the no-CMG (A) vs surface+CMG (B) comparison.
+# ---------------------------------------------------------------- inherited --
+# Everything about the vehicle, its inertia, the aerodynamic coefficients, the
+# aero authority box, the gimbal device (M50 published limits), the reference
+# trajectory, the disturbance, the prediction grid, the solver and the tracking
+# weights is inherited unchanged from the M50 C1 chain.  This experiment only
+# adds the CMG presence switch and the scenario manoeuvre.  Nothing here changes
+# a run that does not load this file.
+base: ../torque_gap_m50/cases/c1_pitch30.yaml
+
+torque_gap:
+  start: 90.0
+  end: 150.0
+  dt_ctrl: 0.2
+  plant: P0
+  plant_substeps: 8
+  seed: 0
+  # The baseline disturbance of the reference trajectory is deterministic, so
+  # `seed` alone would change nothing.  `seed_randomize: true` draws a phase
+  # offset for its sinusoidal components; both arms of a scenario always share
+  # one seed, hence one identical external torque history.
+  seed_randomize: false
+  # B group defaults.  The A-group case files override both to false; the
+  # configuration check rejects cmg_present: false with cmg_enabled: true.
+  cmg_present: true
+  cmg_enabled: true
+  gamma_limit: none          # unwrapped gimbal angle (M50 chain)

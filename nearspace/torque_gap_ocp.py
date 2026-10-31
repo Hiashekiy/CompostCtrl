@@ -1,7 +1,9 @@
 """Joint aerodynamic-torque / CMG trajectory optimiser (CasADi + IPOPT).
 
-Multiple-shooting NLP over the 11-state model of nearspace.torque_gap_model:
+The NLP dimension follows the *physical* system selected by
+`torque_gap.cmg_present`; it is never padded with dummy variables.
 
+cmg_present: true   (B group, 11 states / 7 inputs)
     decision variables   X[11, k=0..N], U[7, k=0..N-1]
     equality             X[:,k+1] = RK4(X[:,k], U[:,k], tau_d[k], dt_k)
                          || q_k || = 1
@@ -11,7 +13,21 @@ Multiple-shooting NLP over the 11-state model of nearspace.torque_gap_model:
                          |nu_i[k] - nu_i[k-1]| <= gddot_max * dt_k
                          gamma is unwrapped: bounded (+-90 deg) or free in R
 
-    J = J_att + J_reg
+    J = J_att + J_reg  (attitude/rate tracking, gimbal-rate + torque regularisation)
+
+cmg_present: false  (A group, 7 states / 3 inputs, no CMG at all)
+    decision variables   X[7, k=0..N], U[3, k=0..N-1]
+    equality             X[:,k+1] = RK4(X[:,k], U[:,k], tau_d[k], dt_k)
+                         || q_k || = 1
+                         X[:,0] = x_measured
+    inequality           tau_min[k] <= tau_a[k] <= tau_max[k]
+
+    J = J_att + J_reg  (identical attitude/rate terms; the gimbal-rate terms do
+                        not exist because neither nu nor gamma exist)
+
+There is no gamma state, no nu input, no gimbal bound and no gimbal-rate
+constraint in the A-group NLP -- see docs/CMG多场景姿态机动对照实验指导书_无CMG对照版.md
+§3.2.  Simulating "no CMG" by forcing nu == 0 is explicitly not permitted.
 
 The predicted torque-gap modulation term (J_cfg with its auxiliary capability
 probe `V`) has been REMOVED: measured over the whole C0-C5 x B1/B2 matrix it gave
@@ -26,7 +42,7 @@ term (implementation plan §6.A).
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import numpy as np
 
@@ -95,9 +111,9 @@ class SolverConfig:
 class OCPResult:
     ok: bool
     status: str
-    u0: np.ndarray                 # first applied [tau_a(3), nu(4)]
-    X: np.ndarray                  # (11, N+1)
-    U: np.ndarray                  # (7, N)
+    u0: np.ndarray                 # first applied input: [tau_a(3)] or [tau_a(3), nu(4)]
+    X: np.ndarray                  # (nx, N+1)
+    U: np.ndarray                  # (nu, N)
     objective: float
     iter_count: int
     cpu_s: float
@@ -120,6 +136,9 @@ class TorqueGapOCP:
         self.solver_cfg = SolverConfig.from_config(scn.cfg)
         self.gamma_lim = scn.gamma_lim
         self.tau_rate_limit = scn.tau_rate_limit
+        self.cmg_present = bool(scn.cmg_present)
+        self.nx = int(scn.nx)
+        self.nu = int(scn.nu)
         self._build()
 
     # ------------------------------------------------------------------
@@ -127,31 +146,32 @@ class TorqueGapOCP:
         ca = self.ca
         scn = self.scn
         N = self.N
-        nx, nu = 11, 7
+        nx, nu_in = self.nx, self.nu
         prm = scn.prm
         J = np.asarray(prm.J, float)
         Jinv = np.asarray(prm.Jinv, float)
-        const = prm.cluster_constants()
-        h0 = float(const["h0"])
-        g_axis = const["g_axis"]
-        s0 = const["s0"]
-        gxs0 = const["gxs0"]
         gdot_max = float(prm.cmg.gdot_max)
         gddot_max = float(prm.cmg.gddot_max)
 
-        # ---- geometry as CasADi expressions ---------------------------
-        gam = ca.SX.sym("gam", 4)
-        A_cols, H = [], ca.SX.zeros(3, 1)
-        for i in range(4):
-            gi = ca.SX(g_axis[:, i])
-            s0i = ca.SX(s0[:, i])
-            gxi = ca.SX(gxs0[:, i])
-            si = s0i * ca.cos(gam[i]) + gxi * ca.sin(gam[i])
-            A_cols.append(h0 * ca.cross(gi, si))
-            H = H + h0 * si
-        A_sym = ca.horzcat(*A_cols)
-        self._A_of = ca.Function("A_of", [gam], [A_sym])
-        self._H_of = ca.Function("H_of", [gam], [H])
+        if self.cmg_present:
+            const = prm.cluster_constants()
+            h0 = float(const["h0"])
+            g_axis = const["g_axis"]
+            s0 = const["s0"]
+            gxs0 = const["gxs0"]
+            # ---- geometry as CasADi expressions -----------------------
+            gam = ca.SX.sym("gam", 4)
+            A_cols, H = [], ca.SX.zeros(3, 1)
+            for i in range(4):
+                gi = ca.SX(g_axis[:, i])
+                s0i = ca.SX(s0[:, i])
+                gxi = ca.SX(gxs0[:, i])
+                si = s0i * ca.cos(gam[i]) + gxi * ca.sin(gam[i])
+                A_cols.append(h0 * ca.cross(gi, si))
+                H = H + h0 * si
+            A_sym = ca.horzcat(*A_cols)
+            self._A_of = ca.Function("A_of", [gam], [A_sym])
+            self._H_of = ca.Function("H_of", [gam], [H])
 
         def quat_mul_sym(a, b):
             aw, ax, ay, az = a[0], a[1], a[2], a[3]
@@ -165,23 +185,29 @@ class TorqueGapOCP:
             return ca.vertcat(a[0], -a[1], -a[2], -a[3])
 
         x = ca.SX.sym("x", nx)
-        u = ca.SX.sym("u", nu)
+        u = ca.SX.sym("u", nu_in)
         td = ca.SX.sym("td", 3)
-        q, w, g = x[0:4], x[4:7], x[7:11]
-        tau_a, nu_c = u[0:3], u[3:7]
-        A_x = ca.horzcat(*[h0 * ca.cross(ca.SX(g_axis[:, i]),
-                                        ca.SX(s0[:, i]) * ca.cos(g[i])
-                                        + ca.SX(gxs0[:, i]) * ca.sin(g[i]))
-                           for i in range(4)])
-        H_x = ca.SX.zeros(3, 1)
-        for i in range(4):
-            H_x = H_x + h0 * (ca.SX(s0[:, i]) * ca.cos(g[i])
-                              + ca.SX(gxs0[:, i]) * ca.sin(g[i]))
-        f = ca.vertcat(
-            0.5 * quat_mul_sym(q, ca.vertcat(0.0, w)),
-            ca.mtimes(Jinv, tau_a - ca.mtimes(A_x, nu_c) + td
-                      - ca.cross(w, ca.mtimes(J, w) + H_x)),
-            nu_c)
+        q, w = x[0:4], x[4:7]
+        tau_a = u[0:3]
+        qdot = 0.5 * quat_mul_sym(q, ca.vertcat(0.0, w))
+        if self.cmg_present:
+            g = x[7:11]
+            nu_c = u[3:7]
+            A_x = ca.horzcat(*[h0 * ca.cross(ca.SX(g_axis[:, i]),
+                                             ca.SX(s0[:, i]) * ca.cos(g[i])
+                                             + ca.SX(gxs0[:, i]) * ca.sin(g[i]))
+                               for i in range(4)])
+            H_x = ca.SX.zeros(3, 1)
+            for i in range(4):
+                H_x = H_x + h0 * (ca.SX(s0[:, i]) * ca.cos(g[i])
+                                  + ca.SX(gxs0[:, i]) * ca.sin(g[i]))
+            wdot = ca.mtimes(Jinv, tau_a - ca.mtimes(A_x, nu_c) + td
+                             - ca.cross(w, ca.mtimes(J, w) + H_x))
+            f = ca.vertcat(qdot, wdot, nu_c)
+        else:
+            # CMG-free rigid body: no A(gamma) nu term, no H(gamma) coupling
+            wdot = ca.mtimes(Jinv, tau_a + td - ca.cross(w, ca.mtimes(J, w)))
+            f = ca.vertcat(qdot, wdot)
         self._f_of = ca.Function("f_tg", [x, u, td], [f])
 
         def rk4(X, U, TD, dt):
@@ -191,17 +217,17 @@ class TorqueGapOCP:
             k4 = self._f_of(X + dt * k3, U, TD)
             Xn = X + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
             qn = Xn[0:4] / ca.norm_2(Xn[0:4])
-            return ca.vertcat(qn, Xn[4:11])
+            return ca.vertcat(qn, Xn[4:nx])
 
         # ---- decision vector ------------------------------------------
         nx_tot = nx * (N + 1)
-        nu_tot = nu * N
+        nu_tot = nu_in * N
         nz = nx_tot + nu_tot
         Z = ca.SX.sym("Z", nz)
         # CasADi reshape is column-major: Z[s*n + i] is entry i of node s.  The
         # numpy side must therefore reshape with order="F" (see _warm_start/solve).
         X = ca.reshape(Z[0:nx_tot], nx, N + 1)
-        U = ca.reshape(Z[nx_tot:nx_tot + nu_tot], nu, N)
+        U = ca.reshape(Z[nx_tot:nx_tot + nu_tot], nu_in, N)
 
         # ---- parameters ------------------------------------------------
         p_qref = ca.SX.sym("qref", 4, N + 1)
@@ -209,18 +235,25 @@ class TorqueGapOCP:
         p_lo = ca.SX.sym("lo", 3, N)
         p_hi = ca.SX.sym("hi", 3, N)
         p_td = ca.SX.sym("td", 3, N)
-        p_nuprev = ca.SX.sym("nuprev", 4)
         p_tauprev = ca.SX.sym("tauprev", 3)
         p_xinit = ca.SX.sym("xinit", nx)
-        P = ca.vertcat(ca.vec(p_qref), ca.vec(p_wref), ca.vec(p_lo), ca.vec(p_hi),
-                       ca.vec(p_td), p_nuprev, p_tauprev, p_xinit)
+        p_parts = [ca.vec(p_qref), ca.vec(p_wref), ca.vec(p_lo), ca.vec(p_hi),
+                   ca.vec(p_td)]
         self._p_shapes = dict(qref=(4, N + 1), wref=(3, N), lo=(3, N), hi=(3, N),
-                              td=(3, N), nuprev=(4,), tauprev=(3,),
-                              xinit=(nx,))
+                              td=(3, N), tauprev=(3,), xinit=(nx,))
+        if self.cmg_present:
+            p_nuprev = ca.SX.sym("nuprev", 4)
+            p_parts.append(p_nuprev)
+            self._p_shapes["nuprev"] = (4,)
+        p_parts.extend([p_tauprev, p_xinit])
+        P = ca.vertcat(*p_parts)
+        self._p_order = (["qref", "wref", "lo", "hi", "td"]
+                         + (["nuprev"] if self.cmg_present else [])
+                         + ["tauprev", "xinit"])
 
         W = self.w
         H_horizon = float(np.sum(self.dts))
-        J = 0.0
+        Jc = 0.0
         J_terms = []          # diagnostics only: the additive cost terms
         g_terms, g_lb, g_ub = [], [], []
 
@@ -239,7 +272,7 @@ class TorqueGapOCP:
             dw = wk_om - p_wref[:, k]
             t_att = wk * (W.w_att * ca.dot(eR, eR) / W.e_scale ** 2
                           + W.w_rate * ca.dot(dw, dw) / W.omega_scale ** 2)
-            J += t_att
+            Jc += t_att
             J_terms.append(("att[%d]" % k, t_att))
 
             # dynamics (multiple shooting defect)
@@ -248,13 +281,14 @@ class TorqueGapOCP:
             g_lb.extend([0.0] * nx)
             g_ub.extend([0.0] * nx)
 
-            # gimbal-rate increment (previous *executed* rate included)
-            prev = p_nuprev if k == 0 else U[3:7, k - 1]
-            dnu = U[3:7, k] - prev
-            for i in range(4):
-                g_terms.append(dnu[i])
-                g_lb.append(-gddot_max * dt)
-                g_ub.append(gddot_max * dt)
+            if self.cmg_present:
+                # gimbal-rate increment (previous *executed* rate included)
+                prev = p_nuprev if k == 0 else U[3:7, k - 1]
+                dnu = U[3:7, k] - prev
+                for i in range(4):
+                    g_terms.append(dnu[i])
+                    g_lb.append(-gddot_max * dt)
+                    g_ub.append(gddot_max * dt)
             # optional aerodynamic torque rate limit (ablation)
             if self.tau_rate_limit is not None:
                 dtau = U[0:3, k] - (p_tauprev if k == 0 else U[0:3, k - 1])
@@ -263,14 +297,16 @@ class TorqueGapOCP:
                     g_lb.append(-float(self.tau_rate_limit) * dt)
                     g_ub.append(float(self.tau_rate_limit) * dt)
 
-            # regularisation
-            nu_k = U[3:7, k]
-            dv = nu_k - prev
-            t_reg = wk * (W.r_nu * ca.dot(nu_k, nu_k) / W.nu_scale ** 2
-                          + W.r_dnu * ca.dot(dv, dv) / W.nu_scale ** 2)
+            # regularisation (the gimbal-rate terms exist only with a CMG)
+            t_reg = 0.0
+            if self.cmg_present:
+                nu_k = U[3:7, k]
+                dv = nu_k - (p_nuprev if k == 0 else U[3:7, k - 1])
+                t_reg = wk * (W.r_nu * ca.dot(nu_k, nu_k) / W.nu_scale ** 2
+                              + W.r_dnu * ca.dot(dv, dv) / W.nu_scale ** 2)
             dtau_k = U[0:3, k] - (p_tauprev if k == 0 else U[0:3, k - 1])
-            t_reg += wk * W.r_dtau * ca.dot(dtau_k, dtau_k) / W.d_scale ** 2
-            J += t_reg
+            t_reg = t_reg + wk * W.r_dtau * ca.dot(dtau_k, dtau_k) / W.d_scale ** 2
+            Jc += t_reg
             J_terms.append(("reg[%d]" % k, t_reg))
 
         # terminal attitude weight
@@ -278,7 +314,7 @@ class TorqueGapOCP:
         qeN = quat_mul_sym(quat_conj_sym(p_qref[:, N]), qN)
         eRN = 2.0 * qeN[1:4]
         t_term = W.q_terminal * ca.dot(eRN, eRN) / W.e_scale ** 2
-        J += t_term
+        Jc += t_term
         J_terms.append(("terminal", t_term))
 
         # unit-norm quaternion equality at every node
@@ -295,7 +331,7 @@ class TorqueGapOCP:
         # ---- bounds ----------------------------------------------------
         lbx = np.full(nz, -np.inf)
         ubx = np.full(nz, np.inf)
-        if scn.gamma_limit_mode != "none":
+        if self.cmg_present and scn.gamma_limit_mode != "none":
             # gimbal travel is a *position* limit only in the bounded model;
             # with gamma_limit: none the state stays a free, unwrapped angle and
             # only the rate / acceleration limits below remain
@@ -304,18 +340,13 @@ class TorqueGapOCP:
                 lbx[base + 7:base + 11] = self.gamma_lim[0]
                 ubx[base + 7:base + 11] = self.gamma_lim[1]
         u_off = nx_tot
-        nu_lo, nu_hi = (-gdot_max, gdot_max) if scn.cmg_enabled else (0.0, 0.0)
-        for k in range(N):
-            base = u_off + k * nu
-            lbx[base:base + 3] = np.nan          # placeholder, set per solve
-            ubx[base:base + 3] = np.nan
-            lbx[base + 3:base + 7] = nu_lo
-            ubx[base + 3:base + 7] = nu_hi
-        v_off = nx_tot + nu_tot
-        vmax = gdot_max if scn.cmg_enabled else 0.0
-        lbx[v_off:] = -vmax
-        ubx[v_off:] = vmax
-        self._tau_idx = (u_off, nu, N)
+        if self.cmg_present:
+            nu_lo, nu_hi = (-gdot_max, gdot_max) if scn.cmg_enabled else (0.0, 0.0)
+            for k in range(N):
+                base = u_off + k * nu_in
+                lbx[base + 3:base + 7] = nu_lo
+                ubx[base + 3:base + 7] = nu_hi
+        self._tau_idx = (u_off, nu_in, N)
         self._nz, self._nx_tot, self._nu_tot = nz, nx_tot, nu_tot
         self._lbx_template = lbx
         self._ubx_template = ubx
@@ -339,7 +370,7 @@ class TorqueGapOCP:
                                    else "exact"),
             sb="yes",
         ), print_time=False)
-        nlp = dict(x=Z, p=P, f=J, g=g)
+        nlp = dict(x=Z, p=P, f=Jc, g=g)
         self.solver = ca.nlpsol("torque_gap_ocp", "ipopt", nlp, opts)
         self.n_vars = int(nz)
         self.n_cons = int(g.shape[0])
@@ -348,48 +379,61 @@ class TorqueGapOCP:
     def _param_vector(self, plan, x_init, nu_prev, tau_prev):
         N = self.N
         cond, box = plan["cond"], plan["box"]
-        vals = [np.asarray(cond["q_ref"], float).T,                     # (4, N+1)
-                np.asarray(cond["omega_ref"], float)[:N].T,             # (3, N)
-                np.asarray(box["tau_min"], float)[:N].T,                # (3, N)
-                np.asarray(box["tau_max"], float)[:N].T,                # (3, N)
-                np.asarray(cond["tau_d"], float)[:N].T,                 # (3, N)
-                np.asarray(nu_prev, float).reshape(4),
-                np.asarray(tau_prev, float).reshape(3),
-                np.asarray(x_init, float).reshape(11)]
+        vals = dict(
+            qref=np.asarray(cond["q_ref"], float).T,                # (4, N+1)
+            wref=np.asarray(cond["omega_ref"], float)[:N].T,         # (3, N)
+            lo=np.asarray(box["tau_min"], float)[:N].T,              # (3, N)
+            hi=np.asarray(box["tau_max"], float)[:N].T,              # (3, N)
+            td=np.asarray(cond["tau_d"], float)[:N].T,               # (3, N)
+            nuprev=np.asarray(nu_prev, float).reshape(4),
+            tauprev=np.asarray(tau_prev, float).reshape(3),
+            xinit=np.asarray(x_init, float).reshape(self.nx))
         # ca.vec() in the graph stacks matrices column-major, so the numpy side
-        # must flatten with order="F" too (same convention as X/U/V above).
-        return np.concatenate([np.asarray(v, float).reshape(-1, order="F") for v in vals])
+        # must flatten with order="F" too (same convention as X/U above).
+        return np.concatenate([np.asarray(vals[k], float).reshape(-1, order="F")
+                               for k in self._p_order])
 
     def _bounds(self, plan):
         lbx = self._lbx_template.copy()
         ubx = self._ubx_template.copy()
-        u_off, nu, N = self._tau_idx
+        u_off, nu_in, N = self._tau_idx
         lo, hi = plan["box"]["tau_min"], plan["box"]["tau_max"]
         for k in range(N):
-            base = u_off + k * nu
+            base = u_off + k * nu_in
             lbx[base:base + 3] = lo[k]
             ubx[base:base + 3] = hi[k]
         return lbx, ubx
 
     def _warm_start(self, plan, x_init, nu_prev, tau_prev, warm):
         z = np.zeros(self._nz)
-        X = z[0:self._nx_tot].reshape(11, self.N + 1, order="F")
-        U = z[self._nx_tot:self._nx_tot + self._nu_tot].reshape(7, self.N, order="F")
+        X = z[0:self._nx_tot].reshape(self.nx, self.N + 1, order="F")
+        U = z[self._nx_tot:self._nx_tot + self._nu_tot].reshape(self.nu, self.N,
+                                                                order="F")
         if warm is None:
             # cold start: propagate the measured state with the feed-forward torque
             # guess so that the initial guess satisfies the shooting defects
-            from .torque_gap_model import rk4_step_tg
+            if self.cmg_present:
+                from .torque_gap_model import rk4_step_tg
+            else:
+                from .torque_gap_model import rk4_step_tg_nocmg
             X[:, 0] = np.asarray(x_init, float)
             tau_guess = np.asarray(plan["mod"]["tau_nom"], float).T   # (3, N+1)
             U[0:3, :] = tau_guess[:, :self.N]
-            U[3:7, :] = np.asarray(nu_prev, float)[:, None]
+            if self.cmg_present:
+                U[3:7, :] = np.asarray(nu_prev, float)[:, None]
             for k in range(self.N):
-                X[:, k + 1] = rk4_step_tg(X[:, k], U[:, k], plan["cond"]["tau_d"][k],
-                                          float(self.dts[k]), self.scn.prm,
-                                          self.scn.cluster)
-                if not self.scn.gamma_unbounded:
-                    X[7:11, k + 1] = np.clip(X[7:11, k + 1], self.gamma_lim[0],
-                                             self.gamma_lim[1])
+                if self.cmg_present:
+                    X[:, k + 1] = rk4_step_tg(X[:, k], U[:, k],
+                                              plan["cond"]["tau_d"][k],
+                                              float(self.dts[k]), self.scn.prm,
+                                              self.scn.cluster)
+                    if not self.scn.gamma_unbounded:
+                        X[7:11, k + 1] = np.clip(X[7:11, k + 1], self.gamma_lim[0],
+                                                 self.gamma_lim[1])
+                else:
+                    X[:, k + 1] = rk4_step_tg_nocmg(X[:, k], U[:, k],
+                                                    plan["cond"]["tau_d"][k],
+                                                    float(self.dts[k]), self.scn.prm)
         else:
             # shift the previous solution by one node and repeat the last action
             Xw, Uw = warm
@@ -398,13 +442,16 @@ class TorqueGapOCP:
             U[:, :-1] = Uw[:, 1:] if Uw.shape[1] > 1 else Uw[:, :1]
             U[:, -1] = Uw[:, -1]
         # honour the bounds (they change every step)
-        x0 = np.asarray(x_init, float)
-        X[:, 0] = x0
+        X[:, 0] = np.asarray(x_init, float)
         return z
 
     # ------------------------------------------------------------------
-    def solve(self, plan, x_init, nu_prev, tau_prev, warm=None):
+    def solve(self, plan, x_init, nu_prev=None, tau_prev=None, warm=None):
         import time
+        if nu_prev is None:
+            nu_prev = np.zeros(4)
+        if tau_prev is None:
+            tau_prev = np.zeros(3)
         t0 = time.perf_counter()
         p = self._param_vector(plan, x_init, nu_prev, tau_prev)
         lbx, ubx = self._bounds(plan)
@@ -431,8 +478,9 @@ class TorqueGapOCP:
             message = "%s: %s" % (type(exc).__name__, exc)
             ok = False
 
-        X = zsol[0:self._nx_tot].reshape(11, self.N + 1, order="F")
-        U = zsol[self._nx_tot:self._nx_tot + self._nu_tot].reshape(7, self.N, order="F")
+        X = zsol[0:self._nx_tot].reshape(self.nx, self.N + 1, order="F")
+        U = zsol[self._nx_tot:self._nx_tot + self._nu_tot].reshape(self.nu, self.N,
+                                                                   order="F")
         viol = self._max_violation(lbx, ubx, zsol, gsol)
         cpu = time.perf_counter() - t0
         return OCPResult(ok=ok, status=status, u0=U[:, 0].copy(), X=X.copy(),
