@@ -125,6 +125,11 @@ class Scenario:
                 np.deg2rad(float(tg_cfg(cfg, "gamma_min_deg", default=-90.0))),
                 np.deg2rad(float(tg_cfg(cfg, "gamma_max_deg", default=90.0))))
         self.tau_rate_limit = tg_cfg(cfg, "tau_rate_limit", default=None)
+        # CMG assist on/off.  With cmg_enabled: false the gimbal rates are frozen
+        # at zero everywhere (optimiser bounds AND both truth plants), so the
+        # vehicle is driven by the aerodynamic surfaces alone.  Everything else
+        # (reference, disturbance, box, horizon, solver, weights) is unchanged.
+        self.cmg_enabled = bool(tg_cfg(cfg, "cmg_enabled", default=True))
         self.rho_fixed = None
         if str(self.auth.mode).lower() == "fixed":
             self.rho_fixed = float(self.atm.rho(self.auth.fixed_h_km * 1000.0))

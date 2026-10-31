@@ -121,6 +121,8 @@ class TorqueGapOCP:
         self.w = scn.w
         self.mode = str(scn.mode).upper()
         self.lambda_cfg = 0.0 if self.mode == "B0" else float(scn.lambda_cfg)
+        if not getattr(scn, "cmg_enabled", True):
+            self.lambda_cfg = 0.0      # E_k(v) has no meaning with the CMG frozen
         self.solver_cfg = SolverConfig.from_config(scn.cfg)
         self.gamma_lim = scn.gamma_lim
         self.tau_rate_limit = scn.tau_rate_limit
@@ -328,15 +330,17 @@ class TorqueGapOCP:
                 lbx[base + 7:base + 11] = self.gamma_lim[0]
                 ubx[base + 7:base + 11] = self.gamma_lim[1]
         u_off = nx_tot
+        nu_lo, nu_hi = (-gdot_max, gdot_max) if scn.cmg_enabled else (0.0, 0.0)
         for k in range(N):
             base = u_off + k * nu
             lbx[base:base + 3] = np.nan          # placeholder, set per solve
             ubx[base:base + 3] = np.nan
-            lbx[base + 3:base + 7] = -gdot_max
-            ubx[base + 3:base + 7] = gdot_max
+            lbx[base + 3:base + 7] = nu_lo
+            ubx[base + 3:base + 7] = nu_hi
         v_off = nx_tot + nu_tot
-        lbx[v_off:] = -gdot_max
-        ubx[v_off:] = gdot_max
+        vmax = gdot_max if scn.cmg_enabled else 0.0
+        lbx[v_off:] = -vmax
+        ubx[v_off:] = vmax
         self._tau_idx = (u_off, nu, N)
         self._nz, self._nx_tot, self._nu_tot, self._nv_tot = nz, nx_tot, nu_tot, nv_tot
         self._lbx_template = lbx

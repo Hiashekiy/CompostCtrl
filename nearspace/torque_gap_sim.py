@@ -244,8 +244,13 @@ class ClosedLoop:
             # execution-side actuator limits (independent of the optimiser)
             lo, hi = plan["box"]["tau_min"][0], plan["box"]["tau_max"][0]
             tau_a_cmd = np.clip(u_cmd[0:3], lo, hi)
-            nu_cmd = np.clip(u_cmd[3:7], -gdot, gdot)
-            nu_cmd = np.clip(nu_cmd, nu_prev - gddot * self.dt, nu_prev + gddot * self.dt)
+            if scn.cmg_enabled:
+                nu_cmd = np.clip(u_cmd[3:7], -gdot, gdot)
+                nu_cmd = np.clip(nu_cmd, nu_prev - gddot * self.dt,
+                                 nu_prev + gddot * self.dt)
+            else:
+                nu_cmd = np.zeros(4)          # CMG frozen: surfaces only
+
             if self.plant == "P0":
                 x, tau_act, nu_act = self._step_P0(x, tau_a_cmd, nu_cmd, t)
                 delta_cmd = np.zeros(3)
@@ -457,6 +462,7 @@ def write_run(out_dir, cl: ClosedLoop, metrics, cfg, extra_meta=None):
                       gddot_max=float(cl.scn.prm.cmg.gddot_max),
                       tau_g=float(cl.scn.prm.cmg.tau_g)),
             H_nom_mode=str(cl.scn.mod.h_nom), tau_d_mode=str(cl.scn.mod.tau_d),
+            cmg_enabled=bool(cl.scn.cmg_enabled),
             solver=dict(max_iter=cl.solver_cfg.max_iter, tol=cl.solver_cfg.tol,
                         linear_solver="mumps", engine="casadi-ipopt"),
             seed=int(getattr(cfg.torque_gap, "seed", 0)),

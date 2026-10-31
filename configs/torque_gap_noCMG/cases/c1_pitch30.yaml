@@ -1,0 +1,8 @@
+# Surface-only arm: byte-for-byte the same case as
+# configs/torque_gap_unlimited/cases/c1_pitch30.yaml (unwrapped gimbal, B0, P0,
+# 30 deg pitch manoeuvre, same reference/disturbance/horizon/solver) with the
+# CMG switched OFF: the gimbal rates are frozen at zero in the optimiser bounds
+# and in both truth plants, so the aerodynamic surfaces alone must fly the task.
+base: ../../torque_gap_unlimited/cases/c1_pitch30.yaml
+torque_gap:
+  cmg_enabled: false
