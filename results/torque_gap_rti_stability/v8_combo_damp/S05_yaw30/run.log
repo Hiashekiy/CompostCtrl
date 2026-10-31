@@ -1,0 +1,2 @@
+[run] v8_combo_damp__S05_yaw30           plant=P0 backend=rti cmg_present=True nx=11 nu=7 nlp=407/407 steps=300
+[done] v8_combo_damp__S05_yaw30           wall=38.1s rmse={'man0': 3.836, 'combined': 3.836, 'pre': 0.673, 'post': 0.576, 'all': 2.264} fb=0.000 cpu_mean=0.120

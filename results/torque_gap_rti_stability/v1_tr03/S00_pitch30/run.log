@@ -1,0 +1,2 @@
+[run] v1_tr03__S00_pitch30               plant=P0 backend=rti cmg_present=True nx=11 nu=7 nlp=407/407 steps=300
+[done] v1_tr03__S00_pitch30               wall=37.2s rmse={'man0': 0.939, 'combined': 0.939, 'pre': 0.176, 'post': 1.244, 'all': 0.903} fb=0.000 cpu_mean=0.117

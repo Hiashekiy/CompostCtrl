@@ -1,0 +1,2 @@
+[run] v9_tr_ws__S05_yaw30                plant=P0 backend=rti cmg_present=True nx=11 nu=7 nlp=407/407 steps=300
+[done] v9_tr_ws__S05_yaw30                wall=36.1s rmse={'man0': 3.156, 'combined': 3.156, 'pre': 0.485, 'post': 0.307, 'all': 1.843} fb=0.000 cpu_mean=0.114

@@ -1,0 +1,2 @@
+[run] v0_plain__S07_sequential           plant=P0 backend=rti cmg_present=True nx=11 nu=7 nlp=407/407 steps=450
+[done] v0_plain__S07_sequential           wall=43.7s rmse={'man0': 0.111, 'man1': 0.001, 'combined': 0.064, 'pre': 0.048, 'post': 0.0, 'all': 0.055} fb=0.000 cpu_mean=0.090

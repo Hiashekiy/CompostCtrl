@@ -1,0 +1,2 @@
+[run] v8_combo_damp__S03_pitch45         plant=P0 backend=rti cmg_present=True nx=11 nu=7 nlp=407/407 steps=300
+[done] v8_combo_damp__S03_pitch45         wall=36.9s rmse={'man0': 6.106, 'combined': 6.106, 'pre': 1.382, 'post': 18.458, 'all': 11.243} fb=0.000 cpu_mean=0.116

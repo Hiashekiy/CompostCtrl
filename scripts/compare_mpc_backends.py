@@ -34,6 +34,7 @@ ROOTS = [
     ("baseline (IPOPT, original settings)", "results/torque_gap_no_cmg_comparison"),
     ("fast (IPOPT, Tier 1)", "results/torque_gap_no_cmg_comparison_fast"),
     ("rti (HPIPM, 12 GN QPs)", "results/torque_gap_no_cmg_comparison_rti"),
+    ("rti2 (HPIPM + trust regions)", "results/torque_gap_no_cmg_comparison_rti2"),
 ]
 SCEN = ["S00_pitch30", "S01_pitch_minus30", "S02_pitch10", "S03_pitch45",
         "S04_roll30", "S05_yaw30", "S06_pitch30_roll20", "S07_sequential"]
@@ -156,7 +157,7 @@ def main():
         })
         FIG.mkdir(parents=True, exist_ok=True)
         backs = [b.split(" ")[0] for b, _ in ROOTS]
-        colors = {"baseline": "C3", "fast": "C1", "rti": "C0"}
+        colors = {"baseline": "C3", "fast": "C1", "rti": "C0", "rti2": "C2"}
         for arm in ARMS:
             fig, axs = plt.subplots(1, 2, figsize=(12.5, 3.8))
             w = 0.26

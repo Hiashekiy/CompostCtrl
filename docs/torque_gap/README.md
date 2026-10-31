@@ -106,7 +106,8 @@ python scripts/run_torque_gap.py --case c1_pitch30 --plant P0 `
 | 该实验的代码审查与惯量审计 | `no_cmg_vs_cmg_code_audit.md` |
 | MPC 求解速度优化（Tier 1/2/3 全报告） | `mpc_solver_speedup.md` |
 | 配置（由脚本生成的 A/B） | `configs/torque_gap_no_cmg_comparison/` |
-| 数据（3 个完整矩阵：baseline / fast / rti） | `results/torque_gap_no_cmg_comparison{,_fast,_rti}/` |
+| 数据（4 个完整矩阵：baseline / fast / rti / rti2） | `results/torque_gap_no_cmg_comparison{,_fast,_rti,_rti2}/` |
+| RTI 线性化稳定性扫描（13 个变体 × 6 场景） | `results/torque_gap_rti_stability/sweep.md` |
 | 求解速度对比与变体研究 | `results/torque_gap_mpc_speed/`、`figures/torque_gap_mpc_speed/` |
 
 新增模块与脚本：
@@ -123,11 +124,14 @@ scripts/plot_no_cmg_comparison.py     逐场景 A/B 八联图与跨场景图
 scripts/compare_mpc_backends.py       三个后端的横向对比与图
 scripts/study_mpc_speed.py            Tier-2 变体研究（网格 / 冗余约束）
 scripts/bench_no_cmg_solver.py        单点微基准（求解器选项 / 网格长度）
+scripts/sweep_rti_stability.py       RTI 信赖域等稳定性开关的扫描
 tests/test_torque_gap_no_cmg.py       无 CMG 分支的 15 项测试
 tests/test_torque_gap_solver_policy.py 采纳策略 / 热启动 / quat_norm 测试
 tests/test_torque_gap_rti.py          HPIPM RTI 的 8 项测试
 ```
 
 关键结论（详见 `mpc_solver_speedup.md`）：B 组单步求解从 baseline 的 781 ms（P95 2973 ms）
-降到 Tier-1 的 252 ms（P95 648 ms）、再降到 HPIPM RTI 的 **79 ms**（P95 128 ms），
-全部 16 次 P0 运行进入 0.2 s 控制周期；代价是能力受限场景（S03/S05）跟踪退化 2–4x。
+降到 Tier-1 的 252 ms（P95 648 ms），再到 HPIPM RTI 的 79 ms；**给 RTI 加上
+`|δγ| ≤ 0.5 rad` / `|δω| ≤ 1 rad/s` 硬信赖域后**，108 ms 均值 / 139 ms P95 /
+**173 ms 最坏**（每一步都在 0.2 s 内），而跟踪（8 场景均值 0.740°）与 IPOPT（0.733°）
+只差 0.9%——实时性与精度同时成立。

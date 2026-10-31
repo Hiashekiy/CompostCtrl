@@ -217,6 +217,73 @@ def test_closed_loop_runs_and_meets_the_period():
     assert m["max_violation"] < 1e-4
 
 
+# --------------------------------------------------------------------------
+# linearisation-stability options (delta-gamma / delta-omega trust regions)
+# --------------------------------------------------------------------------
+def test_defaults_keep_the_historical_behaviour():
+    scn = _scn(CASE_B)
+    rti = _rti(scn)
+    assert rti._tr_active is False
+    assert rti.state_tr_gamma == 0.0 and rti.state_tr_omega == 0.0
+    assert rti.qp_warm_start is False and rti.cost_scale is False
+    assert rti.gamma_damp == 0.0 and rti.qp_iters_hi == 0
+
+
+def test_state_trust_region_is_configured():
+    scn = _scn(CASE_B)
+    rti = _rti(scn, state_tr_gamma=0.5, state_tr_omega=1.0)
+    assert rti._tr_active is True
+    assert list(rti._tr_rows) == [7, 8, 9, 10, 4, 5, 6]
+    assert np.allclose(rti._tr_bound_vec, [0.5] * 4 + [1.0] * 3)
+    assert rti._Jx_tr.shape == (7, scn.nx)
+
+
+def test_trust_region_is_respected_by_the_qp():
+    if not HAVE_HPIPM:
+        print("skip (no HPIPM)")
+        return
+    scn = _scn(CASE_B)
+    rti = _rti(scn, qp_iters=1, state_tr_gamma=0.5, state_tr_omega=1.0)
+    x, plan = _probe(scn)
+    X, U = rti._initial_guess(plan, x, None)
+    dX, dU, status, _ = rti._iterate(X, U, plan)
+    assert status == 0, status
+    for k in range(1, rti.N + 1):
+        assert np.max(np.abs(dX[7:11, k])) <= 0.5 + 1e-6, (k, dX[7:11, k])
+        assert np.max(np.abs(dX[4:7, k])) <= 1.0 + 1e-6, (k, dX[4:7, k])
+    # the hard pin at stage 0 survives
+    assert np.max(np.abs(dX[:, 0])) < 1e-8
+
+
+def test_trust_region_options_from_config():
+    raw = deep_merge(read_yaml(str(CASE_B)),
+                     {"torque_gap": {"rti": {"state_tr_gamma": 0.5,
+                                             "state_tr_omega": 1.0,
+                                             "qp_iters": 8}}})
+    scn = Scenario(_to_ns(raw))
+    rti = _rti(scn).__class__.from_config(scn)
+    assert rti.state_tr_gamma == 0.5 and rti.state_tr_omega == 1.0
+    assert rti.qp_iters == 8
+    assert rti._tr_active is True
+    o = rti.options()
+    assert o["state_tr_gamma"] == 0.5 and o["qp_iters"] == 8
+
+
+def test_closed_loop_with_trust_region_stays_inside_the_period():
+    if not HAVE_HPIPM:
+        print("skip (no HPIPM)")
+        return
+    from nearspace.torque_gap_sim import ClosedLoop
+    raw = deep_merge(read_yaml(str(CASE_B)),
+                     {"torque_gap": {"start": 108.0, "end": 113.0}})
+    scn = Scenario(_to_ns(raw))
+    rti = _rti(scn, qp_iters=12, state_tr_gamma=0.5, state_tr_omega=1.0)
+    cl = ClosedLoop(scn, ocp=rti, plant="P0")
+    m = cl.run()
+    assert m["fallback_steps"] == 0
+    assert m["cpu_s"]["p95"] < 0.2, m["cpu_s"]
+
+
 if __name__ == "__main__":
     fails = 0
     for name in [n for n in sorted(globals()) if n.startswith("test_")]:

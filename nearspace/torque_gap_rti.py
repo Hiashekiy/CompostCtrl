@@ -47,7 +47,10 @@ class TorqueGapRTI:
     """Same interface as TorqueGapOCP: `.N`, `.n_vars`, `.n_cons`, `.solve(...)`."""
 
     def __init__(self, scn, qp_iters=1, qp_iter_max=40, qp_tol=1e-6, mode="balance",
-                 line_search=True, step_tol=1e-4):
+                 line_search=True, step_tol=1e-4,
+                 state_tr_gamma=0.0, state_tr_omega=0.0, state_tr_sigma=False,
+                 nu_scale_sigma=False, qp_warm_start=False, cost_scale=False,
+                 gamma_damp=0.0, qp_iters_hi=0):
         self.ca = ca = _casadi()
         self.scn = scn
         self.dts = np.asarray(scn.dts, float)
@@ -61,10 +64,66 @@ class TorqueGapRTI:
         self.cmg_present = bool(scn.cmg_present)
         self.gamma_lim = scn.gamma_lim
         self.horizon = float(np.sum(self.dts))
+        # --- linearisation-stability options (all off = historical behaviour) ---
+        self.state_tr_gamma = float(state_tr_gamma)     # |dx_gamma| per stage [rad]
+        self.state_tr_omega = float(state_tr_omega)     # |dx_omega| per stage [rad/s]
+        self.state_tr_sigma = bool(state_tr_sigma)      # tighten the gamma TR near singular
+        self.nu_scale_sigma = bool(nu_scale_sigma)      # tighten |dnu| near singular
+        self.qp_warm_start = bool(qp_warm_start)
+        self.cost_scale = bool(cost_scale)              # normalise the QP cost to O(1)
+        self.gamma_damp = float(gamma_damp)             # damping on |dgamma|^2
+        self.qp_iters_hi = int(qp_iters_hi)             # extra QPs when near singular
+        self.cluster = scn.cluster if self.cmg_present else None
+        if self.cmg_present:
+            self.sigma_floor = float(scn.prm.cmg.sigma_floor)
+            self.sigma_home = float(scn.prm.cmg.home_sigma_min)
+        self.last_sigma_min = np.inf
         self._build_model()
         self._build_qp(qp_iter_max, qp_tol, mode)
         self.n_vars = self.nx * (self.N + 1) + self.nu * self.N
         self.n_cons = self.nx * (self.N + 1) + self.nu * self.N
+
+    # ------------------------------------------------------------------
+    @classmethod
+    def from_config(cls, scn, **over):
+        """Build from `torque_gap.rti.*` (all keys optional)."""
+        r = getattr(getattr(scn.cfg, "torque_gap", None), "rti", None)
+
+        def g(name, default):
+            v = over.get(name, None)
+            if v is None:
+                v = getattr(r, name, default) if r is not None else default
+            return v
+
+        return cls(scn,
+                   qp_iters=int(g("qp_iters", 12)),
+                   qp_iter_max=int(g("qp_iter_max", 40)),
+                   qp_tol=float(g("qp_tol", 1e-6)),
+                   mode=str(g("mode", "balance")),
+                   line_search=bool(g("line_search", True)),
+                   step_tol=float(g("step_tol", 1e-4)),
+                   state_tr_gamma=float(g("state_tr_gamma", 0.0)),
+                   state_tr_omega=float(g("state_tr_omega", 0.0)),
+                   state_tr_sigma=bool(g("state_tr_sigma", False)),
+                   nu_scale_sigma=bool(g("nu_scale_sigma", False)),
+                   qp_warm_start=bool(g("qp_warm_start", False)),
+                   cost_scale=bool(g("cost_scale", False)),
+                   gamma_damp=float(g("gamma_damp", 0.0)),
+                   qp_iters_hi=int(g("qp_iters_hi", 0)))
+
+    def options(self):
+        """The stability/accuracy knobs, for the run metadata."""
+        return dict(qp_iters=int(self.qp_iters), qp_iters_hi=int(self.qp_iters_hi),
+                    line_search=bool(self.use_line_search),
+                    step_tol=float(self.step_tol),
+                    state_tr_gamma=float(self.state_tr_gamma),
+                    state_tr_omega=float(self.state_tr_omega),
+                    state_tr_sigma=bool(self.state_tr_sigma),
+                    nu_scale_sigma=bool(self.nu_scale_sigma),
+                    qp_warm_start=bool(self.qp_warm_start),
+                    cost_scale=bool(self.cost_scale),
+                    gamma_damp=float(self.gamma_damp),
+                    sigma_min_last=float(self.last_sigma_min))
 
     # ------------------------------------------------------------------
     def _build_model(self):
@@ -145,6 +204,31 @@ class TorqueGapRTI:
         dim.set("nbx", nx, 0)                 # dx_0 = 0 (measured state is fixed)
         dim.set("nbxe", nx, 0)                # ... as an equality constraint
         dim.set("nbu", nu_in, 0, N - 1)       # control box at every stage
+
+        # state trust region on the deviation (keeps the linearisation inside the
+        # region where the gimbal geometry A(gamma) is still the one we linearised)
+        rows, bounds = [], []
+        if self.cmg_present:
+            if self.state_tr_gamma > 0.0:
+                rows.extend([7, 8, 9, 10])
+                bounds.extend([self.state_tr_gamma] * 4)
+            if self.state_tr_omega > 0.0:
+                rows.extend([4, 5, 6])
+                bounds.extend([self.state_tr_omega] * 3)
+        self._tr_rows = np.asarray(rows, int)
+        self._tr_bound_vec = np.asarray(bounds, float)
+        self._tr_active = self._tr_rows.size > 0
+        self._Jx_tr = np.zeros((self._tr_rows.size, nx))
+        for i, r in enumerate(self._tr_rows):
+            self._Jx_tr[i, r] = 1.0
+        if self._tr_active:
+            for k in range(1, N + 1):
+                dim.set("nbx", int(self._tr_rows.size), k)
+                dim.set("nbxe", 0, k)
+        else:
+            for k in range(1, N + 1):
+                dim.set("nbx", 0, k)
+
         arg = cls["arg"](dim, mode)
         arg.set("iter_max", int(iter_max))
         arg.set("tol_stat", float(tol))
@@ -152,6 +236,9 @@ class TorqueGapRTI:
         arg.set("tol_ineq", float(tol))
         arg.set("tol_comp", float(tol))
         arg.set("reg_prim", float(reg_prim))
+        if self.qp_warm_start:
+            # the qp_sol object persists, so this re-uses the previous QP solution
+            arg.set("warm_start", 1)
         self._dim = dim
         self._qp = cls["qp"](dim)
         self._sol = cls["sol"](dim)
@@ -178,17 +265,27 @@ class TorqueGapRTI:
         qt = 2.0 * w.q_terminal / w.e_scale ** 2
         return qa, qr, qt, wk
 
-    def _qp_matrices(self, X, U, plan):
+    def _sigma_profile(self, X):
+        """sigma_min(A(gamma_k)) at every node (only when a sigma-aware option is on)."""
+        if not self.cmg_present:
+            return None
+        if not (self.nu_scale_sigma or self.state_tr_sigma or self.qp_iters_hi > 0):
+            return None
+        cl = self.cluster
+        return np.array([cl.sigma_min(cl.jacobian(X[7:11, k]))
+                         for k in range(self.N + 1)])
+
+    def _qp_matrices(self, X, U, plan, sig=None):
         """Gauss-Newton QP data for the current reference trajectory."""
         N, nx, nu_in = self.N, self.nx, self.nu
         W = self.w
         qa, qr, qt, wk = self._weights()
         qref = np.asarray(plan["cond"]["q_ref"], float)
         wref = np.asarray(plan["cond"]["omega_ref"], float)
-        tau_d = np.asarray(plan["cond"]["tau_d"], float)
         lo = np.asarray(plan["box"]["tau_min"], float)
         hi = np.asarray(plan["box"]["tau_max"], float)
         gdot = float(self.scn.prm.cmg.gdot_max)
+        gddot = float(self.scn.prm.cmg.gddot_max)
         nu_on = self.cmg_present and bool(self.scn.cmg_enabled)
 
         Q = np.zeros((N + 1, nx, nx))
@@ -208,6 +305,10 @@ class TorqueGapRTI:
                 dW = X[4:7, k] - wref[k]
                 Q[k] += qr[k] * (self._Ew.T @ self._Ew)
                 qv[k] += qr[k] * (self._Ew.T @ dW)
+                if self.cmg_present and self.gamma_damp > 0.0:
+                    # damping on the gimbal-angle deviation: keeps the plan from
+                    # winding the gimbals when the linear model is unreliable
+                    Q[k][7:11, 7:11] += self.gamma_damp * wk[k] * np.eye(4)
         for k in range(N):
             if self.cmg_present:
                 r_nu = wk[k] * 2.0 * W.r_nu / W.nu_scale ** 2
@@ -223,11 +324,14 @@ class TorqueGapRTI:
             # The gimbal-rate *increment* limit of the NLP couples consecutive
             # stages, which a stage-wise QP cannot express.  It is imposed here as
             # a hard trust region on the deviation of this stage's rate:
-            #   |du_nu| <= gddot * dt_k
+            #   |du_nu| <= gddot * dt_k   (optionally scaled down near singularity)
             # and the executor still clips nu to nu_prev +- gddot*dt.  Without this
             # bound the QP happily drives the gimbals to +-gdot for the whole
             # horizon, which is useless because the linear model breaks down.
-            span = float(self.scn.prm.cmg.gddot_max) * float(self.dts[k])
+            span = gddot * float(self.dts[k])
+            if self.nu_scale_sigma and sig is not None:
+                f = np.clip(sig[k] / max(self.sigma_floor, 1e-9), 0.15, 1.0)
+                span = span * float(f)
             if nu_on:
                 nu_lo = np.maximum(-gdot - U[3:7, k], -span)
                 nu_hi = np.minimum(gdot - U[3:7, k], span)
@@ -236,10 +340,34 @@ class TorqueGapRTI:
                 nu_hi = -U[3:7, k]
             lu[k] = np.concatenate([lo[k] - U[0:3, k], nu_lo])
             uu[k] = np.concatenate([hi[k] - U[0:3, k], nu_hi])
+
+        if self.cost_scale:
+            # The tracking Hessian is ~500 while the control regularisation is
+            # ~1e-4; a global cost scale leaves the solution unchanged but makes
+            # the interior-point sub-problems far better conditioned.
+            diag = max(float(np.max(np.abs(np.diagonal(Q, axis1=1, axis2=2)))),
+                       float(np.max(np.abs(np.diagonal(R, axis1=1, axis2=2)))),
+                       1e-12)
+            Q = Q / diag
+            qv = qv / diag
+            R = R / diag
+            rv = rv / diag
         return Q, qv, R, rv, lu, uu
 
+    def _tr_bounds(self, k, sig):
+        """State trust-region bounds of stage k (empty when inactive)."""
+        if not self._tr_active:
+            return None
+        b = self._tr_bound_vec.copy()
+        if self.state_tr_sigma and sig is not None and self.cmg_present:
+            n_g = 4 if self.state_tr_gamma > 0.0 else 0
+            if n_g:
+                f = np.clip(sig[k] / max(self.sigma_floor, 1e-9), 0.2, 1.0)
+                b[:n_g] = b[:n_g] * float(f)
+        return b
+
     # ------------------------------------------------------------------
-    def _iterate(self, X, U, plan):
+    def _iterate(self, X, U, plan, sig=None):
         """One Gauss-Newton SQP iteration: linearise, solve the QP, update."""
         N, nx, nu_in = self.N, self.nx, self.nu
         tau_d = np.asarray(plan["cond"]["tau_d"], float)
@@ -248,7 +376,7 @@ class TorqueGapRTI:
         for k in range(N):
             Ak[k] = np.asarray(self._A(X[:, k], U[:, k], tau_d[k], self.dts[k]))
             Bk[k] = np.asarray(self._B(X[:, k], U[:, k], tau_d[k], self.dts[k]))
-        Q, qv, R, rv, lu, uu = self._qp_matrices(X, U, plan)
+        Q, qv, R, rv, lu, uu = self._qp_matrices(X, U, plan, sig)
 
         # NOTE: the wrapper's range form (idx_start, idx_end) writes the *same*
         # array to every stage, so per-stage data must be set one stage at a time.
@@ -269,6 +397,12 @@ class TorqueGapRTI:
         qp.set("Jx", self._Jx, 0)
         qp.set("lx", np.zeros(nx), 0)
         qp.set("ux", np.zeros(nx), 0)
+        if self._tr_active:
+            for k in range(1, N + 1):
+                b = self._tr_bounds(k, sig)
+                qp.set("Jx", self._Jx_tr, k)
+                qp.set("lx", -b, k)
+                qp.set("ux", b, k)
 
         self._solver.solve(qp, self._sol)
         status = int(self._solver.get("status"))
@@ -339,8 +473,16 @@ class TorqueGapRTI:
 
         status, iters_total = 0, 0
         obj = self._objective(X, U, plan)
-        for _ in range(max(self.qp_iters, 1)):
-            dX, dU, status, it = self._iterate(X, U, plan)
+        sig = self._sigma_profile(X)
+        if sig is not None:
+            self.last_sigma_min = float(np.min(sig))
+        # adaptive effort: spend more QPs only where the linearisation is fragile
+        iters_eff = max(self.qp_iters, 1)
+        if self.qp_iters_hi > 0 and sig is not None and \
+                self.last_sigma_min < self.sigma_floor:
+            iters_eff = max(iters_eff, self.qp_iters_hi)
+        for _ in range(iters_eff):
+            dX, dU, status, it = self._iterate(X, U, plan, sig)
             iters_total += it
             if status != 0:
                 break

@@ -82,7 +82,8 @@ def case_path(scenario, arm):
     raise SystemExit("missing case file for %s/%s" % (scenario, arm))
 
 
-def specs(phase, root=None, solver_profile="baseline", backend="ipopt", qp_iters=12):
+def specs(phase, root=None, solver_profile="baseline", backend="ipopt", qp_iters=12,
+          rti_options=None):
     out = []
     root = Path(root) if root else OUT
     if not root.is_absolute():
@@ -94,6 +95,8 @@ def specs(phase, root=None, solver_profile="baseline", backend="ipopt", qp_iters
         if randomize:
             rid += "_seed%d" % seed
         ov = deep_merge(profile, extra or {})
+        if rti_options:
+            ov = deep_merge(ov, {"torque_gap": {"rti": dict(rti_options)}})
         out.append(dict(run_id=rid, phase=sub, scenario=scenario, arm=arm,
                         case=str(case_path(scenario, arm).relative_to(ROOT)),
                         plant=plant, seed=int(seed), seed_randomize=bool(randomize),
@@ -144,9 +147,11 @@ def run_one(spec):
     scn = Scenario(cfg)
     scn.case = spec["run_id"]
     backend = spec.get("backend", "ipopt")
+    rti_options = None
     if backend == "rti":
         from nearspace.torque_gap_rti import TorqueGapRTI
-        ocp = TorqueGapRTI(scn, qp_iters=int(spec.get("qp_iters", 12)))
+        ocp = TorqueGapRTI.from_config(scn, qp_iters=int(spec.get("qp_iters", 12)))
+        rti_options = ocp.options()
     else:
         ocp = TorqueGapOCP(scn)
     cl = ClosedLoop(scn, ocp=ocp, plant=spec["plant"])
@@ -165,6 +170,7 @@ def run_one(spec):
                                      wall_clock_s=wall,
                                      backend=backend,
                                      qp_iters=int(spec.get("qp_iters", 0)),
+                                     rti_options=rti_options,
                                      command="scripts/run_no_cmg_matrix.py --run-one"))
     (out_dir / "config_resolved.yaml").write_text(
         yaml.safe_dump(raw, allow_unicode=True, sort_keys=False), encoding="utf-8")
@@ -176,12 +182,13 @@ def run_one(spec):
 
 
 def driver(phase, jobs, force, only, root=None, solver_profile="baseline",
-           backend="ipopt", qp_iters=12):
-    todo = [s for s in specs(phase, root, solver_profile, backend, qp_iters)
+           backend="ipopt", qp_iters=12, rti_options=None):
+    todo = [s for s in specs(phase, root, solver_profile, backend, qp_iters, rti_options)
             if (only is None or s["scenario"] in only)
             and (force or not (ROOT / s["out_dir"] / "metrics.json").exists())]
     print("[matrix] phase=%s runs=%d (of %d planned) jobs=%d"
-          % (phase, len(todo), len(specs(phase, root, solver_profile, backend, qp_iters)), jobs), flush=True)
+          % (phase, len(todo), len(specs(phase, root, solver_profile, backend, qp_iters,
+                                        rti_options)), jobs), flush=True)
     running = []
     done, failed = [], []
     while todo or running:
@@ -220,6 +227,10 @@ def driver(phase, jobs, force, only, root=None, solver_profile="baseline",
     return 1 if failed else 0
 
 
+def _rti_opts(args):
+    return json.loads(args.rti_options) if args.rti_options else None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--phase", default="P0",
@@ -235,6 +246,9 @@ def main():
                     choices=sorted(SOLVER_PROFILES))
     ap.add_argument("--backend", default="ipopt", choices=["ipopt", "rti"])
     ap.add_argument("--qp-iters", type=int, default=12)
+    ap.add_argument("--rti-options", default=None,
+                    help="JSON dict of torque_gap.rti.* overrides, e.g. "
+                         "state_tr_gamma / state_tr_omega / qp_warm_start")
     ap.add_argument("--list", action="store_true")
     args = ap.parse_args()
     if args.run_one:
@@ -242,13 +256,14 @@ def main():
         return 0
     if args.list:
         for s in specs(args.phase, args.results_root, args.solver_profile,
-                       args.backend, args.qp_iters):
+                       args.backend, args.qp_iters, _rti_opts(args)):
             done = (ROOT / s["out_dir"] / "metrics.json").exists()
             print("%-40s %s %s" % (s["run_id"], s["plant"], "done" if done else "-"))
         return 0
     only = set(x.strip() for x in args.only.split(",")) if args.only else None
     return driver(args.phase, max(int(args.jobs), 1), args.force, only,
-                  args.results_root, args.solver_profile, args.backend, args.qp_iters)
+                  args.results_root, args.solver_profile, args.backend, args.qp_iters,
+                  _rti_opts(args))
 
 
 if __name__ == "__main__":

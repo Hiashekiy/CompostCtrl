@@ -106,6 +106,40 @@ Each column set is the fully re-run 34-run A/B matrix with one MPC backend, so b
 | rti | P1 | S01_pitch_minus30/with_cmg | 0 | 0.1630 | 90.5 | 123.6 | 141.8 | 0.000 | yes |
 | rti | P1 | S06_pitch30_roll20/no_cmg | 0 | 8.4396 | 51.8 | 101.9 | 111.1 | 0.000 | yes |
 | rti | P1 | S06_pitch30_roll20/with_cmg | 0 | 0.1659 | 84.9 | 122.2 | 140.9 | 0.000 | yes |
+| rti2 | P0 | S00_pitch30/no_cmg | 0 | 4.7460 | 61.6 | 109.4 | 136.0 | 0.000 | yes |
+| rti2 | P0 | S00_pitch30/no_cmg | 1 | 4.6196 | 56.6 | 103.3 | 115.1 | 0.000 | yes |
+| rti2 | P0 | S00_pitch30/no_cmg | 2 | 4.7477 | 56.8 | 103.3 | 125.0 | 0.000 | yes |
+| rti2 | P0 | S00_pitch30/with_cmg | 0 | 0.0851 | 113.6 | 143.5 | 158.5 | 0.000 | yes |
+| rti2 | P0 | S00_pitch30/with_cmg | 1 | 0.0963 | 112.1 | 132.0 | 159.7 | 0.000 | yes |
+| rti2 | P0 | S00_pitch30/with_cmg | 2 | 0.0852 | 108.5 | 129.1 | 146.8 | 0.000 | yes |
+| rti2 | P0 | S01_pitch_minus30/no_cmg | 0 | 5.1142 | 59.5 | 109.4 | 131.4 | 0.000 | yes |
+| rti2 | P0 | S01_pitch_minus30/no_cmg | 1 | 5.1142 | 57.0 | 103.0 | 120.7 | 0.000 | yes |
+| rti2 | P0 | S01_pitch_minus30/no_cmg | 2 | 5.0009 | 57.0 | 102.2 | 118.0 | 0.000 | yes |
+| rti2 | P0 | S01_pitch_minus30/with_cmg | 0 | 0.1321 | 116.6 | 142.2 | 172.7 | 0.000 | yes |
+| rti2 | P0 | S01_pitch_minus30/with_cmg | 1 | 0.1281 | 108.7 | 128.7 | 149.8 | 0.000 | yes |
+| rti2 | P0 | S01_pitch_minus30/with_cmg | 2 | 0.1291 | 107.9 | 130.1 | 141.9 | 0.000 | yes |
+| rti2 | P0 | S02_pitch10/no_cmg | 0 | 0.5534 | 47.6 | 104.1 | 140.8 | 0.000 | yes |
+| rti2 | P0 | S02_pitch10/with_cmg | 0 | 0.0021 | 93.9 | 136.8 | 164.5 | 0.000 | yes |
+| rti2 | P0 | S03_pitch45/no_cmg | 0 | 10.9549 | 75.5 | 115.6 | 139.7 | 0.000 | yes |
+| rti2 | P0 | S03_pitch45/with_cmg | 0 | 2.4260 | 126.6 | 150.8 | 162.1 | 0.000 | yes |
+| rti2 | P0 | S04_roll30/no_cmg | 0 | 4.0034 | 42.2 | 97.7 | 122.2 | 0.000 | yes |
+| rti2 | P0 | S04_roll30/with_cmg | 0 | 0.0006 | 90.5 | 132.6 | 155.1 | 0.000 | yes |
+| rti2 | P0 | S05_yaw30/no_cmg | 0 | 17.1338 | 62.8 | 106.7 | 130.2 | 0.000 | yes |
+| rti2 | P0 | S05_yaw30/with_cmg | 0 | 3.1097 | 108.1 | 143.0 | 171.6 | 0.000 | yes |
+| rti2 | P0 | S06_pitch30_roll20/no_cmg | 0 | 4.9105 | 53.9 | 107.7 | 143.2 | 0.000 | yes |
+| rti2 | P0 | S06_pitch30_roll20/no_cmg | 1 | 4.9106 | 51.2 | 102.2 | 114.3 | 0.000 | yes |
+| rti2 | P0 | S06_pitch30_roll20/no_cmg | 2 | 4.9106 | 51.2 | 101.4 | 110.2 | 0.000 | yes |
+| rti2 | P0 | S06_pitch30_roll20/with_cmg | 0 | 0.1136 | 111.4 | 132.9 | 148.3 | 0.000 | yes |
+| rti2 | P0 | S06_pitch30_roll20/with_cmg | 1 | 0.5279 | 107.5 | 125.1 | 150.2 | 0.000 | yes |
+| rti2 | P0 | S06_pitch30_roll20/with_cmg | 2 | 0.1134 | 105.1 | 122.9 | 146.7 | 0.000 | yes |
+| rti2 | P0 | S07_sequential/no_cmg | 0 | 2.8025 | 43.8 | 98.1 | 125.0 | 0.000 | yes |
+| rti2 | P0 | S07_sequential/with_cmg | 0 | 0.0492 | 101.5 | 126.2 | 143.9 | 0.000 | yes |
+| rti2 | P1 | S00_pitch30/no_cmg | 0 | 9.2753 | 61.9 | 104.1 | 116.4 | 0.000 | yes |
+| rti2 | P1 | S00_pitch30/with_cmg | 0 | 0.1054 | 107.8 | 131.1 | 143.6 | 0.000 | yes |
+| rti2 | P1 | S01_pitch_minus30/no_cmg | 0 | 10.8090 | 52.4 | 100.6 | 114.9 | 0.000 | yes |
+| rti2 | P1 | S01_pitch_minus30/with_cmg | 0 | 0.1078 | 109.2 | 127.5 | 141.7 | 0.000 | yes |
+| rti2 | P1 | S06_pitch30_roll20/no_cmg | 0 | 8.4396 | 51.7 | 102.1 | 109.3 | 0.000 | yes |
+| rti2 | P1 | S06_pitch30_roll20/with_cmg | 0 | 0.6524 | 109.1 | 130.4 | 146.3 | 0.000 | yes |
 
 ## Aggregate over the 8 P0 scenarios (seed 0)
 
@@ -117,3 +151,5 @@ Each column set is the fully re-run 34-run A/B matrix with one MPC backend, so b
 | fast | with_cmg | 0.7401 | 251.6 | 648.0 | 1476.8 | 0/8 | 0.014 |
 | rti | no_cmg | 6.2773 | 54.8 | 107.4 | 220.5 | 8/8 | 0.000 |
 | rti | with_cmg | 1.8214 | 79.1 | 128.1 | 249.7 | 8/8 | 0.000 |
+| rti2 | no_cmg | 6.2773 | 55.9 | 106.1 | 143.2 | 8/8 | 0.000 |
+| rti2 | with_cmg | 0.7398 | 107.8 | 138.5 | 172.7 | 8/8 | 0.000 |
