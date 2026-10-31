@@ -1,0 +1,60 @@
+{
+  "plant": "P0",
+  "mode": "B1",
+  "t_start": 90.0,
+  "t_end": 150.0,
+  "dt_ctrl": 0.2,
+  "n_steps": 300,
+  "window": [
+    110.0,
+    130.0
+  ],
+  "rmse_deg": {
+    "all": 1.2658029824888537,
+    "pre": 0.5933779168022393,
+    "maneuver": 1.307327237453288,
+    "post": 1.702126331371458
+  },
+  "max_err_deg": {
+    "all": 4.855610465179848,
+    "pre": 1.1214134961208264,
+    "maneuver": 2.1323836258943385,
+    "post": 4.855610465179848
+  },
+  "cpu_s": {
+    "mean": 1.367125483666799,
+    "p95": 3.380250005006383,
+    "max": 3.716737499998999,
+    "total": 410.13764510003966
+  },
+  "fallback_steps": 81,
+  "fallback_ratio": 0.27,
+  "iterations": {
+    "mean": 261.2033333333333,
+    "max": 600
+  },
+  "max_violation": 0.0007187222592797138,
+  "tau_bound_used_mean": 0.2922222222222222,
+  "H_norm_max": 121.2534390904595,
+  "sigma_min_min": 2.2963619250294944,
+  "status_counts": {
+    "Maximum_Iterations_Exceeded|previous": 81,
+    "Solve_Succeeded": 219
+  },
+  "gamma_at_maneuver_start": [
+    0.29262337588257975,
+    -1.4598466052928654,
+    -1.570796286806896,
+    1.5478971801984172
+  ],
+  "nu_saturation_ratio_maneuver": 0.039603960396039604,
+  "E_gap_maneuver_mean": 4.101944669056664,
+  "gap_residual_maneuver_mean": 38.164727675189745,
+  "sigma_min_maneuver_min": 2.2963619250294944,
+  "pre_gimbal_travel_rad": 7.727630970827637,
+  "pre_H_norm_at_start": 116.93426923978082,
+  "gamma_dev_max_deg": 150.14504047874416,
+  "migration_onset_t": 91.4,
+  "migration_lead_s": 18.599999999999994,
+  "settle_time_s": 40.000000000000014
+}

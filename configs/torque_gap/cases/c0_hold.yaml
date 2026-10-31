@@ -1,0 +1,12 @@
+# C0 -- no manoeuvre, generous aerodynamic authority: the predicted gap is
+# identically zero, so J_cfg must not bias anything.  Negative control.
+base: ../base.yaml
+torque_gap:
+  start: 90.0
+  end: 150.0
+trajectory3:
+  maneuver:
+    axis: pitch
+    start: 1.0e9
+    duration: 20.0
+    delta_deg: 0.0

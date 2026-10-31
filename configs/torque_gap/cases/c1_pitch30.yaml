@@ -1,0 +1,21 @@
+# C1 -- single smooth 30 deg pitch manoeuvre (quintic, zero rate/accel at both
+# ends) executed at the top of the skip, where the aerodynamic pitch authority
+# has collapsed to a few N m while the preparation window (t < 110 s) still has
+# a large aero surplus.
+#
+# Amplitude chosen by the feasibility scan (results/torque_gap/feasibility.md):
+#   peak demand 67 N m, peak predicted gap 56 N m, i.e. comparable to the
+#   instantaneous CMG capability (86 N m along -y at the home configuration).
+#   At 10 deg the gap (13 N m) is far below that capability, E_k(gamma) == 0 for
+#   >98% of configurations and the modulation term is structurally inactive.
+base: ../base.yaml
+torque_gap:
+  start: 90.0
+  end: 150.0
+trajectory3:
+  maneuver:
+    axis: pitch
+    start: 110.0
+    duration: 20.0
+    delta_deg: 30.0
+    shape: hold

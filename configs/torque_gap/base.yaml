@@ -1,0 +1,90 @@
+# Torque-gap modulated aerodynamic/CMG joint trajectory optimisation (P0/P1)
+# ---------------------------------------------------------------- inherited --
+# Everything about the vehicle, atmosphere, CMG device and reference trajectory
+# is inherited unchanged from the frozen repository config; this file only adds
+# the new experiment block.  Never edit config.yaml for this experiment.
+base: ../../config.yaml
+
+# The 80 N m pitch pulse of the legacy transient-disturbance experiment is
+# switched off: it is a 120 N m s momentum injection that would dominate the
+# predicted-gap mechanism under study.  The physical residual/sinusoidal
+# disturbance (Md0, scaled by q_inf) is kept exactly as configured.
+trajectory3:
+  dist_pulse_amp: [0.0, 0.0, 0.0]
+
+torque_gap:
+  # closed-loop evaluation window [s]
+  start: 90.0
+  end: 150.0
+  dt_ctrl: 0.2
+  plant: P0                 # P0 virtual-torque plant | P1 18-state surface truth
+  plant_substeps: 8         # P0 truth integrator substeps per control interval
+  mode: B0                  # B0 | B1 | B2 | B3
+  lambda_cfg: 1.0           # only used by B1/B2/B3
+  seed: 0
+
+  # non-uniform multiple-shooting prediction grid: 22 nodes, 23.2 s
+  horizon:
+    - {n: 6, dt: 0.2}
+    - {n: 4, dt: 0.5}
+    - {n: 4, dt: 1.0}
+    - {n: 8, dt: 2.0}
+
+  # gimbal travel is a physical limit; +-90 deg is an explicit first-version
+  # assumption (the legacy CMGParams has no travel field)
+  gamma_min_deg: -90.0
+  gamma_max_deg: 90.0
+
+  # dimensionless scaling of every cost term (see docs/torque_gap/experiment_report.md)
+  weights:
+    e_scale_deg: 1.0        # attitude error normalisation
+    omega_scale: 0.02       # body-rate error normalisation [rad/s]
+    d_scale: 20.0           # torque normalisation [N m]: a 20 N m capability
+                            # shortfall then costs ~1, i.e. as much as a 1 deg
+                            # attitude error.  With d_scale = 1 N m the J_cfg term
+                            # is 400x too stiff and swamps the attitude objective.
+    nu_scale: 1.5           # gimbal-rate normalisation [rad/s] (= gdot_max)
+    w_att: 1.0
+    w_rate: 1.0
+    q_terminal: 10.0
+    # The regularisation is deliberately not negligible: with r_nu = 1e-3 the
+    # gimbal-rate term was numerically irrelevant and the NLP chattered between
+    # saturating solutions (+-1.5 rad/s) that cost nothing.  r_nu = 0.05 makes a
+    # saturated node worth ~0.05 of a 1 deg attitude error, while the rate that
+    # actually delivers a 12 N m gap (0.3 rad/s) costs 0.002 -- i.e. it still
+    # does not block a needed migration.
+    r_nu: 0.05
+    r_dnu: 0.1
+    r_dtau: 0.0001
+  # optional torque rate limit (ablation, off by default: no N m/s figure exists)
+  tau_rate_limit: null
+
+  authority:
+    mode: timevarying       # timevarying | fixed  (C5 control arm)
+    fixed_h_km: 100.0       # density frozen at this altitude for mode: fixed
+    scale: 0.9              # conservative box scale (re-calibrated at run time)
+    calibrate: true
+    require_frac: 0.99
+    n_samples: 1000
+    tol_frac: 0.001
+
+  modulation:
+    h_nom: freeze           # freeze (cluster momentum at the current gamma) | zero
+    tau_d: nominal          # nominal | zero
+    gap_tol: 1.0e-6
+
+  solver:
+    max_iter: 600
+    tol: 1.0e-6
+    print_level: 0
+    max_cpu_s: 4.0          # wall-clock budget per control step (soft, logged)
+    acceptable_status: ["Solve_Succeeded", "Solved_To_Acceptable_Level"]
+
+  init:
+    gamma0_deg: [0.0, 0.0, 0.0, 0.0]
+    attitude_offset_deg: [0.0, 0.0, 0.0]
+    # "trim" starts on the reference body rate (no artificial start-up transient);
+    # a three-component list starts at that body rate instead
+    omega0: trim
+
+  log_every: 1

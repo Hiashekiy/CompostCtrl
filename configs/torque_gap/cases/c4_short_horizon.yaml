@@ -1,0 +1,16 @@
+# C4 -- identical to C1 except that the prediction horizon is deliberately
+# shortened to 1 s, so the future gap is outside the window until it happens.
+# B1(C4) vs B1(C1) isolates the value of *predictive* migration.
+base: ../base.yaml
+torque_gap:
+  start: 90.0
+  end: 150.0
+  horizon:
+    - {n: 5, dt: 0.2}
+trajectory3:
+  maneuver:
+    axis: pitch
+    start: 110.0
+    duration: 20.0
+    delta_deg: 30.0
+    shape: hold

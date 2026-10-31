@@ -1,0 +1,11 @@
+# Additional dependency for the torque-gap / CMG joint trajectory optimisation
+# (nearspace/torque_gap_ocp.py).  Pinned to the version actually used.
+#
+# NOTE on this workstation: the interpreter is CPython 3.14 and pip has no write
+# access to site-packages from the experiment sandbox, so the wheel is unpacked
+# into ./.pydeps instead:
+#     pip download --no-deps -d .piptmp casadi==3.8.2
+#     python -c "import zipfile;zipfile.ZipFile(r'.piptmp/casadi-3.8.2-cp311-abi3-win_amd64.whl').extractall(r'.pydeps')"
+#     set PYTHONPATH=%CD%\.pydeps
+# The wheel is cp311-abi3, i.e. it is importable from CPython >= 3.11.
+casadi==3.8.2

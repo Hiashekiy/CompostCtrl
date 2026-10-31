@@ -1,0 +1,10 @@
+# C3 -- two manoeuvres on different axes: the gap direction changes inside the
+# prediction window, so a single fixed migration is not enough.
+base: ../base.yaml
+torque_gap:
+  start: 90.0
+  end: 150.0
+trajectory3:
+  maneuver:
+    - {axis: pitch, start: 104.0, duration: 16.0, delta_deg: 30.0, shape: hold}
+    - {axis: roll, start: 126.0, duration: 16.0, delta_deg: 30.0, shape: hold}

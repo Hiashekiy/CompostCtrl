@@ -1,0 +1,17 @@
+# C5 -- identical to C1, but the aerodynamic torque box is frozen at the density
+# of a single altitude (100 km) instead of following the predicted altitude
+# profile.  Isolates the value of the time-varying authority model.
+base: ../base.yaml
+torque_gap:
+  start: 90.0
+  end: 150.0
+  authority:
+    mode: fixed
+    fixed_h_km: 100.0
+trajectory3:
+  maneuver:
+    axis: pitch
+    start: 110.0
+    duration: 20.0
+    delta_deg: 30.0
+    shape: hold

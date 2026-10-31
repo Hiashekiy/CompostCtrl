@@ -1,0 +1,14 @@
+# C2 -- same task size and timing as C1 on the yaw axis: the three-axis
+# authority is strongly asymmetric (b Cn_dr is the weakest surface channel), and
+# the required gap torque has a different sign/size pattern.
+base: ../base.yaml
+torque_gap:
+  start: 90.0
+  end: 150.0
+trajectory3:
+  maneuver:
+    axis: yaw
+    start: 110.0
+    duration: 20.0
+    delta_deg: 30.0
+    shape: hold

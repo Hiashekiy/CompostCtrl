@@ -5,3 +5,7 @@ results/cmg_maneuver/_cache/
 *.egg-info/
 .venv/
 tmp/
+# local OCP solver dependency (see docs/torque_gap/code_audit.md): no
+# site-packages write access on this host, so casadi lives in ./.pydeps
+.pydeps/
+.piptmp/

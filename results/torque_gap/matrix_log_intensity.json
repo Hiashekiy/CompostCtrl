@@ -1,0 +1,26 @@
+{
+  "group": "intensity",
+  "entries": [
+    {
+      "name": "C1_B0_P0_amp10",
+      "ok": true,
+      "wall_s": 55.77381759999844
+    },
+    {
+      "name": "C1_B1_P0_amp10",
+      "ok": true,
+      "wall_s": 105.21010450000176
+    },
+    {
+      "name": "C1_B0_P0_amp20",
+      "ok": true,
+      "wall_s": 84.3024005000043
+    },
+    {
+      "name": "C1_B1_P0_amp20",
+      "ok": true,
+      "wall_s": 184.72059589999844
+    }
+  ],
+  "total_wall_s": 430.0083403999888
+}
