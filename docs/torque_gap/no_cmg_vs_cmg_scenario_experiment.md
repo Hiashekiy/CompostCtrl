@@ -296,6 +296,34 @@ python tests/test_torque_gap_unlimited.py              # 原无限框架臂回�
 python tests/test_atmosphere_real.py                   # 大气后端回归
 ```
 
+### 12.1 对照总图的版式
+
+逐场景总图按仓库既有的 `figures/torque_gap_noMod/C1_noMod_overview.png` 版式绘制
+（`scripts/plot_no_cmg_comparison.py::fig_scenario`），共享时间轴、9 个面板：
+
+| # | 面板 | 内容 |
+|---|---|---|
+| 1 | 姿态角（°） | 参考 / A 无 CMG / B 舵面+CMG，主机动轴 |
+| 2 | 短弧姿态误差（°） | A / B 对照，标注机动窗 RMSE 与峰值，1° 参考线 |
+| 3 | 误差分量（°） | e_x、e_y、e_z，A 虚线、B 实线 |
+| 4 | 力矩分解（N·m） | 仅 B：τ_nom / τ_a（舵面）/ τ_cmg / 合成 |
+| 5 | 能力包络（N·m） | 灰带 [τ⁻, τ⁺] + 参考需求 + **A 与 B 的实际 τ_a** |
+| 6 | CMG 力矩（N·m） | 仅 B：三轴 |
+| 7 | 框架角（°）/ 框架速率（°/s） | 仅 B，双纵轴，标注 ±γ̇max |
+| 8 | 角动量（N·m·s） | H_x、H_y、H_z、\|H\|、缺口 d（右轴）、4h₀ 上限线 |
+| 9 | 求解耗时（ms） | A / B 对照 + 200 ms 控制周期线 + fallback 标志 |
+
+约定：
+
+- **所有角度一律用度（°）**，角速率用 °/s，图中不再出现弧度；
+- 事件竖线：红色点线 = 构型迁移开始，黑色虚线 = 每个机动窗口的起止，
+  蓝色点划线 = 预测缺口首次非零；面板 1 顶部给出对应时刻；
+- 能力包络在窗口末段随下降段动压增长而迅速扩大（见 §15.6），
+  绘图按曲线自适应限幅并在面板内注明，避免把其它曲线压平；
+- A 组没有 CMG 的面板（4/6/7/8）不画零值曲线，只标"不适用（无 CMG）"。
+
+---
+
 ## 13. 交付清单对照（指导书 §15）
 
 | 项 | 位置 |
@@ -375,7 +403,7 @@ python tests/test_atmosphere_real.py                   # 大气后端回归
 | `summary.csv` / `summary.md` | 同目录 |
 | A/B 配置差异审计（8 场景，0 违规） | 同目录 `config_audit.md` |
 | 参考姿态审计（8 场景全部通过） | 同目录 `reference_audit.md` |
-| 逐场景 A/B 八联图、跨场景汇总图 | `figures/torque_gap_no_cmg_comparison/{P0_rti2,P1_rti2}/`、`cross_P0_rti2_*.png`、`cross_P1_rti2_*.png` |
+| 逐场景 A/B 对照总图（9 联：姿态°/误差°/误差分量°/力矩分解/能力包络/CMG 力矩/框架角°/角动量/求解耗时）、跨场景汇总图 | `figures/torque_gap_no_cmg_comparison/{P0_rti2,P1_rti2}/`、`cross_P0_rti2_*.png`、`cross_P1_rti2_*.png` |
 | 每次运行的时序/指标/元数据/解析配置 | 各运行目录（`rti_options` 记录在 `meta.json`） |
 
 配置审计与参考审计与求解器无关，同一个脚本在 rti2 目录重新生成，结论不变

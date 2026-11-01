@@ -120,146 +120,293 @@ def cmg_capability_series(run):
 
 
 # --------------------------------------------------------------------------
+def _euler_deg(q):
+    """ZYX Euler angles [deg] from a stack of scalar-first quaternions."""
+    q = np.asarray(q, float)
+    w, x, y, z = q[:, 0], q[:, 1], q[:, 2], q[:, 3]
+    roll = np.degrees(np.arctan2(2.0 * (w * x + y * z), 1.0 - 2.0 * (x * x + y * y)))
+    pitch = np.degrees(np.arcsin(np.clip(2.0 * (w * y - z * x), -1.0, 1.0)))
+    yaw = np.degrees(np.arctan2(2.0 * (w * z + x * y), 1.0 - 2.0 * (y * y + z * z)))
+    return np.column_stack([roll, pitch, yaw])
+
+
+def _style():
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    plt.rcParams.update({
+        "font.family": "sans-serif",
+        "font.sans-serif": ["Microsoft YaHei", "SimHei", "DejaVu Sans"],
+        "axes.unicode_minus": False, "mathtext.fontset": "dejavusans",
+        "font.size": 9, "axes.labelsize": 9, "axes.titlesize": 10,
+        "xtick.labelsize": 8, "ytick.labelsize": 8, "legend.fontsize": 7.5,
+        "axes.linewidth": 0.8, "lines.linewidth": 1.1,
+        "grid.linewidth": 0.5, "grid.alpha": 0.35,
+        "pdf.fonttype": 42, "ps.fonttype": 42, "savefig.bbox": "tight",
+    })
+    return plt
+
+
+C_REF = "#2b3a55"
+C_A = "tab:red"
+C_B = "tab:blue"
+C_SURF = "tab:green"
+C_CMG = "tab:red"
+C_NOM = "tab:blue"
+C_BAND = "lightgray"
+AXC = {"roll": 0, "pitch": 1, "yaw": 2}
+AXNAME = {"roll": "滚转", "pitch": "俯仰", "yaw": "偏航"}
+AXSYM = {"roll": "x", "pitch": "y", "yaw": "z"}
+
+
+def _fit(ax, arrays, headroom=0.55, margin=0.15):
+    """Fit the y range to the informative curves, leaving room for the legend.
+
+    The aerodynamic torque envelope grows by an order of magnitude in the last
+    seconds of the window (the vehicle descends, see the report section 15.6);
+    plotting it to scale would flatten everything else, so the *envelope* is
+    allowed to leave the axes and the annotation says so.
+    """
+    vals = []
+    for a in arrays:
+        a = np.asarray(a, float)
+        a = a[np.isfinite(a)]
+        if a.size:
+            vals.append(a)
+    if not vals:
+        return False, 0.0, 0.0
+    v = np.concatenate(vals)
+    lo, hi = float(np.min(v)), float(np.max(v))
+    span = max(hi - lo, 1e-6)
+    ax.set_ylim(lo - margin * span, hi + (margin + headroom) * span)
+    return True, lo - margin * span, hi + (margin + headroom) * span
+
+
+def _headroom(ax, frac=0.42):
+    """Expand the top of the y range so a framed legend cannot cover data."""
+    lo_, hi_ = ax.get_ylim()
+    span = max(hi_ - lo_, 1e-9)
+    ax.set_ylim(lo_, hi_ + frac * span)
+
+
 def fig_scenario(phase, sc, a, b, out_png):
+    """A/B control-process overview, laid out like figures/torque_gap_noMod/C1_noMod_overview.png."""
     plt = _style()
-    fig, axes = plt.subplots(8, 1, figsize=(10.5, 21.0), sharex=True)
     ma, mb = a["_metrics"], b["_metrics"]
-    t = b["t_next"]
-    title = ("%s  %s   A = 无 CMG (nx=%d, nu=%d)   B = 舵面+CMG (nx=%d, nu=%d)"
-             % (sc, phase, ma["nx_model"], ma["nu_model"],
-                mb["nx_model"], mb["nu_model"]))
-    fig.suptitle(title, fontsize=11, y=0.995)
+    n = min(len(a["t_next"]), len(b["t_next"]))
+    t = b["t_next"][:n]
+    # main manoeuvre axis (first enabled manoeuvre of the scenario)
+    wins = mb.get("windows") or {}
+    axis = (wins.get("man0") or {}).get("axis") or "pitch"
+    if axis not in AXC:
+        axis = "pitch"
+    k, sym = AXC[axis], AXSYM[axis]
+    ax_name = AXNAME[axis]
 
-    # 1 reference and actual attitude
+    EA = _euler_deg(np.column_stack([a["q%d" % i][:n] for i in range(4)]))
+    EB = _euler_deg(np.column_stack([b["q%d" % i][:n] for i in range(4)]))
+    EREF = _euler_deg(np.column_stack([b["qref%d" % i][:n] for i in range(4)]))
+    r2d = 180.0 / np.pi
+    errA, errB = a["att_err_deg"][:n], b["att_err_deg"][:n]
+    compA = np.column_stack([a["err_x"][:n], a["err_y"][:n], a["err_z"][:n]]) * r2d
+    compB = np.column_stack([b["err_x"][:n], b["err_y"][:n], b["err_z"][:n]]) * r2d
+    tauA = a["tau_act_%s" % sym][:n]
+    tauB = b["tau_act_%s" % sym][:n]
+    tau_nom = b["tau_nom_%s" % sym][:n]
+    lo, hi = b["lo_%s" % sym][:n], b["hi_%s" % sym][:n]
+    gap = b["d_%s" % sym][:n]
+    cmg = {ax: b["cmg_%s" % ax][:n] for ax in AX}
+    cmg_sum = np.vstack([cmg[ax] for ax in AX]).sum(axis=0)
+    g_deg = {i: np.degrees(b["g%d" % (i + 1)][:n]) for i in range(4)}
+    nu_dps = {i: np.degrees(b["nu%d" % (i + 1)][:n]) for i in range(4)}
+    gdot_dps = None
+    try:
+        gdot_dps = np.degrees(float(b["_meta"]["experiment"]["c_mg"]["gdot_max"]))
+    except Exception:                                            # noqa: BLE001
+        pass
+    H = {ax: b["H%s" % ax][:n] for ax in AX}
+    Hn = b["H_norm"][:n]
+    mig = mb.get("cmg_migration") or {}
+    t_mig = mig.get("migration_onset_t")
+    t_man0 = (wins.get("man0") or {}).get("t0")
+    t_man1 = max([w.get("t1", 0.0) for key, w in wins.items()
+                  if key.startswith("man")] or [0.0])
+    idx = np.flatnonzero(np.abs(gap) > 1e-6)
+    t_gap = float(t[idx[0]]) if idx.size else None
+
+    fig, axes = plt.subplots(9, 1, figsize=(7.6, 15.6), sharex=True,
+                             gridspec_kw=dict(hspace=0.16))
+    backend = (b["_meta"].get("backend") or "ipopt")
+    fig.suptitle("%s  %s（%s 后端）：A 无 CMG vs B 舵面+CMG — 姿态、误差、力矩与能力"
+                 % (sc, phase, backend), fontsize=10.5, y=0.995)
+
+    def events(ax):
+        if t_mig:
+            ax.axvline(t_mig, color="tab:red", ls=":", lw=1.0)
+        for key, w in (mb.get("windows") or {}).items():
+            if key.startswith("man"):
+                ax.axvline(w.get("t0", 0.0), color="k", ls="--", lw=1.0)
+                ax.axvline(w.get("t1", 0.0), color="k", ls="--", lw=1.0)
+        if t_gap:
+            ax.axvline(t_gap, color="tab:blue", ls="-.", lw=0.9)
+        ax.grid(True, which="major")
+
+    # 1 attitude, main manoeuvre axis, all in degrees
     ax = axes[0]
-    for i, lab in enumerate(("q0", "q1", "q2", "q3")):
-        ax.plot(a["t_next"], a[lab], lw=0.8, ls="--", color="C%d" % i,
-                label="A q%d" % i)
-        ax.plot(b["t_next"], b[lab], lw=1.0, color="C%d" % i, label="B q%d" % i)
-    ax.set_ylabel("quaternion [–]")
-    ax.legend(ncol=4, loc="best")
-    ax.grid(alpha=0.3)
-    ax.set_title("1  参考姿态与两组实际姿态（四元数；参考见 figures/…/references/）")
+    ax.plot(t, EREF[:, k], color=C_REF, lw=1.0, ls="--", label="参考 %s角" % ax_name)
+    ax.plot(t, EA[:, k], color=C_A, lw=1.1, label="实际 A（无 CMG）")
+    ax.plot(t, EB[:, k], color=C_B, lw=1.3, label="实际 B（舵面+CMG）")
+    ax.set_ylabel("%s角 [°]" % ax_name)
+    ax.legend(loc="upper left", ncol=3, framealpha=0.9)
+    events(ax)
+    _headroom(ax, 0.30)
+    ev = []
+    if t_mig:
+        ev.append((t_mig, "迁移开始 $t\\approx%.1f$ s" % t_mig))
+    if t_man0:
+        ev.append((t_man0, "机动开始 $t=%.0f$ s" % t_man0))
+    if t_gap:
+        ev.append((t_gap, "缺口出现 $t\\approx%.1f$ s" % t_gap))
+    if t_man1:
+        ev.append((t_man1, "机动结束 $t=%.0f$ s" % t_man1))
+    parts = [txt for _tt, txt in sorted(ev)]
+    if parts:
+        ax.text(0.995, 1.015, "    ".join(parts), transform=ax.transAxes,
+                fontsize=7.6, color="0.25", ha="right", va="bottom")
 
-    # 2 attitude error
+    # 2 attitude error (short arc), degrees
     ax = axes[1]
-    ax.plot(a["t_next"], a["att_err_deg"], lw=1.2, color="C3", label="A 无 CMG")
-    ax.plot(b["t_next"], b["att_err_deg"], lw=1.2, color="C0", label="B 舵面+CMG")
-    for key, st in (("man0", 0), ("man1", 1)):
-        w = mb["windows"].get(key)
-        if w:
-            ax.axvspan(w["t0"], w["t1"], color="0.85", alpha=0.45, zorder=0)
-    ax.set_yscale("symlog", linthresh=0.1)
-    ax.set_ylabel("姿态误差 [deg]")
-    ax.legend(loc="best")
-    ax.grid(alpha=0.3)
-    ax.set_title("2  短弧姿态误差（灰底 = 机动窗口）")
+    ra = (ma.get("rmse_deg") or {}).get("combined")
+    rb = (mb.get("rmse_deg") or {}).get("combined")
+    ax.plot(t, errA, color=C_A, lw=1.1,
+            label="A 无 CMG（机动窗 RMSE %.3f°，峰值 %.2f°）" % (ra or np.nan, np.nanmax(errA)))
+    ax.plot(t, errB, color=C_B, lw=1.3,
+            label="B 舵面+CMG（机动窗 RMSE %.3f°，峰值 %.2f°）" % (rb or np.nan, np.nanmax(errB)))
+    ax.axhline(1.0, color="0.4", ls=":", lw=0.8)
+    ax.set_ylabel("短弧姿态误差 [°]")
+    ax.legend(loc="upper left", ncol=1, framealpha=0.9)
+    events(ax)
+    _headroom(ax, 0.35)
 
-    # 3 aerodynamic torque vs bounds
+    # 3 three-axis error components, degrees
     ax = axes[2]
-    for i, name in enumerate(AX):
-        ax.plot(b["t_next"], b["tau_act_%s" % name], lw=1.0, color="C%d" % i,
-                label="B τ%s" % name)
-        ax.plot(a["t_next"], a["tau_act_%s" % name], lw=1.0, ls="--",
-                color="C%d" % i, alpha=0.8, label="A τ%s" % name)
-        ax.plot(b["t_next"], b["hi_%s" % name], lw=0.6, ls=":", color="C%d" % i)
-        ax.plot(b["t_next"], b["lo_%s" % name], lw=0.6, ls=":", color="C%d" % i)
-    ax.set_ylabel("气动力矩 [N·m]")
-    ax.legend(ncol=3, loc="best")
-    ax.grid(alpha=0.3)
-    ax.set_title("3  三轴实际气动力矩（虚线 = A，点线 = 实时上下限）")
+    comp_cols = ("#6a3d9a", "#b15928", "#1b7f5a")
+    for i, nm in enumerate(("x", "y", "z")):
+        ax.plot(t, compA[:, i], color=comp_cols[i], lw=0.9, ls="--", alpha=0.85,
+                label="$e_%s$ A（无 CMG）" % nm)
+        ax.plot(t, compB[:, i], color=comp_cols[i], lw=1.2,
+                label="$e_%s$ B（舵面+CMG）" % nm)
+    ax.set_ylabel("误差分量 [°]")
+    ax.legend(loc="upper left", ncol=3, framealpha=0.9)
+    events(ax)
+    _headroom(ax, 0.60)
 
-    # 4 CMG torque
+    # 4 torque decomposition, B group (reference style)
     ax = axes[3]
-    for i, name in enumerate(AX):
-        ax.plot(b["t_next"], b["cmg_%s" % name], lw=1.1, color="C%d" % i,
-                label="CMG τ%s（区间平均）" % name)
-        ax.plot(b["t_next"], b["cmg_end_%s" % name], lw=0.7, ls=":", color="C%d" % i)
-    ax.legend(ncol=3, loc="best")
-    ax.set_ylabel("CMG 力矩 [N·m]")
-    if ma.get("cmg_present") is False:
-        ax.text(0.01, 0.04, "A 组：不适用（无 CMG）", transform=ax.transAxes,
-                fontsize=8.5, color="0.35")
-    ax.grid(alpha=0.3)
-    ax.set_title("4  B 组三轴 CMG 实际输出力矩（实线区间平均，点线周期末瞬时）")
+    ax.plot(t, tau_nom, color=C_NOM, ls="--", lw=1.0, label="$\\tau_{nom,%s}$" % sym)
+    ax.plot(t, tauB, color=C_SURF, lw=1.1, label="$\\tau_{a,%s}$（舵面）" % sym)
+    ax.plot(t, cmg[sym], color=C_CMG, lw=1.1, label="$\\tau_{cmg,%s}$（CMG）" % sym)
+    ax.plot(t, tauB + cmg[sym], color=C_REF, lw=1.0, alpha=0.9,
+            label="合成 $\\tau_{a}+\\tau_{cmg}$")
+    ax.set_ylabel("%s力矩 [N·m]" % ax_name)
+    _fit(ax, [tau_nom, tauB, cmg[sym]], headroom=0.55)
+    ax.legend(loc="upper center", ncol=2, framealpha=0.9)
+    events(ax)
 
-    # 5 gimbal angles and rates
+    # 5 aero envelope with both arms
     ax = axes[4]
-    for i in range(4):
-        ax.plot(b["t_next"], np.rad2deg(b["g%d" % (i + 1)]), lw=1.0,
-                color="C%d" % i, label="gimbal g%d [deg]" % (i + 1))
-    ax.set_ylabel("框架角 [deg]")
-    ax2 = ax.twinx()
-    for i in range(4):
-        ax2.plot(b["t_next"], b["nu%d" % (i + 1)], lw=0.7, ls=":",
-                 color="C%d" % i)
-    ax2.set_ylabel("框架速率 [rad/s]（点线）")
-    ax.legend(ncol=4, loc="upper left")
-    if ma.get("cmg_present") is False:
-        ax.text(0.01, 0.04, "A 组：不适用（无 CMG）", transform=ax.transAxes,
-                fontsize=8.5, color="0.35")
-    ax.grid(alpha=0.3)
-    ax.set_title("5  B 组四台框架角与框架速率")
+    ax.fill_between(t, lo, hi, color=C_BAND, alpha=0.55,
+                    label="舵面可实现力矩范围 $[\\tau^-_{%s},\\ \\tau^+_{%s}]$" % (sym, sym))
+    ax.plot(t, tau_nom, color=C_NOM, ls="--", lw=1.0, label="参考需求 $\\tau_{nom,%s}$" % sym)
+    ax.plot(t, tauA, color=C_A, lw=1.0, alpha=0.9, label="A 实际 $\\tau_{a,%s}$" % sym)
+    ax.plot(t, tauB, color=C_SURF, lw=1.2, label="B 实际 $\\tau_{a,%s}$" % sym)
+    ax.set_ylabel("%s力矩 [N·m]" % ax_name)
+    _fit(ax, [tau_nom, tauB, cmg[sym]], headroom=0.55)
+    ax.legend(loc="upper center", ncol=2, framealpha=0.9)
+    events(ax)
 
-    # 6 momentum
+    # 6 CMG torque, three axes
     ax = axes[5]
-    for i, name in enumerate(AX):
-        ax.plot(b["t_next"], b["H%s" % name], lw=1.0, color="C%d" % i,
-                label="H%s" % name)
-    ax.plot(b["t_next"], b["H_norm"], lw=1.2, color="k", label="|H|")
-    ax.legend(ncol=4, loc="best")
-    ax.set_ylabel("角动量 [N·m·s]")
+    for i, ax_i in enumerate(AX):
+        ax.plot(t, cmg[ax_i], color="C%d" % (i + 3), lw=1.1,
+                label="$\\tau_{cmg,%s}$（%s）" % (ax_i, AXNAME[[kk for kk, vv in AXC.items() if vv == i][0]]))
+    ax.set_ylabel("CMG 力矩 [N·m]")
+    _headroom(ax, 0.50)
+    ax.legend(loc="upper center", ncol=3, framealpha=0.9)
     if ma.get("cmg_present") is False:
         ax.text(0.01, 0.04, "A 组：不适用（无 CMG）", transform=ax.transAxes,
-                fontsize=8.5, color="0.35")
-    ax.grid(alpha=0.3)
-    ax.set_title("6  B 组三轴角动量与模长")
+                fontsize=8, color="0.35")
+    events(ax)
 
-    # 7 sigma_min and task-direction capability
+    # 7 gimbal angles [deg] and rates [deg/s]
     ax = axes[6]
-    cap, cap_min = cmg_capability_series(b)
-    ax.plot(b["t_next"], b["sigma_min"], lw=1.0, color="C4", label="sigma_min(A)")
-    ax.plot(b["t_next"], cap_min, lw=1.0, ls="--", color="C4",
-            label="sigma_min x gdot_max（各向同性保证力矩）")
-    ax.plot(b["t_next"], cap, lw=1.1, color="C1",
-            label="沿任务方向的瞬时力矩能力")
-    ax.plot(b["t_next"], np.abs(b["d_x"]) + np.abs(b["d_y"]) + np.abs(b["d_z"]),
-            lw=0.8, ls=":", color="0.4", label="|d|_1（预测力矩缺口诊断）")
-    ax.legend(ncol=2, loc="best")
-    ax.set_ylabel("sigma_min [N·m·s] / 力矩 [N·m]")
+    for i in range(4):
+        ax.plot(t, g_deg[i], color="C%d" % i, lw=1.0, label="框架角 $\\gamma_%d$" % (i + 1))
+    ax.set_ylabel("框架角 [°]")
+    ax2 = ax.twinx()
+    for i in range(4):
+        ax2.plot(t, nu_dps[i], color="C%d" % i, lw=0.7, ls=":", alpha=0.9)
+    ax2.set_ylabel("框架速率 [°/s]（点线）")
+    if gdot_dps:
+        ax2.axhline(gdot_dps, color="0.4", ls=":", lw=0.7)
+        ax2.axhline(-gdot_dps, color="0.4", ls=":", lw=0.7)
+    h1, l1 = ax.get_legend_handles_labels()
+    _headroom(ax, 0.55)
+    ax.legend(h1, l1, loc="upper left", ncol=4, framealpha=0.9)
     if ma.get("cmg_present") is False:
         ax.text(0.01, 0.04, "A 组：不适用（无 CMG）", transform=ax.transAxes,
-                fontsize=8.5, color="0.35")
-    ax.grid(alpha=0.3)
-    ax.set_title("7  B 组 sigma_min 与任务方向的瞬时力矩能力（角动量储备 ≠ 力矩能力）")
+                fontsize=8, color="0.35")
+    events(ax)
 
-    # 8 solver reliability
+    # 8 cluster momentum + gap, twin axis
     ax = axes[7]
-    ax.plot(a["t_next"], a["cpu_s"], lw=0.9, color="C3", label="A 求解耗时 [s]")
-    ax.plot(b["t_next"], b["cpu_s"], lw=0.9, color="C0", label="B 求解耗时 [s]")
-    ax.plot(a["t_next"], np.maximum(a["viol"], 1e-12), lw=0.7, ls=":",
-            color="C3", label="A 最大约束违反")
-    ax.plot(b["t_next"], np.maximum(b["viol"], 1e-12), lw=0.7, ls=":",
-            color="C0", label="B 最大约束违反")
-    ax.axhline(0.2, color="k", ls="--", lw=0.8, label="控制周期 0.2 s")
-    ax.set_yscale("log")
-    ax.set_ylabel("求解耗时 [s] / 约束违反")
-    ax.set_xlabel("t [s]")
+    for i, ax_i in enumerate(AX):
+        ax.plot(t, H[ax_i], color="C%d" % i, lw=1.0, label="$H_%s$" % ax_i)
+    ax.set_ylabel("角动量 $H$ [N·m·s]")
+    if ma.get("cmg_present") is False:
+        ax.text(0.99, 0.04, "A 组：不适用（无 CMG）", transform=ax.transAxes,
+                fontsize=8, color="0.35", ha="right")
     ax2 = ax.twinx()
-    ax2.step(a["t_next"], a["fallback"], where="post", color="C3", alpha=0.35)
-    ax2.step(b["t_next"], b["fallback"], where="post", color="C0", alpha=0.35)
-    ax2.set_ylabel("fallback 标志（阶梯）")
+    ax2.plot(t, Hn, color=C_REF, lw=1.2, alpha=0.85, label="$|H|$")
+    ax2.plot(t, gap, color="0.45", lw=1.0, ls="--",
+             label="缺口 $d_%s$（右轴，N·m）" % sym)
+    hlim = None
+    cm = b["_meta"]["experiment"].get("c_mg")
+    if isinstance(cm, dict):
+        hlim = 4.0 * float(cm["h0"])
+        ax2.axhline(hlim, color="0.5", ls=":", lw=0.8)
+        ax2.text(0.995, 0.93, "$4h_0=%.0f$ N·m·s" % hlim, transform=ax2.transAxes,
+                 fontsize=7, color="0.35", va="top", ha="right")
+    ax2.set_ylabel("$|H|$ / 缺口 [N·m·s] / [N·m]")
+    h1, l1 = ax.get_legend_handles_labels()
+    h2, l2 = ax2.get_legend_handles_labels()
+    _headroom(ax, 0.45)
+    ax.legend(h1 + h2, l1 + l2, loc="upper left", ncol=3, framealpha=0.9)
+    events(ax)
+
+    # 9 solver cost
+    ax = axes[8]
+    ax.plot(t, 1000.0 * a["cpu_s"][:n], color=C_A, lw=0.9, label="A 求解耗时")
+    ax.plot(t, 1000.0 * b["cpu_s"][:n], color=C_B, lw=0.9, label="B 求解耗时")
+    ax.axhline(200.0, color="k", ls="--", lw=0.9, label="控制周期 200 ms")
+    ax.set_yscale("log")
+    ax.set_ylabel("求解耗时 [ms]")
+    ax.set_xlabel("时间 $t$ [s]")
+    ax2 = ax.twinx()
+    ax2.step(t, a["fallback"][:n], where="post", color=C_A, alpha=0.18, lw=0.7)
+    ax2.step(t, b["fallback"][:n], where="post", color=C_B, alpha=0.18, lw=0.7)
+    ax2.set_ylabel("fallback 标志")
     ax2.set_ylim(-0.05, 1.5)
-    ax.legend(loc="upper left", ncol=2)
-    ax.grid(alpha=0.3)
-    ax.set_title("8  两组求解耗时（对数）、最大约束违反、fallback")
-    fig.tight_layout(rect=(0, 0, 1, 0.995))
+    ax.legend(loc="lower left", ncol=3, framealpha=0.9)
+    events(ax)
+
+    for ax_ in axes[:-1]:
+        ax_.tick_params(labelbottom=False)
     FIG.mkdir(parents=True, exist_ok=True)
-    fig.savefig(out_png, dpi=130)
+    fig.savefig(out_png, dpi=140)
     plt.close(fig)
 
 
-# --------------------------------------------------------------------------
 def collect(phase):
     rows = []
     for sc in SCENARIO_ORDER:

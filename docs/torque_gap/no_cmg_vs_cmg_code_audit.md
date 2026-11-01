@@ -168,4 +168,4 @@ B 组 NLP 规模仍为 407 变量 / 364 约束，与改动前一致，说明 B �
 | `scripts/audit_no_cmg_references.py` | 参考姿态采样、方向/符号/叠加语义核验与出图 |
 | `scripts/run_no_cmg_matrix.py` | 运行矩阵（`smoke`/`P0`/`P0seq`/`P1`/`seed`/`all`） |
 | `scripts/summarize_no_cmg_comparison.py` | `summary.csv` / `summary.md` |
-| `scripts/plot_no_cmg_comparison.py` | 逐场景 A/B 八联图与跨场景汇总图 |
+| `scripts/plot_no_cmg_comparison.py` | 逐场景 A/B 对照总图（9 联：姿态°/误差°/误差分量°/力矩分解/能力包络/CMG 力矩/框架角°/角动量/求解耗时），以及跨场景汇总图 |

@@ -120,7 +120,7 @@ scripts/audit_no_cmg_configs.py      A/B 逐键差异审计
 scripts/audit_no_cmg_references.py   参考姿态核验与出图
 scripts/run_no_cmg_matrix.py         运行矩阵（--solver-profile / --backend / --results-root）
 scripts/summarize_no_cmg_comparison.py  summary.csv / summary.md
-scripts/plot_no_cmg_comparison.py     逐场景 A/B 八联图与跨场景图
+scripts/plot_no_cmg_comparison.py     逐场景 A/B 对照总图（9 联：姿态°/误差°/误差分量°/力矩分解/能力包络/CMG 力矩/框架角°/角动量/求解耗时） 与跨场景图
 scripts/compare_mpc_backends.py       三个后端的横向对比与图
 scripts/study_mpc_speed.py            Tier-2 变体研究（网格 / 冗余约束）
 scripts/bench_no_cmg_solver.py        单点微基准（求解器选项 / 网格长度）
