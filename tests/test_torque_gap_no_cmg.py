@@ -30,6 +30,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from nearspace import hpipm_bindings                                  # noqa: E402
 from nearspace.cmg import CMGCluster                                  # noqa: E402
 from nearspace.config import _to_ns, deep_merge, read_yaml            # noqa: E402
 from nearspace.model6 import quat_mul, quat_normalize                 # noqa: E402
@@ -353,7 +354,7 @@ def test_cmg_torque_convention():
     for row in cl.rows:
         gamma = np.array([row["g%d" % (i + 1)] for i in range(4)])
         nu = np.array([row["nu%d" % (i + 1)] for i in range(4)])
-        end = -scn.cluster.torque(gamma, nu)
+        end = scn.cluster.torque(gamma, nu)      # CMGCluster.torque is the body torque
         assert np.allclose(np.array([row["cmg_end_%s" % ax] for ax in "xyz"]), end)
         avg = np.array([row["cmg_%s" % ax] for ax in "xyz"])
         # the earlier sub-steps of the interval used a different gimbal geometry,
@@ -389,6 +390,56 @@ def test_per_manoeuvre_windows_do_not_include_the_hold_phase():
     assert w["man1"]["t0"] == 150.0 and w["man1"]["t1"] == 170.0
     assert 130.0 <= w["man1"]["t0"]
     assert m["stats"]["man0"] and m["stats"]["man1"]
+
+
+def test_cmg_torque_log_sign_matches_the_body_dynamics():
+    """The logged CMG torque must be the *body* torque -A(gamma) nu.
+
+    A regression here (an extra minus, as once happened) makes the figures show the
+    CMG fighting the demand, while the trajectories stay correct because the log is
+    diagnostics only.  Pinning it to dynamics_tg makes that impossible.
+    """
+    scn = scn_b()
+    cl = CMGCluster(scn.prm.cmg)
+    gamma = np.deg2rad([20.0, -35.0, 15.0, 60.0])
+    nu = np.array([0.2, -0.4, 0.1, 0.3])
+    w = np.array([0.01, -0.02, 0.015])
+    q = quat_normalize([1.0, 0.0, 0.0, 0.0])
+    tau_a = np.array([12.0, -30.0, 4.0])
+    tau_d = np.array([0.3, -0.2, 0.05])
+    dx = dynamics_tg(pack_state(q, w, gamma), np.concatenate([tau_a, nu]), tau_d,
+                     scn.prm, cl)
+    H = cl.momentum(gamma)
+    cmg = cl.torque(gamma, nu)                    # the logged convention
+    wdot = scn.prm.Jinv @ (tau_a + cmg + tau_d - np.cross(w, scn.prm.J @ w + H))
+    assert np.allclose(dx[4:7], wdot, atol=1e-12)
+    # and NOT the opposite sign
+    wrong = scn.prm.Jinv @ (tau_a - cmg + tau_d - np.cross(w, scn.prm.J @ w + H))
+    assert np.linalg.norm(dx[4:7] - wrong) > 1e-3
+
+
+def test_closed_loop_cmg_torque_reduces_the_torque_deficit():
+    """End-to-end sign check: adding the CMG must bring the total moment *closer* to
+    the demand.  With the sign flipped it is further away, so this fails loudly."""
+    if not hpipm_bindings.available():
+        print("skip (no HPIPM)")
+        return
+    from nearspace.torque_gap_rti import TorqueGapRTI
+    from nearspace.torque_gap_sim import ClosedLoop
+    raw = read_yaml(str(CASE_B))
+    raw = deep_merge(raw, {"torque_gap": {"start": 106.0, "end": 122.0}})
+    scn = Scenario(_to_ns(raw))
+    cl = ClosedLoop(scn, ocp=TorqueGapRTI(scn, qp_iters=8), plant="P0")
+    cl.run()
+    rows = cl.rows
+    nom = np.array([r["tau_nom_y"] for r in rows])
+    ta = np.array([r["tau_act_y"] for r in rows])
+    cmg = np.array([r["cmg_y"] for r in rows])
+    rms = lambda x: float(np.sqrt(np.mean(x ** 2)))
+    good = rms(ta + cmg - nom)
+    bad = rms(ta - cmg - nom)
+    assert good < 0.7 * bad, (good, bad)   # a flipped sign swaps the two
+    assert np.corrcoef(ta + cmg, nom)[0, 1] > np.corrcoef(ta - cmg, nom)[0, 1]
 
 
 if __name__ == "__main__":

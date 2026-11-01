@@ -1,2 +1,0 @@
-[run] v8_combo_damp__S04_roll30          plant=P0 backend=rti cmg_present=True nx=11 nu=7 nlp=407/407 steps=300
-[done] v8_combo_damp__S04_roll30          wall=31.6s rmse={'man0': 0.042, 'combined': 0.042, 'pre': 0.005, 'post': 0.016, 'all': 0.027} fb=0.000 cpu_mean=0.099

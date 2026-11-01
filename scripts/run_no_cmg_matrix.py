@@ -44,14 +44,19 @@ sys.path.insert(0, str(ROOT))
 from nearspace.config import deep_merge                     # noqa: E402
 
 CFG = ROOT / "configs" / "torque_gap_no_cmg_comparison"
-OUT = ROOT / "results" / "torque_gap_no_cmg_comparison"
+OUT = ROOT / "results" / "torque_gap_no_cmg_comparison_rti2"
 PY = sys.executable
 
 # Solver profiles.  `baseline` is exactly what the first experiment used; `fast`
 # is the Tier-1 speed profile.  Both arms of a scenario always share one profile,
 # so the A/B comparison stays fair.
 SOLVER_PROFILES = {
-    "baseline": {},
+    # Pinned to the settings of the *first* experiment: the Tier-1 acceptance
+    # policy defaults to True in the code now, so an empty profile would silently
+    # re-run the baseline arm with Tier-1 behaviour.
+    "baseline": {"torque_gap": {"solver": {"tol": 1e-6, "max_iter": 600,
+                                           "accept_feasible": False,
+                                           "warm_shift_on_fallback": False}}},
     # 3.8x faster on S00/B with no tracking loss (manoeuvre RMSE 0.096 -> 0.090);
     # the win comes from accepting feasible non-converged solutions and keeping
     # the warm start alive, not from the looser tolerance.

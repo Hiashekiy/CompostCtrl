@@ -11,7 +11,7 @@
 | 分支 | `experiment/torque-gap-modulated-ocp` |
 | 基线 HEAD（本轮改动前） | `99cda4c3ede0638409afe243b600b5a1a83927cf` |
 | 工作树（改动前） | 干净，仅新增本实验指导书一份未跟踪文档 |
-| 本轮改动 | 见 §3，全部位于 `nearspace/`、`scripts/`、`tests/`、`configs/torque_gap_no_cmg_comparison/`、`results/torque_gap_no_cmg_comparison/`、`figures/torque_gap_no_cmg_comparison/`、`docs/torque_gap/` |
+| 本轮改动 | 见 §3，全部位于 `nearspace/`、`scripts/`、`tests/`、`configs/torque_gap_no_cmg_comparison/`、`results/torque_gap_no_cmg_comparison_rti2/`、`figures/torque_gap_no_cmg_comparison/`、`docs/torque_gap/` |
 
 历史结果目录（`results/torque_gap*`、`figures/torque_gap*`）一律未被覆盖：
 本实验的全部输出写入新的 `*_no_cmg_comparison` 目录。
@@ -38,7 +38,7 @@ CMG 参数：`h0 = 50 N·m·s/台`、`rotor_rpm = 6000`、`n = 4`、`mass_per_un
 
 结论：A/B 两组使用同一 `J_b`、同一气动系数、同一舵面限幅与同一外部扰动；
 差异只有 CMG 是否存在及其控制能力。`scripts/audit_no_cmg_configs.py` 每次运行前
-都会逐键核对这一点（见 `results/torque_gap_no_cmg_comparison/config_audit.md`）。
+都会逐键核对这一点（见 `results/torque_gap_no_cmg_comparison_rti2/config_audit.md`）。
 
 ## 3. 实现内容
 
@@ -117,12 +117,15 @@ B 组额外把 `ν` 送进框架回路；A 组构造 `VehicleCMGParams(cmg_on=Fa
 
 ### 3.6 CMG 力矩统计口径（指导书 §9.2）
 
-* `cmg_x/y/z`：**控制区间平均**的已实现 CMG 力矩。P0 在积分器子步内按中点法则对
+* `cmg_x/y/z`：**控制区间平均**的已实现 CMG 力矩，符号约定为
+  **机体所受的 CMG 力矩** `τ_cmg = −A(γ)·ν`（与 `CMGCluster.torque(γ,ν)`、
+  与动力学 `Jω̇ = τ_a + τ_cmg + τ_d − ω×(Jω+H)` 完全一致；正值表示该方向作用在机体上）。
+  注意 `+A(γ)ν` 是作用在 CMG 框架上的**反作用**力矩，不是本列的含义。P0 在积分器子步内按中点法则对
   `−A(γ)ν` 积分再除以 `dt_ctrl`；P1 用与真值模型同结构的 RK4 子步积分框架回路
   （`γ̇ = γ̇`、`γ̈ = (ν_c − γ̇)/τ_g`，该回路与其余状态解耦）后做同样的子步平均。
   该辅助积分与真值模型的一致性被逐次记录为 `p1_gimbal_mismatch_max`
   （实测 0.0）。
-* `cmg_end_x/y/z`：**周期末瞬时值** `−A(γ)ν`。
+* `cmg_end_x/y/z`：**周期末瞬时值** `−A(γ)ν`（同上约定）。
 * 两种口径分别成列，从不混用；`meta.json` 的 `experiment.log_conventions` 里写明。
 * A 组：所有 CMG 列在 CSV 中为**空单元格**（“不适用”），不写零值曲线。
 

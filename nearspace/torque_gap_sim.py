@@ -22,7 +22,9 @@ Log time alignment (implementation guide §9.1)
     error statistics therefore use ``t_next``, never ``t``.
 
 CMG torque convention (implementation guide §9.2)
-    ``cmg_[xyz]`` is the *control-interval average* of the achieved CMG torque,
+    ``cmg_[xyz]`` is the *control-interval average* of the achieved CMG torque
+    (body torque ``-A(gamma) nu``, i.e. exactly ``CMGCluster.torque(gamma, nu)``;
+    positive = the direction that acts on the rigid body),
     built from the integrator sub-steps (P0: -A(gamma_i) nu held over each
     sub-step; P1: trapezoidal average of -A(gamma) gdot over the gimbal-loop
     sub-steps).  ``cmg_end_[xyz]`` is the end-of-interval instantaneous value.
@@ -146,7 +148,7 @@ def gimbal_interval_average(cluster: CMGCluster, gamma, gdot, nu_cmd, dt,
         k4g, k4d = d0 + h * k3d, (nu_cmd - (d0 + h * k3d)) / tau_g
         gamma = g0 + (h / 6.0) * (k1g + 2.0 * k2g + 2.0 * k3g + k4g)
         gdot = d0 + (h / 6.0) * (k1d + 2.0 * k2d + 2.0 * k3d + k4d)
-        acc = acc + h * (-cluster.torque(0.5 * (g0 + gamma), 0.5 * (d0 + gdot)))
+        acc = acc + h * cluster.torque(0.5 * (g0 + gamma), 0.5 * (d0 + gdot))
     return acc / dt, gamma, gdot
 
 
@@ -210,9 +212,9 @@ class ClosedLoop:
                 x = rk4_step_tg(x, u, td, h, self.scn.prm, self.scn.cluster)
                 if not self.scn.gamma_unbounded:
                     x[7:11] = np.clip(x[7:11], gamma_lim[0], gamma_lim[1])
-                acc = acc + h * (-self.scn.cluster.torque(0.5 * (g0 + x[7:11]), nu))
+                acc = acc + h * self.scn.cluster.torque(0.5 * (g0 + x[7:11]), nu)
             cmg_avg = acc / self.dt
-            cmg_end = -self.scn.cluster.torque(x[7:11], nu)
+            cmg_end = self.scn.cluster.torque(x[7:11], nu)
             return x, tau_a.copy(), nu.copy(), cmg_avg, cmg_end
         for i in range(n):
             td = self._tau_d(t + (i + 0.5) * h)
@@ -257,7 +259,7 @@ class ClosedLoop:
             self.gimbal_mismatch_max = max(
                 self.gimbal_mismatch_max,
                 float(np.max(np.abs(x18n[10:18] - np.concatenate([gam_aux, gdot_aux])))))
-            cmg_end = -self.cluster6c.torque(x18n[10:14], x18n[14:18])
+            cmg_end = self.cluster6c.torque(x18n[10:14], x18n[14:18])
         tau_act = aero_moment6c(x18n, p, self.vp)
         return (x18n, tau_act, np.asarray(u_act[3:7], float).copy(),
                 np.asarray(delta_cmd, float), res, cmg_avg, cmg_end)
@@ -469,7 +471,7 @@ class ClosedLoop:
             d = plan["mod"]["d"][0]
             E = capability_residual(gamma, d, scn.cluster,
                                     float(scn.prm.cmg.gdot_max))[0]
-            end = -scn.cluster.torque(gamma, nu_act)
+            end = scn.cluster.torque(gamma, nu_act)
             row.update(
                 **{"g%d" % (i + 1): gamma[i] for i in range(4)},
                 **{"nu%d" % (i + 1): nu_act[i] for i in range(4)},

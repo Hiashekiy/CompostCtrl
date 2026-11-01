@@ -1,2 +1,2 @@
 [run] S05_yaw30_no_cmg                   plant=P0 backend=rti cmg_present=False nx=7 nu=3 nlp=227/227 steps=300
-[done] S05_yaw30_no_cmg                   wall=20.6s rmse={'man0': 17.134, 'combined': 17.134, 'pre': 10.609, 'post': 22.125, 'all': 16.885} fb=0.000 cpu_mean=0.063
+[done] S05_yaw30_no_cmg                   wall=20.7s rmse={'man0': 17.134, 'combined': 17.134, 'pre': 10.609, 'post': 22.125, 'all': 16.885} fb=0.000 cpu_mean=0.063

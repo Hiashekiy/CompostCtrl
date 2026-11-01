@@ -11,8 +11,8 @@ NLP variable and constraint counts, gimbal limits that do not exist without a
 CMG).  Any other difference is reported as a violation and makes the audit fail.
 
 Outputs
-    results/torque_gap_no_cmg_comparison/config_audit.md
-    results/torque_gap_no_cmg_comparison/config_audit.json
+    results/torque_gap_no_cmg_comparison_rti2/config_audit.md
+    results/torque_gap_no_cmg_comparison_rti2/config_audit.json
 
 python scripts/audit_no_cmg_configs.py
 """
@@ -32,7 +32,7 @@ from nearspace.torque_gap_ocp import TorqueGapOCP             # noqa: E402
 from nearspace.torque_gap_scenario import Scenario            # noqa: E402
 
 CFG = ROOT / "configs" / "torque_gap_no_cmg_comparison"
-OUT = ROOT / "results" / "torque_gap_no_cmg_comparison"   # overridden by --out-root
+OUT = ROOT / "results" / "torque_gap_no_cmg_comparison_rti2"   # overridden by --out-root
 
 ALLOWED_PATHS = {"torque_gap.cmg_present", "torque_gap.cmg_enabled"}
 # Dimensions that differ because the physical system differs (never padded).

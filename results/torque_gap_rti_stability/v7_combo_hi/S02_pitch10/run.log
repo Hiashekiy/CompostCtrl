@@ -1,2 +1,0 @@
-[run] v7_combo_hi__S02_pitch10           plant=P0 backend=rti cmg_present=True nx=11 nu=7 nlp=407/407 steps=300
-[done] v7_combo_hi__S02_pitch10           wall=49.6s rmse={'man0': 0.371, 'combined': 0.371, 'pre': 0.017, 'post': 0.038, 'all': 0.216} fb=0.000 cpu_mean=0.159

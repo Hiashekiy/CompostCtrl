@@ -19,7 +19,7 @@ before the manoeuvre offset is measured.
 Outputs
     figures/torque_gap_no_cmg_comparison/references/<ID>_reference.png
     figures/torque_gap_no_cmg_comparison/references/all_references.png
-    results/torque_gap_no_cmg_comparison/reference_audit.md / .json
+    results/torque_gap_no_cmg_comparison_rti2/reference_audit.md / .json
 
 python scripts/audit_no_cmg_references.py
 """
@@ -40,7 +40,7 @@ from nearspace.model6 import quat_to_euler, wrap_pi             # noqa: E402
 from nearspace.torque_gap_scenario import Scenario              # noqa: E402
 
 CFG = ROOT / "configs" / "torque_gap_no_cmg_comparison"
-OUT = ROOT / "results" / "torque_gap_no_cmg_comparison"   # overridden by --out-root
+OUT = ROOT / "results" / "torque_gap_no_cmg_comparison_rti2"   # overridden by --out-root
 FIG = ROOT / "figures" / "torque_gap_no_cmg_comparison" / "references"
 AXES = ("roll", "pitch", "yaw")
 

@@ -301,6 +301,8 @@ torque_gap:
     acceptable_status:
     - Solve_Succeeded
     - Solved_To_Acceptable_Level
+    accept_feasible: false
+    warm_shift_on_fallback: false
   init:
     gamma0_deg:
     - 0.0

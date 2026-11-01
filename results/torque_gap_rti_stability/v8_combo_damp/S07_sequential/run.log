@@ -1,2 +1,0 @@
-[run] v8_combo_damp__S07_sequential      plant=P0 backend=rti cmg_present=True nx=11 nu=7 nlp=407/407 steps=450
-[done] v8_combo_damp__S07_sequential      wall=56.4s rmse={'man0': 1.321, 'man1': 0.055, 'combined': 0.842, 'pre': 0.124, 'post': 0.06, 'all': 0.689} fb=0.000 cpu_mean=0.118

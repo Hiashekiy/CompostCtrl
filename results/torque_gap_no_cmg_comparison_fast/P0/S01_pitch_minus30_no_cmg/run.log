@@ -1,2 +1,0 @@
-[run] S01_pitch_minus30_no_cmg           plant=P0 cmg_present=False nx=7 nu=3 nlp=227/184 steps=300
-[done] S01_pitch_minus30_no_cmg           wall=15.7s rmse={'man0': 5.061, 'combined': 5.061, 'pre': 1.763, 'post': 2.69, 'all': 3.409} fb=0.000 cpu_mean=0.047

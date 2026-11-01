@@ -1,2 +1,0 @@
-[run] fast_g14__S00_pitch30_no_cmg       plant=P0 backend=ipopt cmg_present=False nx=7 nu=3 nlp=147/120 steps=300
-[done] fast_g14__S00_pitch30_no_cmg       wall=6.0s rmse={'man0': 11.97, 'combined': 11.97, 'pre': 0.118, 'post': 12.663, 'all': 10.112} fb=0.000 cpu_mean=0.015

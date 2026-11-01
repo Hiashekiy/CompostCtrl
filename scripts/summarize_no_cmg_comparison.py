@@ -18,7 +18,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
-RES = ROOT / "results" / "torque_gap_no_cmg_comparison"   # overridden by --root
+RES = ROOT / "results" / "torque_gap_no_cmg_comparison_rti2"   # overridden by --root
 PHASES = ("P0", "P1")
 SCENARIO_ORDER = ["S00_pitch30", "S01_pitch_minus30", "S02_pitch10", "S03_pitch45",
                   "S04_roll30", "S05_yaw30", "S06_pitch30_roll20", "S07_sequential"]

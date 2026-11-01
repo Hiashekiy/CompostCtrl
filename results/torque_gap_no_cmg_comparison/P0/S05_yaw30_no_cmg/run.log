@@ -1,2 +1,0 @@
-[run] S05_yaw30_no_cmg                   plant=P0 cmg_present=False nx=7 nu=3 nlp=227/184 steps=300
-[done] S05_yaw30_no_cmg                   wall=51.6s rmse={'man0': 17.137, 'combined': 17.137, 'pre': 10.609, 'post': 22.094, 'all': 16.873} fb=0.003 cpu_mean=0.158

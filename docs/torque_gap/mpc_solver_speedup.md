@@ -1,5 +1,12 @@
 # MPC 求解速度优化：三层方案与实测
 
+> **状态**：本文是加速方案的**设计与历史测量记录**。
+> 按要求，除最终采用的 RTI + 信赖域配置外，其余实验臂（baseline / fast / rti）
+> 及其对比数据已从仓库删除（仍在 git 历史中可查）。
+> **当前唯一的实验数据集是** `results/torque_gap_no_cmg_comparison_rti2/`，
+> 其正式结果见 `no_cmg_vs_cmg_scenario_experiment.md`。
+> 下文出现的其它 results 路径均为历史记录，不再存在于工作树。
+
 目标：把闭环 MPC 的单步求解时间从 **0.24–1.39 s（均值）/ 4.84 s（P95）** 压到
 **0.2 s 控制周期以内**，且不牺牲跟踪质量。所有数字都来自
 `results/` 下的真实闭环运行，没有单点微基准代替闭环统计。
@@ -248,7 +255,7 @@ python scripts/run_no_cmg_matrix.py --phase all --jobs 5 --solver-profile fast `
 python scripts/run_no_cmg_matrix.py --phase all --jobs 5 --backend rti --qp-iters 12 `
     --results-root results/torque_gap_no_cmg_comparison_rti
 # 三层对比与图
-python scripts/compare_mpc_backends.py
+# （多臂对比脚本已随基线臂一并删除）
 # Tier 2 变体研究（网格/冗余约束）
 python scripts/study_mpc_speed.py --jobs 6
 # 单点微基准（求解器选项 / 网格长度）

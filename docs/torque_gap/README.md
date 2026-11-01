@@ -106,9 +106,8 @@ python scripts/run_torque_gap.py --case c1_pitch30 --plant P0 `
 | 该实验的代码审查与惯量审计 | `no_cmg_vs_cmg_code_audit.md` |
 | MPC 求解速度优化（Tier 1/2/3 全报告） | `mpc_solver_speedup.md` |
 | 配置（由脚本生成的 A/B） | `configs/torque_gap_no_cmg_comparison/` |
-| 数据（4 个完整矩阵：baseline / fast / rti / rti2） | `results/torque_gap_no_cmg_comparison{,_fast,_rti,_rti2}/` |
-| RTI 线性化稳定性扫描（13 个变体 × 6 场景） | `results/torque_gap_rti_stability/sweep.md` |
-| 求解速度对比与变体研究 | `results/torque_gap_mpc_speed/`、`figures/torque_gap_mpc_speed/` |
+| 数据（当前唯一数据集：11 组 A/B，RTI + 信赖域） | `results/torque_gap_no_cmg_comparison_rti2/` |
+| 图（逐组对照总图 + 跨场景汇总） | `figures/torque_gap_no_cmg_comparison/{P0_rti2,P1_rti2}/`、`cross_*_rti2_*` |
 
 新增模块与脚本：
 
@@ -121,10 +120,7 @@ scripts/audit_no_cmg_references.py   参考姿态核验与出图
 scripts/run_no_cmg_matrix.py         运行矩阵（--solver-profile / --backend / --results-root）
 scripts/summarize_no_cmg_comparison.py  summary.csv / summary.md
 scripts/plot_no_cmg_comparison.py     逐场景 A/B 对照总图（9 联：姿态°/误差°/误差分量°/力矩分解/能力包络/CMG 力矩/框架角°/角动量/求解耗时） 与跨场景图
-scripts/compare_mpc_backends.py       三个后端的横向对比与图
-scripts/study_mpc_speed.py            Tier-2 变体研究（网格 / 冗余约束）
-scripts/bench_no_cmg_solver.py        单点微基准（求解器选项 / 网格长度）
-scripts/sweep_rti_stability.py       RTI 信赖域等稳定性开关的扫描
+scripts/report_no_cmg_rti2.py        由 summary.csv 直接生成实验报告（11 组）
 tests/test_torque_gap_no_cmg.py       无 CMG 分支的 15 项测试
 tests/test_torque_gap_solver_policy.py 采纳策略 / 热启动 / quat_norm 测试
 tests/test_torque_gap_rti.py          HPIPM RTI 的 8 项测试

@@ -1,2 +1,0 @@
-[run] S07_sequential_with_cmg            plant=P0 cmg_present=True nx=11 nu=7 nlp=407/364 steps=450
-[done] S07_sequential_with_cmg            wall=148.3s rmse={'man0': 0.09, 'man1': 0.292, 'combined': 0.192, 'pre': 0.061, 'post': 0.0, 'all': 0.158} fb=0.016 cpu_mean=0.322

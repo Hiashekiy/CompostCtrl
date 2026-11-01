@@ -386,7 +386,9 @@
         "acceptable_status": [
           "Solve_Succeeded",
           "Solved_To_Acceptable_Level"
-        ]
+        ],
+        "accept_feasible": false,
+        "warm_shift_on_fallback": false
       },
       "init": {
         "gamma0_deg": [
@@ -925,9 +927,9 @@
       "engine": "casadi-ipopt",
       "hessian_approximation": "exact",
       "max_cpu_s": 4.0,
-      "accept_feasible": true,
+      "accept_feasible": false,
       "accept_feasible_viol": 0.0001,
-      "warm_shift_on_fallback": true
+      "warm_shift_on_fallback": false
     }
   },
   "run_id": "S01_pitch_minus30_no_cmg_seed2",
@@ -936,6 +938,12 @@
   "arm": "no_cmg",
   "config_path": "configs\\torque_gap_no_cmg_comparison\\cases\\S01_pitch_minus30_no_cmg.yaml",
   "overrides": {
+    "solver": {
+      "tol": 1e-06,
+      "max_iter": 600,
+      "accept_feasible": false,
+      "warm_shift_on_fallback": false
+    },
     "rti": {
       "state_tr_gamma": 0.5,
       "state_tr_omega": 1.0
@@ -944,7 +952,7 @@
     "seed": 2,
     "seed_randomize": true
   },
-  "wall_clock_s": 18.77760329999728,
+  "wall_clock_s": 18.76371030000155,
   "backend": "rti",
   "qp_iters": 12,
   "rti_options": {

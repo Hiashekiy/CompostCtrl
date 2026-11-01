@@ -1,2 +1,0 @@
-[run] v7_combo_hi__S04_roll30            plant=P0 backend=rti cmg_present=True nx=11 nu=7 nlp=407/407 steps=300
-[done] v7_combo_hi__S04_roll30            wall=48.1s rmse={'man0': 0.013, 'combined': 0.013, 'pre': 0.007, 'post': 0.009, 'all': 0.014} fb=0.000 cpu_mean=0.154
