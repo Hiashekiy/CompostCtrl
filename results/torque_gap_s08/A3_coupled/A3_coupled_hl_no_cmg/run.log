@@ -1,0 +1,2 @@
+[run] A3_coupled_hl_no_cmg                     plant=P0 cmg_present=False nx=7 nu=3 nlp=227/227 steps=300
+[done] A3_coupled_hl_no_cmg                     wall=25.9s rmse={'man0': 22.512, 'combined': 22.512, 'pre': 9.194, 'post': 36.533, 'all': 25.143} fb=0.000 cpu_mean=0.080

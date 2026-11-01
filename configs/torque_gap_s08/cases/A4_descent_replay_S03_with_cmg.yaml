@@ -1,0 +1,6 @@
+# B arm of A4_descent_replay_S03 -- surfaces + the current 4-unit pyramid CMG.
+# 11 states / 7 inputs, M50 gimbal limits, joint optimisation.
+base: ../scenarios/A4_descent_replay_S03.yaml
+torque_gap:
+  cmg_present: true
+  cmg_enabled: true

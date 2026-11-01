@@ -1,0 +1,2 @@
+[run] A2_qbar_p0p5_no_cmg                      plant=P0 cmg_present=False nx=7 nu=3 nlp=227/227 steps=300
+[done] A2_qbar_p0p5_no_cmg                      wall=19.1s rmse={'man0': 0.94, 'combined': 0.94, 'pre': 0.19, 'post': 0.16, 'all': 0.559} fb=0.000 cpu_mean=0.057

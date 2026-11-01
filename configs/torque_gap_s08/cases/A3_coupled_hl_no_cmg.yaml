@@ -1,0 +1,7 @@
+# A arm of A3_coupled_hl -- aerodynamic surfaces only, no CMG at all.
+# The vehicle carries no rotor momentum, no gimbal state and no gimbal
+# rate; the optimiser is a 7-state / 3-input problem (doc §10).
+base: ../scenarios/A3_coupled_hl.yaml
+torque_gap:
+  cmg_present: false
+  cmg_enabled: false

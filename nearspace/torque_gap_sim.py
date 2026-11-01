@@ -49,6 +49,8 @@ from dataclasses import dataclass
 import numpy as np
 
 from .cmg import CMGCluster
+from .aero_diagnostics import (aero_moment_diagnostics, flow_diagnostics,
+                               surface_capability, surface_utilisation)
 from .model6 import quat_to_euler, wrap_pi
 from .model6c import VehicleCMGParams, aero_moment6c, plant_step6c
 from .torque_gap_authority import allocate_deflection, natural_moment_v, surface_matrix
@@ -69,6 +71,18 @@ COMMON_COLUMNS = (
     + ["Rp_x", "Rp_y", "Rp_z", "Rm_x", "Rm_y", "Rm_z", "d_x", "d_y", "d_z"]
     + ["lo_x", "lo_y", "lo_z", "hi_x", "hi_y", "hi_z"]
     + ["tau_bound_used"]
+    # flow / aerodynamic diagnostics (S08 code audit §4 and §11.1-11.3).  These
+    # columns are observations of the frozen model; they enter no dynamics, no
+    # constraint and no cost.  CL/CD/lift/drag are written as empty cells because
+    # the model has no aerodynamic force at all ("not modelled", never a zero
+    # curve).
+    + ["alpha_deg", "alpha_ref_deg", "beta_deg", "mach", "knudsen", "qbar_pa",
+       "V_rel", "CL", "CD", "lift_N", "drag_N"]
+    + ["Cm_nat", "Cm", "Cm_alpha_deriv", "Cm_delta_e", "delta_e_rad",
+       "tau_nat_x", "tau_nat_y", "tau_nat_z"]
+    + ["half_x", "half_y", "half_z", "tau_req_x", "tau_req_y", "tau_req_z",
+       "surf_util_x", "surf_util_y", "surf_util_z", "surf_util_max",
+       "surf_margin_y"]
     + ["cpu_s", "iters", "viol", "fallback", "accepted", "status"]
 )
 
@@ -189,6 +203,19 @@ class ClosedLoop:
             cmg_torque="cmg_* = control-interval average of the achieved -A(gamma) nu "
                        "(integrator sub-steps); cmg_end_* = end-of-interval instantaneous",
             cmg_columns_in_A_group="empty cells: not applicable (no CMG)",
+            flow="alpha_deg = atan2(w_b,u_b) of the actual attitude against the "
+                 "actual relative wind at t_next; alpha_ref_deg = theta_ref - gamma "
+                 "= alpha_trim + manoeuvre; qbar_pa = 0.5 rho |V_ned|^2; mach and "
+                 "knudsen from the atmosphere backend (diagnostic only)",
+            aero="Cm_nat = Cm0 + Cm_alpha alpha + Cm_q q_chat; Cm includes the "
+                 "modelled deflection only in the P1 plant (empty in P0: the P0 "
+                 "plant has no deflection state)",
+            aero_not_modelled="CL, CD, lift_N, drag_N are empty cells: this is an "
+                              "attitude-only model with no aerodynamic force",
+            surface="half_* = |M_delta| delta_max (deflection-reachable half width "
+                    "[N m]); tau_req_* = tau_a_command - tau_nat; surf_util_* = "
+                    "|tau_req| / half (1.0 = demand fills the available control "
+                    "moment); surf_margin_y = half_y - |tau_req_y|",
         )
 
     # ---- plant-specific execution ---------------------------------
@@ -441,6 +468,16 @@ class ClosedLoop:
         tol = 1e-6 * np.maximum(1.0, np.abs(hi - lo))
         at_bound = np.mean((np.abs(tau_act - lo) <= tol) |
                            (np.abs(tau_act - hi) <= tol))
+        # ---- flow / aerodynamic diagnostics at t_next (observation only) ----
+        h_next = float(traj.h(t_next))
+        rho_next = float(traj.rho(t_next))
+        Vn_next = np.asarray(traj.V_ned(t_next), float)
+        flow = flow_diagnostics(q, rho_next, Vn_next, h_next, atm=scn.atm,
+                                cbar=scn.veh.cbar)
+        delta_act = None if self.plant == "P0" else np.asarray(x[7:10], float)
+        aero = aero_moment_diagnostics(q, w, delta_act, rho_next, Vn_next, scn.veh)
+        half = surface_capability(flow["qbar_pa"], scn.veh)
+        surf = surface_utilisation(tau_a_cmd, aero["tau_nat"], half)
         row = dict(
             t=t, t_next=t_next, h_km=traj.h(t_next) / 1000.0,
             rho=plan["cond"]["rho"][0], Q=plan["box"]["Q"][0], step=step,
@@ -462,6 +499,23 @@ class ClosedLoop:
             **{("lo_%s" % ax): lo[i] for i, ax in enumerate("xyz")},
             **{("hi_%s" % ax): hi[i] for i, ax in enumerate("xyz")},
             tau_bound_used=float(at_bound),
+            **{k: flow[k] for k in ("alpha_deg", "beta_deg", "mach", "knudsen",
+                                    "qbar_pa", "V_rel")},
+            alpha_ref_deg=float(np.rad2deg(traj.pitch_ref(t_next) - traj.gamma(t_next))),
+            CL=None, CD=None, lift_N=None, drag_N=None,     # not modelled
+            Cm_nat=aero["Cm_nat"], Cm=aero["Cm"],
+            Cm_alpha_deriv=float(scn.veh.Cm_alpha),
+            Cm_delta_e=float(scn.veh.Cm_de),
+            delta_e_rad=aero["delta_e_rad"],
+            **{("tau_nat_%s" % ax): float(aero["tau_nat"][i])
+               for i, ax in enumerate("xyz")},
+            **{("half_%s" % ax): float(half[i]) for i, ax in enumerate("xyz")},
+            **{("tau_req_%s" % ax): float(surf["tau_req"][i])
+               for i, ax in enumerate("xyz")},
+            **{("surf_util_%s" % ax): float(surf["util"][i])
+               for i, ax in enumerate("xyz")},
+            surf_util_max=float(np.max(surf["util"])),
+            surf_margin_y=float(surf["margin"][1]),
             cpu_s=res.cpu_s, iters=res.iter_count, viol=res.max_violation,
             fallback=fallback, accepted=accepted, status=status,
         )

@@ -1,0 +1,2 @@
+[run] A1_alpha_p30_no_cmg_P1                   plant=P1 cmg_present=False nx=7 nu=3 nlp=227/227 steps=300
+[done] A1_alpha_p30_no_cmg_P1                   wall=26.1s rmse={'man0': 61.135, 'combined': 61.135, 'pre': 26.758, 'post': 81.26, 'all': 60.079} fb=0.000 cpu_mean=0.080

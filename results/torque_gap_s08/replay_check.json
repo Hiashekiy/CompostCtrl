@@ -1,0 +1,106 @@
+[
+  {
+    "case": "A4_descent_replay_S00",
+    "arm": "no_cmg",
+    "new_file": "results\\torque_gap_s08\\A4_descent_replay\\A4_descent_replay_S00_no_cmg\\metrics.json",
+    "old_file": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S00_pitch30_no_cmg\\metrics.json",
+    "new": {
+      "rmse": 3.3258035373088872,
+      "rmse_man0": 4.745998651356712,
+      "rmse_post": 2.6543286817882774,
+      "max_err": 6.224313711162158,
+      "fallback_ratio": 0.0,
+      "cpu_p95": 0.48336704501562056,
+      "n_steps": 300
+    },
+    "old": {
+      "rmse": 3.3258035373088872,
+      "rmse_man0": 4.745998651356712,
+      "rmse_post": 2.6543286817882774,
+      "max_err": 6.224313711162158,
+      "fallback_ratio": 0.0,
+      "cpu_p95": 0.11225869499467081,
+      "n_steps": 300
+    },
+    "status": "compared",
+    "delta_rmse": 0.0
+  },
+  {
+    "case": "A4_descent_replay_S00",
+    "arm": "with_cmg",
+    "new_file": "results\\torque_gap_s08\\A4_descent_replay\\A4_descent_replay_S00_with_cmg\\metrics.json",
+    "old_file": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S00_pitch30_with_cmg\\metrics.json",
+    "new": {
+      "rmse": 0.4331041267036346,
+      "rmse_man0": 0.08513984154702695,
+      "rmse_post": 0.7441377671579922,
+      "max_err": 3.7693330469690545,
+      "fallback_ratio": 0.0,
+      "cpu_p95": 0.5530215349936043,
+      "n_steps": 300
+    },
+    "old": {
+      "rmse": 0.4331041267036346,
+      "rmse_man0": 0.08513984154702695,
+      "rmse_post": 0.7441377671579922,
+      "max_err": 3.7693330469690545,
+      "fallback_ratio": 0.0,
+      "cpu_p95": 0.15195542500296144,
+      "n_steps": 300
+    },
+    "status": "compared",
+    "delta_rmse": 0.0
+  },
+  {
+    "case": "A4_descent_replay_S03",
+    "arm": "no_cmg",
+    "new_file": "results\\torque_gap_s08\\A4_descent_replay\\A4_descent_replay_S03_no_cmg\\metrics.json",
+    "old_file": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S03_pitch45_no_cmg\\metrics.json",
+    "new": {
+      "rmse": 8.264280462840349,
+      "rmse_man0": 10.954905692787564,
+      "rmse_post": 8.249843521315867,
+      "max_err": 15.967770996211614,
+      "fallback_ratio": 0.0,
+      "cpu_p95": 0.36910272497771074,
+      "n_steps": 300
+    },
+    "old": {
+      "rmse": 8.264280462840349,
+      "rmse_man0": 10.954905692787564,
+      "rmse_post": 8.249843521315867,
+      "max_err": 15.967770996211614,
+      "fallback_ratio": 0.0,
+      "cpu_p95": 0.11817058000306134,
+      "n_steps": 300
+    },
+    "status": "compared",
+    "delta_rmse": 0.0
+  },
+  {
+    "case": "A4_descent_replay_S03",
+    "arm": "with_cmg",
+    "new_file": "results\\torque_gap_s08\\A4_descent_replay\\A4_descent_replay_S03_with_cmg\\metrics.json",
+    "old_file": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S03_pitch45_with_cmg\\metrics.json",
+    "new": {
+      "rmse": 9.489975504723391,
+      "rmse_man0": 2.425980795705335,
+      "rmse_post": 16.25390244866887,
+      "max_err": 30.99398751480387,
+      "fallback_ratio": 0.006666666666666667,
+      "cpu_p95": 0.3976882050250425,
+      "n_steps": 300
+    },
+    "old": {
+      "rmse": 9.489975504723391,
+      "rmse_man0": 2.425980795705335,
+      "rmse_post": 16.25390244866887,
+      "max_err": 30.99398751480387,
+      "fallback_ratio": 0.006666666666666667,
+      "cpu_p95": 0.15026525000284893,
+      "n_steps": 300
+    },
+    "status": "compared",
+    "delta_rmse": 0.0
+  }
+]

@@ -1,0 +1,2 @@
+[run] A4_descent_replay_S03_with_cmg_seed2     plant=P0 cmg_present=True nx=11 nu=7 nlp=407/407 steps=300
+[done] A4_descent_replay_S03_with_cmg_seed2     wall=39.3s rmse={'man0': 2.405, 'combined': 2.405, 'pre': 0.393, 'post': 16.728, 'all': 9.759} fb=0.000 cpu_mean=0.124

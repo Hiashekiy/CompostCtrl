@@ -1,0 +1,6 @@
+# B arm of A3_coupled_hl -- surfaces + the current 4-unit pyramid CMG.
+# 11 states / 7 inputs, M50 gimbal limits, joint optimisation.
+base: ../scenarios/A3_coupled_hl.yaml
+torque_gap:
+  cmg_present: true
+  cmg_enabled: true

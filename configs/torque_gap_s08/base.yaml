@@ -1,0 +1,53 @@
+# S08 -- large-angle-of-attack / dynamic-pressure degradation study.
+# ---------------------------------------------------------------- inherited --
+# Everything physical is inherited unchanged from the previous A/B chain:
+#   configs/torque_gap_no_cmg_comparison/base.yaml
+#     -> configs/torque_gap_m50/cases/c1_pitch30.yaml        (M50 gimbal limits)
+#     -> configs/torque_gap_unlimited/cases/c1_pitch30.yaml   (unwrapped gimbal)
+#     -> configs/torque_gap/cases/c1_pitch30.yaml             (90-150 s window)
+#     -> configs/torque_gap/base.yaml -> config.yaml          (frozen repository)
+# so vehicle inertia, aerodynamic coefficients, atmosphere backend (MSIS2), the
+# CMG device (4 x 50 N m s, 1.0 rad/s, 3.0 rad/s^2), the aero authority box, the
+# disturbance, the prediction grid, the solver and the tracking weights are
+# exactly the ones the earlier experiments used.  S08 adds nothing but the
+# flight condition (alpha / qbar) of each controlled case.
+#
+# S08 never edits a cost function, a weight, the CMG configuration search, the
+# gimbal limits, the surface parameters or the simulation window (doc §17).
+base: ../torque_gap_no_cmg_comparison/base.yaml
+
+torque_gap:
+  # Same 60 s evaluation window as the S00/S03 replay, so a controlled case and
+  # a descent replay are scored over the identical interval.
+  start: 90.0
+  end: 150.0
+  dt_ctrl: 0.2
+  plant: P0                  # P0 virtual-torque plant | P1 18-state surface truth
+  plant_substeps: 8
+  seed: 0
+  # The baseline disturbance is deterministic; `seed_randomize: true` draws a
+  # phase offset for its sinusoidal components.  Both arms of a case always
+  # share one seed, hence one identical external torque history.
+  seed_randomize: false
+  cmg_present: true          # the generated *no_cmg case files override this
+  cmg_enabled: true
+  gamma_limit: none
+  # MPC backend settings.  The values are the production RTI settings accepted by
+  # the previous A/B experiment (same tolerance, same trust region, same QP
+  # iteration count); they are written here so that every run's resolved
+  # configuration states them explicitly instead of relying on a CLI flag.
+  #
+  # The acceptance policy is pinned to the *baseline* one of that experiment:
+  # a non-converged or constraint-violating step is NOT used (the runner applies
+  # the logged fallback instead), so a degraded attitude cannot be blamed on a
+  # silently accepted infeasible solution.  Leaving it at the code default would
+  # have run the "Tier-1" policy and changed the S03 replay numbers.
+  solver:
+    tol: 1.0e-6
+    max_iter: 600
+    accept_feasible: false
+    warm_shift_on_fallback: false
+  rti:
+    qp_iters: 12
+    state_tr_gamma: 0.5
+    state_tr_omega: 1.0
