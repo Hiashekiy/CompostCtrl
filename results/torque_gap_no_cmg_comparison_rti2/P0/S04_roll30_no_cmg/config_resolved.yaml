@@ -318,6 +318,7 @@ torque_gap:
   seed_randomize: false
   cmg_present: false
   cmg_enabled: false
+  cmg_slew_max: 80.0
   rti:
     state_tr_gamma: 0.5
     state_tr_omega: 1.0
