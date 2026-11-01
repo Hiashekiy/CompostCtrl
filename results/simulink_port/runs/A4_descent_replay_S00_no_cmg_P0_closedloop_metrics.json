@@ -1,0 +1,21 @@
+{
+  "tag": "A4_descent_replay_S00_no_cmg_P0",
+  "mode": "closedloop",
+  "samples": 300,
+  "nx": 7,
+  "wall_s": 49.3918386,
+  "state_max_abs_diff": 4.6406907799889652E-7,
+  "state_max_rel_diff": 4.6406907799889652E-7,
+  "state_worst_state": 2,
+  "att_err_max_abs_diff_deg": 3.3559228838520028E-5,
+  "rmse_python_deg": 3.3258035373108488,
+  "rmse_matlab_deg": 3.3258078767911976,
+  "max_err_python_deg": 6.224313711,
+  "max_err_matlab_deg": 6.2243138033190712,
+  "final_err_python_deg": 3.610016027,
+  "final_err_matlab_deg": 3.6100471080715724,
+  "C3_state_rel_tol": 1E-9,
+  "C3_err_tol_deg": 1E-6,
+  "C3_state_pass": false,
+  "C3_err_pass": false
+}

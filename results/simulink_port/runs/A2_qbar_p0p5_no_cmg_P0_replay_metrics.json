@@ -1,0 +1,21 @@
+{
+  "tag": "A2_qbar_p0p5_no_cmg_P0",
+  "mode": "replay",
+  "samples": 300,
+  "nx": 7,
+  "wall_s": 0.3383368,
+  "state_max_abs_diff": 4.994571423111438E-11,
+  "state_max_rel_diff": 4.994571423111438E-11,
+  "state_worst_state": 1,
+  "att_err_max_abs_diff_deg": 8.9946849968214337E-10,
+  "rmse_python_deg": 0.55882726020473916,
+  "rmse_matlab_deg": 0.55882726022623852,
+  "max_err_python_deg": 1.473558724,
+  "max_err_matlab_deg": 1.4735587238643235,
+  "final_err_python_deg": 5.991139449E-8,
+  "final_err_matlab_deg": 5.9440547651119786E-8,
+  "C3_state_rel_tol": 1E-9,
+  "C3_err_tol_deg": 1E-6,
+  "C3_state_pass": true,
+  "C3_err_pass": true
+}

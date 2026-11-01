@@ -1,0 +1,21 @@
+{
+  "tag": "A1_alpha_p20_no_cmg_P0",
+  "mode": "replay",
+  "samples": 300,
+  "nx": 7,
+  "wall_s": 0.3818291,
+  "state_max_abs_diff": 5.2364834690621365E-11,
+  "state_max_rel_diff": 5.2364834690621365E-11,
+  "state_worst_state": 3,
+  "att_err_max_abs_diff_deg": 6.5680194616390963E-10,
+  "rmse_python_deg": 0.74468951869775357,
+  "rmse_matlab_deg": 0.744689518692415,
+  "max_err_python_deg": 1.590174458,
+  "max_err_matlab_deg": 1.590174458242585,
+  "final_err_python_deg": 3.863520603E-6,
+  "final_err_matlab_deg": 3.8639370656178568E-6,
+  "C3_state_rel_tol": 1E-9,
+  "C3_err_tol_deg": 1E-6,
+  "C3_state_pass": true,
+  "C3_err_pass": true
+}

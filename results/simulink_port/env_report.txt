@@ -1,0 +1,152 @@
+==== S08 Simulink port: environment check ====
+time            : 2026-11-02 02:17:32
+version         : 24.1.0.2537033 (R2024a)
+release         : 2024a
+burst           : 
+matlabroot      : D:\Program Files\MATLAB\R2024a
+computer        : PCWIN64   ispc=1  is64=1
+prefdir         : D:\项目\飞轮\.matlab_prefs
+pwd             : D:\项目\飞轮
+
+---- installed products (ver) ----
+5G Toolbox                                 24.1       (R2024a)
+AUTOSAR Blockset                           24.1       (R2024a)
+Aerospace Blockset                         24.1       (R2024a)
+Aerospace Toolbox                          24.1       (R2024a)
+Antenna Toolbox                            24.1       (R2024a)
+Audio Toolbox                              24.1       (R2024a)
+Automated Driving Toolbox                  24.1       (R2024a)
+Bioinformatics Toolbox                     24.1       (R2024a)
+Bluetooth Toolbox                          24.1       (R2024a)
+C2000 Microcontroller Blockset             24.1       (R2024a)
+Communications Toolbox                     24.1       (R2024a)
+Computer Vision Toolbox                    24.1       (R2024a)
+Control System Toolbox                     24.1       (R2024a)
+Curve Fitting Toolbox                      24.1       (R2024a)
+DDS Blockset                               24.1       (R2024a)
+DSP HDL Toolbox                            24.1       (R2024a)
+DSP System Toolbox                         24.1       (R2024a)
+Data Acquisition Toolbox                   24.1       (R2024a)
+Database Toolbox                           24.1       (R2024a)
+Datafeed Toolbox                           24.1       (R2024a)
+Deep Learning HDL Toolbox                  24.1       (R2024a)
+Deep Learning Toolbox                      24.1       (R2024a)
+Econometrics Toolbox                       24.1       (R2024a)
+Embedded Coder                             24.1       (R2024a)
+Filter Design HDL Coder                    24.1       (R2024a)
+Financial Instruments Toolbox              24.1       (R2024a)
+Financial Toolbox                          24.1       (R2024a)
+Fixed-Point Designer                       24.1       (R2024a)
+Fuzzy Logic Toolbox                        24.1       (R2024a)
+GPU Coder                                  24.1       (R2024a)
+Global Optimization Toolbox                24.1       (R2024a)
+HDL Coder                                  24.1       (R2024a)
+HDL Verifier                               24.1       (R2024a)
+Image Acquisition Toolbox                  24.1       (R2024a)
+Image Processing Toolbox                   24.1       (R2024a)
+Industrial Communication Toolbox           24.1       (R2024a)
+Instrument Control Toolbox                 24.1       (R2024a)
+LTE Toolbox                                24.1       (R2024a)
+Lidar Toolbox                              24.1       (R2024a)
+MATLAB                                     24.1       (R2024a)
+MATLAB Coder                               24.1       (R2024a)
+MATLAB Compiler                            24.1       (R2024a)
+MATLAB Compiler SDK                        24.1       (R2024a)
+MATLAB Report Generator                    24.1       (R2024a)
+MATLAB Test                                24.1       (R2024a)
+Mapping Toolbox                            24.1       (R2024a)
+Medical Imaging Toolbox                    24.1       (R2024a)
+Mixed-Signal Blockset                      24.1       (R2024a)
+Model Predictive Control Toolbox           24.1       (R2024a)
+Model-Based Calibration Toolbox            24.1       (R2024a)
+Motor Control Blockset                     24.1       (R2024a)
+Navigation Toolbox                         24.1       (R2024a)
+Optimization Toolbox                       24.1       (R2024a)
+Parallel Computing Toolbox                 24.1       (R2024a)
+Partial Differential Equation Toolbox      24.1       (R2024a)
+Phased Array System Toolbox                24.1       (R2024a)
+Powertrain Blockset                        24.1       (R2024a)
+Predictive Maintenance Toolbox             24.1       (R2024a)
+RF Blockset                                24.1       (R2024a)
+RF PCB Toolbox                             24.1       (R2024a)
+RF Toolbox                                 24.1       (R2024a)
+ROS Toolbox                                24.1       (R2024a)
+Radar Toolbox                              24.1       (R2024a)
+Reinforcement Learning Toolbox             24.1       (R2024a)
+Requirements Toolbox                       24.1       (R2024a)
+Risk Management Toolbox                    24.1       (R2024a)
+Robotics System Toolbox                    24.1       (R2024a)
+Robust Control Toolbox                     24.1       (R2024a)
+Satellite Communications Toolbox           24.1       (R2024a)
+Sensor Fusion and Tracking Toolbox         24.1       (R2024a)
+SerDes Toolbox                             24.1       (R2024a)
+Signal Integrity Toolbox                   24.1       (R2024a)
+Signal Processing Toolbox                  24.1       (R2024a)
+SimBiology                                 24.1       (R2024a)
+SimEvents                                  24.1       (R2024a)
+Simscape                                   24.1       (R2024a)
+Simscape Battery                           24.1       (R2024a)
+Simscape Driveline                         24.1       (R2024a)
+Simscape Electrical                        24.1       (R2024a)
+Simscape Fluids                            24.1       (R2024a)
+Simscape Multibody                         24.1       (R2024a)
+Simulink                                   24.1       (R2024a)
+Simulink 3D Animation                      24.1       (R2024a)
+Simulink Check                             24.1       (R2024a)
+Simulink Code Inspector                    24.1       (R2024a)
+Simulink Coder                             24.1       (R2024a)
+Simulink Compiler                          24.1       (R2024a)
+Simulink Control Design                    24.1       (R2024a)
+Simulink Coverage                          24.1       (R2024a)
+Simulink Design Optimization               24.1       (R2024a)
+Simulink Design Verifier                   24.1       (R2024a)
+Simulink Desktop Real-Time                 24.1       (R2024a)
+Simulink Fault Analyzer                    24.1       (R2024a)
+Simulink PLC Coder                         24.1       (R2024a)
+Simulink Real-Time                         24.1       (R2024a)
+Simulink Report Generator                  24.1       (R2024a)
+Simulink Test                              24.1       (R2024a)
+SoC Blockset                               24.1       (R2024a)
+Spreadsheet Link                           24.1       (R2024a)
+Stateflow                                  24.1       (R2024a)
+Statistics and Machine Learning Toolbox    24.1       (R2024a)
+Symbolic Math Toolbox                      24.1       (R2024a)
+System Composer                            24.1       (R2024a)
+System Identification Toolbox              24.1       (R2024a)
+Text Analytics Toolbox                     24.1       (R2024a)
+UAV Toolbox                                24.1       (R2024a)
+Vehicle Dynamics Blockset                  24.1       (R2024a)
+Vehicle Network Toolbox                    24.1       (R2024a)
+Vision HDL Toolbox                         24.1       (R2024a)
+WLAN Toolbox                               24.1       (R2024a)
+Wavelet Toolbox                            24.1       (R2024a)
+Wireless HDL Toolbox                       24.1       (R2024a)
+Wireless Testbench                         24.1       (R2024a)
+
+---- license('test', ...) ----
+MATLAB                       1
+Simulink                     1
+Aerospace_Blockset           1
+Aerospace_Toolbox            0
+Simulink_Coder               0
+Embedded_Coder               0
+MATLAB_Coder                 1
+Stateflow                    1
+Optimization_Toolbox         1
+MPC_Toolbox                  1
+Control_Toolbox              1
+Simulink_Control_Design      1
+Real-Time_Workshop           1
+Simulink_Real_Time           0
+
+[FAIL]  C compiler (mex)             no C compiler selected: run mex -setup -client api
+[OK]    mex -setup writable          temp dir writable: D:\项目\飞轮\.matlab_temp\s08_mex_probe
+
+[OK]    Simulink load                simulink library loaded (2.410000e+01)
+[FAIL]  headless sim                 无法识别的字段名称 "yout"。
+[OK]    workspace writable           D:\项目\飞轮\results\simulink_port
+
+[FAIL]  Aerospace Blockset blocks    aeroblks library not available (Aerospace Blockset not installed/licensed)
+
+---- summary ----
+critical FAILED: C compiler (mex), headless sim

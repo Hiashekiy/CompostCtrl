@@ -1,0 +1,21 @@
+{
+  "tag": "A4_descent_replay_S00_with_cmg_P0",
+  "eps": 1e-09,
+  "replicate_max_du": 4.978803147537292e-09,
+  "replicate_max_d_err_deg": 4.3266479288206483e-10,
+  "perturbed_first_separation_step": 33,
+  "perturbed_first_separation_t": 96.6,
+  "perturbed_median_du": 0.11783568246308951,
+  "perturbed_max_du": 12.56212428192151,
+  "perturbed_max_d_err_deg": 0.6366631827592006,
+  "rmse_ref": 0.43310412670660775,
+  "rmse_unperturbed": 0.4331041267036346,
+  "rmse_perturbed": 0.37115812125686165,
+  "rmse_perturbed_meta": {
+    "man0": 0.08485558725592478,
+    "combined": 0.08485558725592478,
+    "pre": 0.05311562287075165,
+    "post": 0.6359086923023013,
+    "all": 0.37115812125686165
+  }
+}

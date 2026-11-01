@@ -1,0 +1,25 @@
+==== probe2 ====
+path handling: pwd=D:\项目\飞轮
+[OK] headless sim: final=7 (expect 7), 101 samples
+[OK] model save/close
+---- block library probe ----
+[OK]   simulink       23 top-level subsystem blocks
+[--]   aeroblks       not loadable
+[--]   aeroblks_lib   not loadable
+[--]   aerospaceblks  not loadable
+[--]   aero_vroot     not loadable
+[--]   aerolib        not loadable
+[--]   aerospace      not loadable
+[--]   aerosim        not loadable
+[--]   aeroanim       not loadable
+[--]   sl3d           not loadable
+[--]   sim3dblocks    not loadable
+---- 6DoF block search in toolbox/aeroblks ----
+aeroblks dir exists, 56 .slx files
+   D:\Program Files\MATLAB\R2024a\toolbox\aeroblks\aeroblks\aerolib6dof.slx
+   D:\Program Files\MATLAB\R2024a\toolbox\aeroblks\aeroblks\aerolib6dof2.slx
+   D:\Program Files\MATLAB\R2024a\toolbox\aeroblks\aeroblks\aerolib6dofsys.slx
+   D:\Program Files\MATLAB\R2024a\toolbox\aeroblks\flightcontrol\6DOFAirframe\DehavillandBeaver6DOFAirframe.slx
+---- I/O with the chinese path ----
+[OK] write/read back: alpha_deg,3.5
+[OK] python result csv visible from MATLAB (388250 bytes)

@@ -1,0 +1,62 @@
+{
+  "tol": 1E-12,
+  "cases": [
+    {
+      "tag": "A1_alpha_p20_no_cmg_P0",
+      "nx": 7,
+      "tests": 8,
+      "max_abs_dx": 1.1102230246251565E-16,
+      "max_rel_dx": 1.1102230246251565E-16,
+      "passed": true
+    },
+    {
+      "tag": "A1_alpha_p20_with_cmg_P0",
+      "nx": 11,
+      "tests": 8,
+      "max_abs_dx": 2.2204460492503131E-16,
+      "max_rel_dx": 2.2204460492503131E-16,
+      "passed": true
+    },
+    {
+      "tag": "A2_qbar_p0p5_no_cmg_P0",
+      "nx": 7,
+      "tests": 8,
+      "max_abs_dx": 1.1102230246251565E-16,
+      "max_rel_dx": 1.1102230246251565E-16,
+      "passed": true
+    },
+    {
+      "tag": "A4_descent_replay_S00_no_cmg_P0",
+      "nx": 7,
+      "tests": 8,
+      "max_abs_dx": 1.1102230246251565E-16,
+      "max_rel_dx": 1.1102230246251565E-16,
+      "passed": true
+    },
+    {
+      "tag": "A4_descent_replay_S00_with_cmg_P0",
+      "nx": 11,
+      "tests": 8,
+      "max_abs_dx": 2.2204460492503131E-16,
+      "max_rel_dx": 2.2204460492503131E-16,
+      "passed": true
+    },
+    {
+      "tag": "A4_descent_replay_S03_no_cmg_P0",
+      "nx": 7,
+      "tests": 8,
+      "max_abs_dx": 1.1102230246251565E-16,
+      "max_rel_dx": 1.1102230246251565E-16,
+      "passed": true
+    },
+    {
+      "tag": "A4_descent_replay_S03_with_cmg_P0",
+      "nx": 11,
+      "tests": 8,
+      "max_abs_dx": 2.2204460492503131E-16,
+      "max_rel_dx": 2.2204460492503131E-16,
+      "passed": true
+    }
+  ],
+  "passed": true
+}

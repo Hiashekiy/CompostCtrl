@@ -15,3 +15,8 @@ pip-build-tracker-*/
 pip-ephem-wheel-cache-*/
 pip-install-*/
 pip-unpack-*/
+
+# MATLAB per-user state redirected into the workspace (see simulink/mlab.cmd)
+.matlab_appdata/
+.matlab_prefs/
+.matlab_temp/

@@ -1,0 +1,28 @@
+which S08Plant: D:\项目\飞轮\simulink\blocks\S08Plant.m
+exist class     : 8
+---- checkcode (lint) ----
+L62  ISMAT  检查变量是否为矩阵时，请考虑使用 ISMATRIX。
+L63  MSNU  此处之前隐藏了一条代码分析器消息，但该消息不再产生。
+L108  PROPLC  存在一个名为 'x' 的属性。这是否可能是对其的引用?
+L111  PROPLC  存在一个名为 'nu' 的属性。这是否可能是对其的引用?
+L115  PROPLC  存在一个名为 'x' 的属性。这是否可能是对其的引用?
+L116  PROPLC  存在一个名为 'x' 的属性。这是否可能是对其的引用?
+L116  PROPLC  存在一个名为 'x' 的属性。这是否可能是对其的引用?
+L116  PROPLC  存在一个名为 'nu' 的属性。这是否可能是对其的引用?
+L119  PROPLC  存在一个名为 'x' 的属性。这是否可能是对其的引用?
+L120  PROPLC  存在一个名为 'nu' 的属性。这是否可能是对其的引用?
+L127  PROPLC  存在一个名为 'x' 的属性。这是否可能是对其的引用?
+L127  PROPLC  存在一个名为 'x' 的属性。这是否可能是对其的引用?
+L130  PROPLC  存在一个名为 'x' 的属性。这是否可能是对其的引用?
+L132  PROPLC  存在一个名为 'x' 的属性。这是否可能是对其的引用?
+L161  PROPLC  存在一个名为 'nu' 的属性。这是否可能是对其的引用?
+L165  PROPLC  存在一个名为 'nu' 的属性。这是否可能是对其的引用?
+L166  PROPLC  存在一个名为 'nu' 的属性。这是否可能是对其的引用?
+---- meta.class ----
+class ok, superclasses: matlab.System
+properties: CaseFile, SampleTime, Replay, TauDOverride, nx, nu, cmgp, cmg_enabled, substeps, nsteps, J, Jinv, veh_S, veh_b, veh_cbar, h0, g_axis, s0, gxs0, gdot_max, tau_d, x0, x, k, isInMATLABSystemBlock, SysObjIsLocked, GraphNode
+---- minimal system object ----
+[FAIL] minimal system object: 没有找到关于超类 'matlab.system.SystemInterface' 的匹配构造函数。
+---- construct S08Plant() ----
+[OK] S08Plant() default
+[FAIL] attempt 2: 没有找到关于超类 'matlab.system.SystemInterface' 的匹配构造函数。
