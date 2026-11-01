@@ -32,7 +32,7 @@ from nearspace.torque_gap_ocp import TorqueGapOCP             # noqa: E402
 from nearspace.torque_gap_scenario import Scenario            # noqa: E402
 
 CFG = ROOT / "configs" / "torque_gap_no_cmg_comparison"
-OUT = ROOT / "results" / "torque_gap_no_cmg_comparison"
+OUT = ROOT / "results" / "torque_gap_no_cmg_comparison"   # overridden by --out-root
 
 ALLOWED_PATHS = {"torque_gap.cmg_present", "torque_gap.cmg_enabled"}
 # Dimensions that differ because the physical system differs (never padded).
@@ -96,7 +96,15 @@ def describe(path, plant="P0"):
                     getattr(scn, "dist_phase", np.zeros(3)), float)])
 
 
-def main():
+def main(argv=None):
+    global OUT
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out-root", default=None)
+    args = ap.parse_args(argv)
+    if args.out_root:
+        OUT = ROOT / args.out_root if not Path(args.out_root).is_absolute() else Path(args.out_root)
+        print("[audit] out-root =", OUT)
     OUT.mkdir(parents=True, exist_ok=True)
     rows, violations, audit = [], [], []
     for sid, a, b, sub in pairs():

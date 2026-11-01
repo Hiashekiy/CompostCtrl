@@ -37,6 +37,7 @@ from nearspace.config import load_config                # noqa: E402
 
 RES = ROOT / "results" / "torque_gap_no_cmg_comparison"   # overridden by --root
 FIG = ROOT / "figures" / "torque_gap_no_cmg_comparison"
+TAG = ""
 SCENARIO_ORDER = ["S00_pitch30", "S01_pitch_minus30", "S02_pitch10", "S03_pitch45",
                   "S04_roll30", "S05_yaw30", "S06_pitch30_roll20", "S07_sequential"]
 AX = ("x", "y", "z")
@@ -306,7 +307,7 @@ def fig_cross(rows, phase):
         a_.set_xticks(xpos)
         a_.set_xticklabels([s.split("_")[0] for s in scs])
     fig.tight_layout()
-    fig.savefig(FIG / ("cross_%s_rmse.png" % phase), dpi=150)
+    fig.savefig(FIG / ("cross_%s%s_rmse.png" % (phase, TAG)), dpi=150)
     plt.close(fig)
 
     # surface torque
@@ -327,7 +328,7 @@ def fig_cross(rows, phase):
         axs[j].set_xticks(xpos)
         axs[j].set_xticklabels([s.split("_")[0] for s in scs])
     fig.tight_layout()
-    fig.savefig(FIG / ("cross_%s_tau.png" % phase), dpi=150)
+    fig.savefig(FIG / ("cross_%s%s_tau.png" % (phase, TAG)), dpi=150)
     plt.close(fig)
 
     # B pre-manoeuvre momentum + gimbal-rate saturation
@@ -349,7 +350,7 @@ def fig_cross(rows, phase):
         a_.set_xticks(xpos)
         a_.set_xticklabels([s.split("_")[0] for s in scs])
     fig.tight_layout()
-    fig.savefig(FIG / ("cross_%s_cmg.png" % phase), dpi=150)
+    fig.savefig(FIG / ("cross_%s%s_cmg.png" % (phase, TAG)), dpi=150)
     plt.close(fig)
 
     # solver cost and fallback
@@ -376,7 +377,7 @@ def fig_cross(rows, phase):
         a_.set_xticks(xpos)
         a_.set_xticklabels([s.split("_")[0] for s in scs])
     fig.tight_layout()
-    fig.savefig(FIG / ("cross_%s_solver.png" % phase), dpi=150)
+    fig.savefig(FIG / ("cross_%s%s_solver.png" % (phase, TAG)), dpi=150)
     plt.close(fig)
 
 
@@ -386,7 +387,8 @@ def main():
     ap.add_argument("--root", default=None)
     ap.add_argument("--tag", default="")
     args = ap.parse_args()
-    global RES
+    global RES, TAG
+    TAG = args.tag
     if args.root:
         RES = (ROOT / args.root) if not Path(args.root).is_absolute() else Path(args.root)
         print("[plot] root =", RES)

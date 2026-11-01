@@ -40,7 +40,7 @@ from nearspace.model6 import quat_to_euler, wrap_pi             # noqa: E402
 from nearspace.torque_gap_scenario import Scenario              # noqa: E402
 
 CFG = ROOT / "configs" / "torque_gap_no_cmg_comparison"
-OUT = ROOT / "results" / "torque_gap_no_cmg_comparison"
+OUT = ROOT / "results" / "torque_gap_no_cmg_comparison"   # overridden by --out-root
 FIG = ROOT / "figures" / "torque_gap_no_cmg_comparison" / "references"
 AXES = ("roll", "pitch", "yaw")
 
@@ -225,7 +225,15 @@ def plot_all(results):
     plt.close(fig)
 
 
-def main():
+def main(argv=None):
+    global OUT
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out-root", default=None)
+    args = ap.parse_args(argv)
+    if args.out_root:
+        OUT = ROOT / args.out_root if not Path(args.out_root).is_absolute() else Path(args.out_root)
+        print("[audit] out-root =", OUT)
     res = [check(p) for p in scenario_files()]
     OUT.mkdir(parents=True, exist_ok=True)
     for r in res:
