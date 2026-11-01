@@ -72,7 +72,7 @@
       ],
       "tau_bound_used": 0.7500000000000001,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.09729454000102124,
+      "cpu_mean": 0.03720609099982539,
       "settle_time_s": 40.2
     },
     "man1": {
@@ -96,7 +96,7 @@
       ],
       "tau_bound_used": 0.7500000000000001,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.09729454000102124,
+      "cpu_mean": 0.03720609099982539,
       "settle_time_s": 40.2
     },
     "combined": {
@@ -120,7 +120,7 @@
       ],
       "tau_bound_used": 0.7500000000000001,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.09729454000102124
+      "cpu_mean": 0.03720609099982539
     },
     "pre": {
       "rmse_deg": 1.7390745467449589,
@@ -143,7 +143,7 @@
       ],
       "tau_bound_used": 0.8777777777777777,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.03875003000381791
+      "cpu_mean": 0.04098444499977631
     },
     "post": {
       "rmse_deg": 6.6422850640466145,
@@ -166,7 +166,7 @@
       ],
       "tau_bound_used": 0.88,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.217126672998711
+      "cpu_mean": 0.07733914099953836
     },
     "all": {
       "rmse_deg": 4.836348387905846,
@@ -189,7 +189,7 @@
       ],
       "tau_bound_used": 0.7344444444444445,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.11730723133427091
+      "cpu_mean": 0.05101609433312357
     }
   },
   "rmse_deg": {
@@ -209,13 +209,13 @@
     "all": 16.299403967440053
   },
   "cpu_s": {
-    "mean": 0.11730723133427091,
-    "p95": 0.2825582350094919,
-    "max": 0.38158829999156296,
-    "total": 35.19216940028127
+    "mean": 0.05101609433312357,
+    "p95": 0.10166875498689479,
+    "max": 0.14007220001076348,
+    "total": 15.304828299937071
   },
   "realtime_dt_ctrl": 0.2,
-  "realtime_met": false,
+  "realtime_met": true,
   "fallback_steps": 0,
   "fallback_ratio": 0.0,
   "accepted_steps": 0,
@@ -225,7 +225,7 @@
     "max": 246,
     "total": 25036.0
   },
-  "ms_per_iteration": 1.4056626218358073,
+  "ms_per_iteration": 0.6113128415057146,
   "max_violation": 0.0,
   "status_counts": {
     "rti_ok": 300

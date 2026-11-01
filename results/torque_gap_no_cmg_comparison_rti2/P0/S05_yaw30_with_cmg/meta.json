@@ -408,7 +408,6 @@
       "seed_randomize": false,
       "cmg_present": true,
       "cmg_enabled": true,
-      "cmg_slew_max": 80.0,
       "rti": {
         "state_tr_gamma": 0.5,
         "state_tr_omega": 1.0
@@ -958,7 +957,7 @@
     "seed": 0,
     "seed_randomize": false
   },
-  "wall_clock_s": 33.97871429999941,
+  "wall_clock_s": 34.380706399999326,
   "backend": "rti",
   "qp_iters": 12,
   "rti_options": {
@@ -973,8 +972,6 @@
     "qp_warm_start": false,
     "cost_scale": false,
     "gamma_damp": 0.0,
-    "mom_penalty": 0.0,
-    "mom_soft_frac": 0.0,
     "sigma_min_last": Infinity
   },
   "command": "scripts/run_no_cmg_matrix.py --run-one"

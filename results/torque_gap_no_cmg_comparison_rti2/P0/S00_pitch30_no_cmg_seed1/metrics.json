@@ -66,7 +66,7 @@
       ],
       "tau_bound_used": 0.3333333333333334,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.07158669699943858,
+      "cpu_mean": 0.038744947000814135,
       "settle_time_s": 40.2
     },
     "combined": {
@@ -90,7 +90,7 @@
       ],
       "tau_bound_used": 0.3333333333333334,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.07158669699943858
+      "cpu_mean": 0.038744947000814135
     },
     "pre": {
       "rmse_deg": 2.0937450258804624,
@@ -113,7 +113,7 @@
       ],
       "tau_bound_used": 0.8111111111111112,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.06469080500294998
+      "cpu_mean": 0.05633830333390506
     },
     "post": {
       "rmse_deg": 2.670577292091412,
@@ -136,7 +136,7 @@
       ],
       "tau_bound_used": 0.7566666666666666,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.23261256700148805
+      "cpu_mean": 0.07496286499896086
     },
     "all": {
       "rmse_deg": 3.225578807297159,
@@ -159,7 +159,7 @@
       ],
       "tau_bound_used": 0.5388888888888889,
       "fallback_ratio": 0.0,
-      "cpu_mean": 0.12089322300084557
+      "cpu_mean": 0.05590827033302048
     }
   },
   "rmse_deg": {
@@ -177,13 +177,13 @@
     "all": 6.018122353165193
   },
   "cpu_s": {
-    "mean": 0.12089322300084557,
-    "p95": 0.3446410949894926,
-    "max": 0.3662021000054665,
-    "total": 36.26796690025367
+    "mean": 0.05590827033302048,
+    "p95": 0.10394889499148122,
+    "max": 0.13420890000998043,
+    "total": 16.772481099906145
   },
   "realtime_dt_ctrl": 0.2,
-  "realtime_met": false,
+  "realtime_met": true,
   "fallback_steps": 0,
   "fallback_ratio": 0.0,
   "accepted_steps": 0,
@@ -193,7 +193,7 @@
     "max": 251,
     "total": 24588.0
   },
-  "ms_per_iteration": 1.4750271229971397,
+  "ms_per_iteration": 0.6821409264643787,
   "max_violation": 0.0,
   "status_counts": {
     "rti_ok": 300

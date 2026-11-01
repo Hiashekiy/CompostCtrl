@@ -86,11 +86,6 @@ torque_gap:
   # configuration check rejects cmg_present: false with cmg_enabled: true.
   cmg_present: true
   cmg_enabled: true
-  # Actuator-level limit on how fast the cluster torque may change [N m / s].
-  # 80 N m/s = 16 N m per 0.2 s step.  It is applied in the executor for every
-  # CMG run (the A group has no cluster, so it is unaffected) and removes a
-  # control-layer chattering artefact at the end of the window (report 13).
-  cmg_slew_max: 80.0
   gamma_limit: none          # unwrapped gimbal angle (M50 chain)
 """
 

@@ -167,9 +167,6 @@ class ClosedLoop:
         self.vp = VehicleCMGParams.from_config(
             scn.cfg, cmg_on=self.cmg_present)        # P1 truth: CMG on/off
         self.cluster6c = CMGCluster(self.vp.cmg) if self.cmg_present else None
-        self.cmg_slew_max = getattr(scn.cfg.torque_gap, "cmg_slew_max", None)
-        self.cmg_slew_max = None if self.cmg_slew_max in (None, "null") \
-            else float(self.cmg_slew_max)
         self.gimbal_mismatch_max = 0.0
         self.gamma_clipped_steps = 0
         self.delta = np.zeros(3)
@@ -403,17 +400,6 @@ class ClosedLoop:
                 nu_cmd = np.clip(u_cmd[3:7], -gdot, gdot)
                 nu_cmd = np.clip(nu_cmd, nu_prev - gddot * self.dt,
                                  nu_prev + gddot * self.dt)
-                if self.cmg_slew_max is not None:
-                    # |d(-A(gamma) nu)/dt| <= slew_max  [N m / s]
-                    A_now = scn.cluster.jacobian(x_opt[7:11])
-                    tc_new = -A_now @ nu_cmd
-                    tc_old = -A_now @ nu_prev
-                    d_tc = tc_new - tc_old
-                    lim = self.cmg_slew_max * self.dt
-                    nrm = float(np.linalg.norm(d_tc))
-                    if nrm > lim > 0.0:
-                        nu_cmd = nu_prev + (nu_cmd - nu_prev) * (lim / nrm)
-                        self.cmg_slew_clipped = getattr(self, "cmg_slew_clipped", 0) + 1
             else:
                 nu_cmd = np.zeros(4)          # no CMG (A) / CMG locked
 
@@ -745,8 +731,6 @@ def write_run(out_dir, cl: ClosedLoop, metrics, cfg, extra_meta=None):
                         accept_feasible=cl.solver_cfg.accept_feasible,
                         accept_feasible_viol=cl.solver_cfg.accept_feasible_viol,
                         warm_shift_on_fallback=cl.solver_cfg.warm_shift_on_fallback),
-            cmg_slew_max_Nm_s=(float(cl.cmg_slew_max)
-                               if cl.cmg_slew_max is not None else None),
         ),
     )
     if extra_meta:

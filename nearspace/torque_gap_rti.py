@@ -50,8 +50,7 @@ class TorqueGapRTI:
                  line_search=True, step_tol=1e-4,
                  state_tr_gamma=0.0, state_tr_omega=0.0, state_tr_sigma=False,
                  nu_scale_sigma=False, qp_warm_start=False, cost_scale=False,
-                 gamma_damp=0.0, qp_iters_hi=0,
-                 mom_penalty=0.0, mom_soft_frac=0.0):
+                 gamma_damp=0.0, qp_iters_hi=0):
         self.ca = ca = _casadi()
         self.scn = scn
         self.dts = np.asarray(scn.dts, float)
@@ -74,10 +73,6 @@ class TorqueGapRTI:
         self.cost_scale = bool(cost_scale)              # normalise the QP cost to O(1)
         self.gamma_damp = float(gamma_damp)             # damping on |dgamma|^2
         self.qp_iters_hi = int(qp_iters_hi)             # extra QPs when near singular
-        # momentum management: penalise rho * max(0, |H|/(4 h0) - beta)^2
-        # (H = 0 without a CMG, so the A arm is untouched by construction)
-        self.mom_penalty = float(mom_penalty)
-        self.mom_soft_frac = float(mom_soft_frac)
         self.cluster = scn.cluster if self.cmg_present else None
         if self.cmg_present:
             self.sigma_floor = float(scn.prm.cmg.sigma_floor)
@@ -114,9 +109,7 @@ class TorqueGapRTI:
                    qp_warm_start=bool(g("qp_warm_start", False)),
                    cost_scale=bool(g("cost_scale", False)),
                    gamma_damp=float(g("gamma_damp", 0.0)),
-                   qp_iters_hi=int(g("qp_iters_hi", 0)),
-                   mom_penalty=float(g("mom_penalty", 0.0)),
-                   mom_soft_frac=float(g("mom_soft_frac", 0.0)))
+                   qp_iters_hi=int(g("qp_iters_hi", 0)))
 
     def options(self):
         """The stability/accuracy knobs, for the run metadata."""
@@ -130,8 +123,6 @@ class TorqueGapRTI:
                     qp_warm_start=bool(self.qp_warm_start),
                     cost_scale=bool(self.cost_scale),
                     gamma_damp=float(self.gamma_damp),
-                    mom_penalty=float(self.mom_penalty),
-                    mom_soft_frac=float(self.mom_soft_frac),
                     sigma_min_last=float(self.last_sigma_min))
 
     # ------------------------------------------------------------------
@@ -314,20 +305,6 @@ class TorqueGapRTI:
                 dW = X[4:7, k] - wref[k]
                 Q[k] += qr[k] * (self._Ew.T @ self._Ew)
                 qv[k] += qr[k] * (self._Ew.T @ dW)
-                if self.cmg_present and self.mom_penalty > 0.0:
-                    # 0.5 * (2 rho) * (max(0, s - beta))^2, s = |H(gamma)| / (4 h0)
-                    # gradient = 2 rho (s-beta) J_s, Gauss-Newton Hessian = 2 rho J_s J_s^T
-                    gamma_k = X[7:11, k]
-                    Hk = self.cluster.momentum(gamma_k)
-                    hk = float(np.linalg.norm(Hk))
-                    hmax = 4.0 * float(self.scn.prm.cmg.h0)
-                    sk = hk / hmax
-                    if sk > self.mom_soft_frac:
-                        Ak = self.cluster.jacobian(gamma_k)
-                        Js = (Ak.T @ Hk) / max(hk, 1e-9) / hmax      # d s / d gamma (4,)
-                        w_mom = wk[k] * 2.0 * self.mom_penalty
-                        Q[k][7:11, 7:11] += w_mom * np.outer(Js, Js)
-                        qv[k][7:11] += w_mom * (sk - self.mom_soft_frac) * Js
                 if self.cmg_present and self.gamma_damp > 0.0:
                     # damping on the gimbal-angle deviation: keeps the plan from
                     # winding the gimbals when the linear model is unreliable

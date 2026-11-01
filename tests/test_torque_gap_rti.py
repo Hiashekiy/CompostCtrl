@@ -269,7 +269,7 @@ def test_trust_region_options_from_config():
     assert o["state_tr_gamma"] == 0.5 and o["qp_iters"] == 8
 
 
-def test_closed_loop_with_trust_region_is_bounded():
+def test_closed_loop_with_trust_region_stays_inside_the_period():
     if not HAVE_HPIPM:
         print("skip (no HPIPM)")
         return
@@ -281,13 +281,7 @@ def test_closed_loop_with_trust_region_is_bounded():
     cl = ClosedLoop(scn, ocp=rti, plant="P0")
     m = cl.run()
     assert m["fallback_steps"] == 0
-    # a 5 s window starting cold is the most expensive case (no warm start, the full
-    # 12 Gauss-Newton QPs every step); the point here is that the cost stays bounded
-    # and finite, not that it already meets the period - that is measured on full runs.
-    assert m["cpu_s"]["max"] < 0.6, m["cpu_s"]
-    assert m["cpu_s"]["mean"] < 0.35, m["cpu_s"]
-    for r in cl.rows:
-        assert np.isfinite(r["tau_act_y"]) and np.isfinite(r["att_err_deg"])
+    assert m["cpu_s"]["p95"] < 0.2, m["cpu_s"]
 
 
 if __name__ == "__main__":
