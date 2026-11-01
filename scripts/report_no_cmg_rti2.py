@@ -311,6 +311,7 @@ def main():
     add("7. 唯一明显回退是 S06-P1（B 组 0.652°），需要时可在该情形切回非线性求解器。")
     add("")
 
+
     # ---------------- reproduce ----------------
     add("## 11. 复现命令")
     add("")
@@ -325,6 +326,8 @@ def main():
     add("python scripts/audit_no_cmg_references.py --out-root results/torque_gap_no_cmg_comparison_rti2")
     add("python scripts/plot_no_cmg_comparison.py --root results/torque_gap_no_cmg_comparison_rti2 --tag _rti2")
     add("python scripts/report_no_cmg_rti2.py")
+    add("# 末端现象溯源：把 S00 的窗口延长到 180 s 再对比")
+    add("python scripts/plot_extension_180s.py")
     add("```")
     add("")
     add("## 12. 交付清单")
@@ -338,7 +341,55 @@ def main():
     add("| 代码审查与惯量审计 | `no_cmg_vs_cmg_code_audit.md` |")
     add("| 求解器设计与加速过程记录 | `mpc_solver_speedup.md`（历史记录） |")
     add("| 自动化测试 | `tests/test_torque_gap_{no_cmg,solver_policy,rti}.py` |")
+    add("| 窗口延长实验（90–180 s，A/B 各一次 + 两个 150 s 对照） | `results/torque_gap_no_cmg_comparison_rti2/ext_window/` |")
+    add("| 窗口延长图 | `figures/torque_gap_no_cmg_comparison/ext_window/S00_extension_180s.png` |")
     add("")
+
+    # ---------------- end-window forensics ----------------
+    add("## 13. 末端现象溯源：把窗口延长到 180 s")
+    add("")
+    add("S00/B 在 140–150 s 出现明显退化（末段 RMSE 0.744°，图中 146–150 s 尤其明显）。"
+        "为判断这是**时域/窗口边界效应**还是**轨迹本身的物理发散**，把同一条轨迹延长到 180 s 重跑："
+        "同一控制器（RTI，12 GN-QP，信赖域）、同一参考、同一网格，只把 `torque_gap.end` 从 150 改成 180。"
+        "结果在 `results/torque_gap_no_cmg_comparison_rti2/ext_window/`，图 "
+        "`figures/torque_gap_no_cmg_comparison/ext_window/S00_extension_180s.png`。")
+    add("")
+    add("**证据 1：重叠段逐位相同。** 140–150 s 内，短窗口运行与 180 s 运行的"
+        "姿态误差、气动/CMG 力矩、`|H|`、框架速率、俯仰角速率的最大差异全部为 **0.000e+00**"
+        "（气动能力盒标定也相同，scale = 0.773781）。也就是说**窗口末端对这段毫无影响**，"
+        "不是预测时域被截断、也不是仿真结束造成的。")
+    add("")
+    add("**证据 2：延长后继续演化并彻底失效**（相对参考的姿态误差首次越过阈值）：")
+    add("")
+    add("| 组 | >5° | >10° | >20° | >40° |")
+    add("|---|---:|---:|---:|---:|")
+    add("| A 无 CMG | 154.4 s | 156.2 s | 159.0 s | 171.2 s |")
+    add("| B 舵面+CMG | 151.6 s | 152.6 s | 154.0 s | 167.0 s |")
+    add("")
+    add("**证据 3：驱动量是下降段动压与其带来的低头自然力矩**。")
+    add("")
+    add("| t [s] | 动压 Q [Pa] | 抬头能力上界 τ⁺ᵧ [N·m] | 参考需求 τₙₒₘ,ᵧ [N·m] | 误差 A [°] | 误差 B [°] |")
+    add("|---:|---:|---:|---:|---:|---:|")
+    add("| 140 | 6.6 | −3.9 | 0.22 | 1.70 | 0.00 |")
+    add("| 150 | 15.5 | −9.1 | 0.55 | 3.61 | 3.77 |")
+    add("| 160 | 48.1 | −28.2 | 0.78 | 23.23 | 37.47 |")
+    add("| 170 | 181.0 | −105.9 | 0.92 | 29.90 | 72.78 |")
+    add("| 180 | 654.7 | −383.1 | 1.01 | 94.43 | 111.74 |")
+    add("")
+    add("需求一直只有 0.2–1 N·m，而**气动抬头能力上界从 −3.9 一路掉到 −383 N·m**："
+        "整个能力盒被低头自然力矩拖下去，正向力矩只能靠 CMG，而 CMG 的角动量已在 155–163 N·m·s"
+        "（上限 200）且框架速率饱和。这是能力层面的真实发散。")
+    add("")
+    add("**证据 4：B 组在延长段反而比 A 组更早失效**（151.6 s vs 154.4 s）："
+        "CMG 在近饱和 + 抖振状态下把姿态推过了参考。这说明在**发散域**里 CMG 帮不上忙，"
+        "与机动窗（110–130 s）内 B 组大幅领先的结论并不矛盾——两者的工作点完全不同。")
+    add("")
+    add("**结论**：`t = 150 s` 只是实验窗口的末端，恰好落在弹道下降段把该参考姿态"
+        "变成“不可实现”的位置附近。窗口内 `post` 窗口（130–150 s）的退化是这一物理发散的**起始段**，"
+        "不是数值或时域伪像；机动窗（110–130 s）完全不受影响（延长前后逐位相同），"
+        "因此指导书选定的 90–150 s 窗口同时是合理的：它停在发散之前。")
+    add("")
+
 
     OUT.write_text("\n".join(L) + "\n", encoding="utf-8")
     print("wrote", OUT.relative_to(ROOT), "(%d lines)" % len(L))
