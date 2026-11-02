@@ -1,0 +1,181 @@
+{
+  "verified_runs": 22,
+  "records": [
+    {
+      "phase": "P0",
+      "scenario": "S00_pitch30",
+      "arm": "no_cmg",
+      "rmse": 4.745998651349802,
+      "peak": 6.224313711,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S00_pitch30",
+      "arm": "with_cmg",
+      "rmse": 0.08513984154738674,
+      "peak": 0.1743650876,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S01_pitch_minus30",
+      "arm": "no_cmg",
+      "rmse": 5.114220322387641,
+      "peak": 6.741256278,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S01_pitch_minus30",
+      "arm": "with_cmg",
+      "rmse": 0.132141956319854,
+      "peak": 0.2315650173,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S02_pitch10",
+      "arm": "no_cmg",
+      "rmse": 0.5534347192332093,
+      "peak": 0.8446965677,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S02_pitch10",
+      "arm": "with_cmg",
+      "rmse": 0.002077344432513772,
+      "peak": 0.004288326816,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S03_pitch45",
+      "arm": "no_cmg",
+      "rmse": 10.954905693250677,
+      "peak": 15.967771,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S03_pitch45",
+      "arm": "with_cmg",
+      "rmse": 2.4259807956864163,
+      "peak": 3.9002008,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S04_roll30",
+      "arm": "no_cmg",
+      "rmse": 4.003394268023529,
+      "peak": 5.897040138,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S04_roll30",
+      "arm": "with_cmg",
+      "rmse": 0.0006236209104791476,
+      "peak": 0.001047202136,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S05_yaw30",
+      "arm": "no_cmg",
+      "rmse": 17.13375872390748,
+      "peak": 20.57701267,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S05_yaw30",
+      "arm": "with_cmg",
+      "rmse": 3.1097401793116544,
+      "peak": 4.368818273,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S06_pitch30_roll20",
+      "arm": "no_cmg",
+      "rmse": 4.910539999242938,
+      "peak": 6.613372951,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S06_pitch30_roll20",
+      "arm": "with_cmg",
+      "rmse": 0.11360296850177737,
+      "peak": 0.2175892601,
+      "samples": 100
+    },
+    {
+      "phase": "P0",
+      "scenario": "S07_sequential",
+      "arm": "no_cmg",
+      "rmse": 2.8024695724880724,
+      "peak": 6.224313711,
+      "samples": 300
+    },
+    {
+      "phase": "P0",
+      "scenario": "S07_sequential",
+      "arm": "with_cmg",
+      "rmse": 0.049185572479824406,
+      "peak": 0.1743650876,
+      "samples": 300
+    },
+    {
+      "phase": "P1",
+      "scenario": "S00_pitch30",
+      "arm": "no_cmg",
+      "rmse": 9.275320283341834,
+      "peak": 12.94041725,
+      "samples": 100
+    },
+    {
+      "phase": "P1",
+      "scenario": "S00_pitch30",
+      "arm": "with_cmg",
+      "rmse": 0.10543736409038863,
+      "peak": 0.2433927521,
+      "samples": 100
+    },
+    {
+      "phase": "P1",
+      "scenario": "S01_pitch_minus30",
+      "arm": "no_cmg",
+      "rmse": 10.808950473411606,
+      "peak": 14.89207358,
+      "samples": 100
+    },
+    {
+      "phase": "P1",
+      "scenario": "S01_pitch_minus30",
+      "arm": "with_cmg",
+      "rmse": 0.10781854270840853,
+      "peak": 0.2350081983,
+      "samples": 100
+    },
+    {
+      "phase": "P1",
+      "scenario": "S06_pitch30_roll20",
+      "arm": "no_cmg",
+      "rmse": 8.439591303005692,
+      "peak": 13.44154235,
+      "samples": 100
+    },
+    {
+      "phase": "P1",
+      "scenario": "S06_pitch30_roll20",
+      "arm": "with_cmg",
+      "rmse": 0.6524055537653566,
+      "peak": 1.210763807,
+      "samples": 100
+    }
+  ]
+}

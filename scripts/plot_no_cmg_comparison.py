@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 """Figures of the no-CMG (A) vs surface+CMG (B) comparison.
 
+Default paper figures use four panels from paper_control_figures.py: main-axis
+tracking, attitude-error norm, actuator torque contributions, and CMG momentum.
+The previous full diagnostic layout remains in fig_scenario_diagnostics.
+
 Per scenario (implementation guide §12):
   1  three-axis reference and actual attitude            7  B: sigma_min and the
   2  attitude error                                         instantaneous torque
@@ -190,6 +194,11 @@ def _headroom(ax, frac=0.42):
 
 
 def fig_scenario(phase, sc, a, b, out_png):
+    from paper_control_figures import scenario
+    return scenario(phase, sc, a, b, out_png, _euler_deg)
+
+
+def fig_scenario_diagnostics(phase, sc, a, b, out_png):
     """A/B control-process overview, laid out like figures/torque_gap_noMod/C1_noMod_overview.png."""
     plt = _style()
     ma, mb = a["_metrics"], b["_metrics"]

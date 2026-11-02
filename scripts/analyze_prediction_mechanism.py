@@ -167,6 +167,11 @@ def stats(g):
 
 
 def plot_group(g, st):
+    from paper_control_figures import mechanism
+    return mechanism(g, st, FIG / (g['tag'] + '_overview.png'))
+
+
+def plot_group_diagnostics(g, st):
     p = _mpl()
     d, prm = g["d"], g["prm"]
     t = d["t"]
