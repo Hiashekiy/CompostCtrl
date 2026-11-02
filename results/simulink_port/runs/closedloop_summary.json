@@ -2,14 +2,14 @@
   {
     "tag": "A4_descent_replay_S00_with_cmg_P0",
     "arm": "with_cmg",
-    "wall_s": 211.9431722164154,
+    "wall_s": 148.5985016822815,
     "rc": 0,
     "metrics": {
       "tag": "A4_descent_replay_S00_with_cmg_P0",
       "mode": "closedloop",
       "samples": 300,
       "nx": 11,
-      "wall_s": 87.5897714,
+      "wall_s": 39.4309876,
       "state_max_abs_diff": 6.326872108242205,
       "state_max_rel_diff": 1.211683875255047,
       "state_worst_state": 11,
@@ -32,14 +32,14 @@
   {
     "tag": "A4_descent_replay_S00_no_cmg_P0",
     "arm": "no_cmg",
-    "wall_s": 173.05943751335144,
+    "wall_s": 134.07154393196106,
     "rc": 0,
     "metrics": {
       "tag": "A4_descent_replay_S00_no_cmg_P0",
       "mode": "closedloop",
       "samples": 300,
       "nx": 7,
-      "wall_s": 49.3918386,
+      "wall_s": 21.71651,
       "state_max_abs_diff": 4.640690779988965e-07,
       "state_max_rel_diff": 4.640690779988965e-07,
       "state_worst_state": 2,
@@ -59,14 +59,14 @@
   {
     "tag": "A4_descent_replay_S03_with_cmg_P0",
     "arm": "with_cmg",
-    "wall_s": 218.85819029808044,
+    "wall_s": 152.70236325263977,
     "rc": 0,
     "metrics": {
       "tag": "A4_descent_replay_S03_with_cmg_P0",
       "mode": "closedloop",
       "samples": 300,
       "nx": 11,
-      "wall_s": 93.374352,
+      "wall_s": 40.8181586,
       "state_max_abs_diff": 23.770692696662785,
       "state_max_rel_diff": 1.9829672925619268,
       "state_worst_state": 8,
@@ -89,14 +89,14 @@
   {
     "tag": "A4_descent_replay_S03_no_cmg_P0",
     "arm": "no_cmg",
-    "wall_s": 182.72880959510803,
+    "wall_s": 136.58136677742004,
     "rc": 0,
     "metrics": {
       "tag": "A4_descent_replay_S03_no_cmg_P0",
       "mode": "closedloop",
       "samples": 300,
       "nx": 7,
-      "wall_s": 58.8517545,
+      "wall_s": 26.1565489,
       "state_max_abs_diff": 4.837442758864885e-09,
       "state_max_rel_diff": 4.837442758864885e-09,
       "state_worst_state": 5,
@@ -116,7 +116,7 @@
   {
     "tag": "A1_alpha_p20_with_cmg_P0",
     "arm": "with_cmg",
-    "wall_s": 194.4583282470703,
+    "wall_s": 122.66692924499512,
     "rc": 0,
     "metrics": {
       "tag": "A1_alpha_p20_with_cmg_P0",
@@ -146,14 +146,14 @@
   {
     "tag": "A1_alpha_p20_no_cmg_P0",
     "arm": "no_cmg",
-    "wall_s": 163.3786005973816,
+    "wall_s": 126.30952477455139,
     "rc": 0,
     "metrics": {
       "tag": "A1_alpha_p20_no_cmg_P0",
       "mode": "closedloop",
       "samples": 300,
       "nx": 7,
-      "wall_s": 33.1714504,
+      "wall_s": 14.7611897,
       "state_max_abs_diff": 1.0260259296647006e-09,
       "state_max_rel_diff": 1.0260259296647006e-09,
       "state_worst_state": 7,

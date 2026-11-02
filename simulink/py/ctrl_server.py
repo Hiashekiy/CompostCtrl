@@ -120,6 +120,9 @@ class Controller:
 def serve(ctrl, port, timeout_s=600.0):
     srv = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     srv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    # Nagle + delayed ACK would add ~0.2 s to every request/response pair, which
+    # dominates a 0.1 s QP solve: disable it on both ends of the connection.
+    srv.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
     srv.bind(("127.0.0.1", port))
     srv.listen(4)
     srv.settimeout(timeout_s)
@@ -129,7 +132,8 @@ def serve(ctrl, port, timeout_s=600.0):
         while time.time() < t_end:
             conn, _addr = srv.accept()
             conn.settimeout(120.0)
-            fin = conn.makefile("rwb")
+            conn.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+            fin = conn.makefile("rwb", buffering=0)
             while True:
                 line = fin.readline()
                 if not line:

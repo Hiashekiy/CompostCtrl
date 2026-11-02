@@ -5,10 +5,15 @@
 
 - 环境：MATLAB **R2024a**（`D:\Program Files\MATLAB\R2024a`），Simulink 24.1，
   Aerospace Blockset（授权 `license('test')=1`，但本安装里块库无法 `load_system`，因此主链未使用），
-  Optimization/MPC/Control/Stateflow 均已授权，**无可用 C 编译器**（VS2026 残装：仅 x86 宿主
-  cl.exe、无 `vcvars64.bat`、无 Windows 10/11 SDK；且 R2024a 的 `mexopts` 只认 msvc2017/2019/2022
-  与 mingw64）。
-- 目标层级：**MIL（高保真数学仿真）**。不含 PIL/HIL、不含代码生成。
+  Optimization/MPC/Control/Stateflow 均已授权。
+- **C 工具链：可用**。机器上有独立 MinGW-w64 发行版 `D:\w64devkit`（GCC **15.2.0**，
+  x86_64-w64-mingw32，含 g++/gfortran/make）。`simulink/mlab.cmd` 会设置
+  `MW_MINGW64_LOC=D:\w64devkit`，`mex` 随即用 `matlabroot/bin/win64/mexopts/mingw64.xml`
+  选中它。**实测**：`mex simulink/mexopts/s08_hello.c` 编译成功并运行（`2*21 = 42`，
+  报 `gcc 15.2.0`）。MATLAB 会提示"该 MinGW 版本不在官方支持列表"
+  （官方只支持 MathWorks MinGW 附加组件的那一版），但对 C MEX 而言**功能正常**——
+  属于"非官方支持但可用"，若后续换 MATLAB 版本需重新验证 ABI。
+- 目标层级：**MIL（高保真数学仿真）**。不含 PIL/HIL，暂不含代码生成。
 
 ---
 
@@ -117,6 +122,23 @@ C1/C3 的残差量级（1e-16 / 1e-9）分别对应"浮点结合律"与"参考 C
 | `bdroot(block.BlockHandle)` 返回 `'?'` | 句柄在 `setup` 阶段不可用 | 不再依赖模型名/句柄，改固定文件路径 |
 | 中文路径 | `D:\项目\飞轮` | 已实测：文件 I/O、`dlmread`、S-Function 均正常；仅控制台回显为 GBK 乱码 |
 
+### 6.1 C 工具链（w64devkit）
+
+| 项 | 值 |
+|---|---|
+| 位置 | `D:\w64devkit`（独立 MinGW-w64 发行版，非 MathWorks 附加组件） |
+| 版本 | GCC 15.2.0，target `x86_64-w64-mingw32`，含 g++ / gfortran / make |
+| 接入方式 | `simulink/mlab.cmd` 设 `MW_MINGW64_LOC=D:\w64devkit`；`mingw64.xml` 通过 `<envVarExists name="MW_MINGW64_LOC"/>` 定位，无需改 MATLAB 安装目录 |
+| 实测 | `mex simulink/mexopts/s08_hello.c` → 编译成功、运行输出 `gcc 15.2.0`、`2*21 = 42` |
+| 提示 | MATLAB 警告"该 MinGW 版本不在官方支持列表"（官方仅支持附加组件版本）。功能正常，但属非官方支持组合，升级 MATLAB 后需复验 |
+
+### 6.2 闭环通信开销：Nagle 算法
+
+第一版闭环 300 步耗时 **87.6 s**（0.29 s/步），而进程内 Python 闭环只要 0.12 s/步。
+原因是 TCP 默认开启 Nagle + 延迟 ACK，请求-应答式的小包往返被拖到 ~0.2 s/次。
+两侧都设 `TCP_NODELAY` 后降到 **39.4 s**（0.13 s/步），与进程内闭环一致——
+说明接口本身已不再是瓶颈，剩余时间几乎全是 RTI 求解。
+
 ## 7. 闭环结果与"混沌本底"归因
 
 完整表格见 `results/simulink_port/report.md`，此处给结论与归因方法。
@@ -179,10 +201,13 @@ python simulink/py/sensitivity_check.py --tag A4_descent_replay_S00_with_cmg_P0
 ## 9. 本轮边界
 
 1. **只用 P0 植物**（11/7 状态虚拟力矩）。P1（18 状态、真实舵机与有界分配）尚未移植。
-2. **控制器未生成 C 代码**：D2① 的"C + S-Function"需要编译器，本机没有；当前用
-   "Python 控制器 over TCP"保持**同一份控制器代码**，保真度等价但需两个进程。
-   装上 VS2022 Build Tools 或 MinGW 后，可把 `casadi` 生成的 C + HPIPM 编译成 MEX，
-   再替换 `s08_ctrl_sfun` 的实现，接口不变。
-3. 植物是解释执行的 M-S-Function，单次 60 s 仿真 0.3–3 s（回放）/ ~90 s（闭环，含 300 次 TCP 往返），
-   不用于实时性结论。
+2. **控制器未生成 C 代码**：D2① 的"C + S-Function"在工具链上已经**不再被阻塞**
+   （w64devkit/GCC 15.2 实测可用），剩下的工作是**移植本身**，不是环境：
+   CasADi 对 RTI 用到的 `f/F/A/B/e` 函数生成 C，用 HPIPM 的 C 接口（本机 `.pydeps` 里已有
+   `hpipm` 的 Windows DLL）替换 Python 侧封装，再把 `_iterate` / 线搜索 / 接受-回退逻辑
+   用 C 重写一遍，最后包成 S-Function。预估 1–2 天，且必须用现有 C2/C3/C4 判据回归。
+   当前用"Python 控制器 over TCP"保持**同一份控制器代码**，保真度等价但需两个进程。
+3. 植物是解释执行的 M-S-Function：单次 60 s 仿真 0.3–3 s（回放）；
+   闭环 300 步约 **39 s**（0.13 s/步，与进程内 Python 闭环的 0.12 s/步相当——见 §6.2）。
+   不用于实时性结论。用 C MEX 重写植物预计可把回放降到亚秒级，但闭环时间由控制器支配。
 4. Aerospace Blockset 块库在本安装不可加载，主链未使用；如需 Blockset 版本，需先解决块库加载。

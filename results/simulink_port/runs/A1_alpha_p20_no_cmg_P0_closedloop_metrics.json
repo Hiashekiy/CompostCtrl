@@ -3,7 +3,7 @@
   "mode": "closedloop",
   "samples": 300,
   "nx": 7,
-  "wall_s": 33.1714504,
+  "wall_s": 14.7611897,
   "state_max_abs_diff": 1.0260259296647006E-9,
   "state_max_rel_diff": 1.0260259296647006E-9,
   "state_worst_state": 7,

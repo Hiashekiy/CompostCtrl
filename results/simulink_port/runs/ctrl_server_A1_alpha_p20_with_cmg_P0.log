@@ -1,3 +1,2 @@
 [ctrl] case=D:\项目\飞轮\configs\torque_gap_s08\cases\A1_alpha_p20_with_cmg.yaml plant=P0 nx=11 nu=7 steps=300
 [ctrl] listening on 55911
-[ctrl] quit

@@ -106,6 +106,9 @@ function s = local_open(cfg)
 addr = java.net.InetAddress.getByName('127.0.0.1');
 s.sock = java.net.Socket(addr, cfg.port);
 s.sock.setSoTimeout(int32(120000));
+% Nagle would add ~0.2 s to every request/response pair, which dominates the
+% 0.1 s QP solve; the server disables it too.
+s.sock.setTcpNoDelay(true);
 s.in = java.io.BufferedReader(java.io.InputStreamReader(s.sock.getInputStream()));
 s.out = java.io.PrintWriter(s.sock.getOutputStream(), true);
 r = local_call(s, struct('cmd', 'ping'));

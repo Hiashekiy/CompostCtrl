@@ -20,3 +20,9 @@ pip-unpack-*/
 .matlab_appdata/
 .matlab_prefs/
 .matlab_temp/
+
+# MATLAB/Simulink build artifacts (reproducible: see simulink/README.md)
+*.mexw64
+*.mexa64
+*.slxc
+slprj/
