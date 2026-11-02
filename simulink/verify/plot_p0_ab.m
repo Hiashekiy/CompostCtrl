@@ -28,7 +28,7 @@ tk=loadmodel(case_name,false);tm=loadmodel(case_name,true);
 bank=tk.bank;tmpl=tm.tmpl;
 t=B.t;tref=bank.time(:);
 h0=tmpl.h0;s0=tmpl.s0;gxs0=tmpl.gxs0;
-cmgB=-cmgmoment(s0,gxs0,h0,B.gamma,B.nu);      % tau = -A(gamma) nu
+cmgB=cmgmoment(s0,gxs0,h0,B.gamma,B.nu);        % tau_cmg = -A(gamma) nu (already negated inside)
 Hy=cmgH(s0,gxs0,h0,B.gamma);
 
 % which body axis this case manoeuvres about
