@@ -208,8 +208,9 @@ CMG 力矩与 CMG 角动量都恒为零（home 位形本身净角动量为零）
   提高动压反而改善跟踪；CMG 在 S00 把失效时刻推后 46 s，但代价是占掉 80% 角动量并把
   `sigma_min` 压到奇异下限以下，在 S03 反而不如纯舵面。
 
-* **Simulink 移植（MIL）**：`simulink/`，规格与调试记录见
-  `docs/torque_gap/simulink_port_spec.md`，验收结果见 `results/simulink_port/report.md`。
-  植物与 Python 逐条同源（单步差 1e-16，300 步回放差 ≤4e-10）；控制器不重写，
-  由 Python RTI 进程托管（本机无可用 C 编译器）；闭环差异已用"参考模型自身 1e-9 扰动响应"
-  作为标尺归因为模型的条件敏感性（近奇异处混沌放大），而非移植误差。
+* **Simulink 移植**：原生迁移已完成，入口见 `simulink/NATIVE_README.md`，
+  开发与接口说明见 `docs/simulink/原生Simulink迁移_开发接续手册.md`，
+  八组 P0 A/B 与历史 Python 的对照见 `docs/simulink/09_ab_experiment_report.md`。
+  真值、气动、执行机构与 CMG 全部改用工具箱/基础模块，控制器为 MATLAB 在线 RTI + HPIPM MEX。
+  早先那套 S08 Python/TCP 移植（`s08_startup.m`、`run_case.m`、`py/ctrl_server.py` 等）及其
+  规格文档 `docs/torque_gap/simulink_port_spec.md` 已在迁移完成后清理，需要时从提交历史取回。

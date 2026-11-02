@@ -26,10 +26,17 @@ if strcmp(action,'terminate')
   c=contexts(key);fprintf('ONLINE_MPC fallbacks=%d\n',c.fallbacks);
   root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
   folder=fullfile(root,'simulink','results','native_closedloop');if ~exist(folder,'dir'),mkdir(folder);end
-  fid=fopen(fullfile(folder,[get_param(bdroot(b.BlockHandle),'Name') '_runtime.json']),'w');
-  fprintf(fid,'%s',jsonencode(struct('fallbacks',c.fallbacks,'last_control_time',c.time)));fclose(fid);
-  fid=fopen(fullfile(folder,sprintf('%s_runtime_%gs.json',get_param(bdroot(b.BlockHandle),'Name'),c.time)),'w');
-  fprintf(fid,'%s',jsonencode(struct('fallbacks',c.fallbacks,'last_control_time',c.time)));fclose(fid);
+  % Statistics only: a locked/read-only results file must not abort the run
+  % (an older MATLAB session or a scanner can hold these files open on Windows).
+  stats=jsonencode(struct('fallbacks',c.fallbacks,'last_control_time',c.time));
+  try
+   fid=fopen(fullfile(folder,[get_param(bdroot(b.BlockHandle),'Name') '_runtime.json']),'w');
+   if fid>0,fprintf(fid,'%s',stats);fclose(fid);else,error('native:locked','cannot open runtime file');end
+   fid=fopen(fullfile(folder,sprintf('%s_runtime_%gs.json',get_param(bdroot(b.BlockHandle),'Name'),c.time)),'w');
+   if fid>0,fprintf(fid,'%s',stats);fclose(fid);else,error('native:locked','cannot open runtime file');end
+  catch err
+   warning('ONLINE_MPC_STATS_SKIPPED %s',err.message);
+  end
   remove(contexts,key);
  end
  return;

@@ -83,8 +83,11 @@ python scripts/run_torque_gap.py --case c1_pitch30 --plant P0 `
 | 无限行程 20 臂 | `results/torque_gap_unlimited/` 中除 `C1_B0_P0` 外的 19 次；`figures/torque_gap_unlimited/` 中除 `C1_control_overview` 外的 109 张；`docs/torque_gap/unlimited_gimbal_experiment.md` |
 | 早期 CMG/MPC 遗留项目 | `results/{cmg_ab,cmg_maneuver,c1_cmg_diagnostics,c1_cmg_reproduction,legacy_rw}`、`figures/cmg_ab/`、`experiments/`、`archive/`、`legacy/`、`tools/`、`configs/{cmg_ab,cmg_maneuver,c1_cmg_reproduction*}`、20 个旧脚本、9 个未使用模块（`mpc3` `qp` `cmg_control` `cmg_hier` `cmg_priority` `scenarios` `sim` `arms` `metrics`）、`tests/test_cmg_ab.py` |
 | 过时报告 | `docs/` 根目录 18 份阶段性/对比报告 |
+| S08 Python/TCP Simulink 移植链（原生迁移完成后清理） | `simulink/README.md`、`s08_startup.m`、`open_case.m`、`run_case.m`、`check_plant_step.m`、`probe2/3.m`、`simulink/blocks/`、`simulink/py/{ctrl_server,run_closedloop,make_report,export_for_simulink,export_visible_model,sensitivity_check,check_controller_replay}.py`、`simulink/mexopts/`、`docs/torque_gap/simulink_port_spec.md`、`docs/任务说明_S08退化分析与Simulink移植.md` |
+| 一次性开发残留（原生迁移完成后清理） | 仓库根 `tmp_*.py`、`*.slxc`、`simulink/restart_license_check.m`、`simulink/hpipm/build_log.txt`、`simulink/results/{license_recheck,hpipm_interface}/`、`simulink/results/native_closedloop/development_failed/` |
 
-删除项均在 git 历史中：精简前的最后一个完整提交是 `7ee44e1`。
+删除项均在 git 历史中：精简前的最后一个完整提交是 `7ee44e1`；原生迁移的清理点见其后的
+`Fix P0 CMG gimbal drive wiring` 与 `Prune legacy S08 port and development leftovers` 两个提交。
 
 ## 6. 说明
 

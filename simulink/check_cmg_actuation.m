@@ -25,10 +25,14 @@ close_system(model,0);
 % run; keep the full-window file authoritative after this short check.
 outdir=fullfile(root,'simulink','results','native_closedloop');
 short=fullfile(outdir,sprintf('%s_runtime_%gs.json',model,st.Time(end)));
-if exist(short,'file'),delete(short);end
-for tag={'60s','90s'}
- full=fullfile(outdir,[model '_runtime_' tag{1} '.json']);
- if exist(full,'file'),copyfile(full,fullfile(outdir,[model '_runtime.json']));break;end
+try
+ if exist(short,'file'),delete(short);end
+ for tag={'60s','90s'}
+  long=fullfile(outdir,[model '_runtime_' tag{1} '.json']);
+  if exist(long,'file'),copyfile(long,fullfile(outdir,[model '_runtime.json']));break;end
+ end
+catch
+ warning('runtime evidence file is locked; canonical full-window copy left untouched');
 end
 assert(all(peak>1e-3),'CMG gimbal angles did not move: the P0 gimbal drive is disconnected');
 assert(all(any(abs(rates)>1e-6,1)),'no gimbal-rate command reached the CMG subsystem');

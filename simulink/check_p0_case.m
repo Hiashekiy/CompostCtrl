@@ -1,11 +1,21 @@
 function check_p0_case(case_name,enabled)
 % Build, simulate and score one P0 case with the current builder (no progress bookkeeping).
 % Usage: check_p0_case('S00_pitch30',true)   % true = B (surface+CMG), false = A
+%
+% The controller template and the future-reference bank are NOT re-exported here:
+% this function builds whatever is currently in
+% simulink/tests/05_python_matlab_qp_equivalence/production_online_*qp.mat and
+% simulink/data/online_plan_bank.mat.  Export the case first, otherwise the model
+% silently runs another case's reference:
+%   python simulink/py/export_hpipm_qp.py --config <case config_resolved.yaml>
+%   python simulink/py/export_online_plan_bank.py --config <case config_resolved.yaml>
+% For a fully consistent sweep use run_native_p0_matrix.py instead.
 root=fileparts(fileparts(mfilename('fullpath')));
 addpath(fullfile(root,'simulink'));addpath(fullfile(root,'simulink','hpipm'));
 if ischar(enabled),enabled=logical(str2double(enabled));end
 bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
 duration=double(bank.time(end));
+fprintf('bank on disk: window 0-%g s, %d control instants (must match %s)\n',duration,numel(bank.time),case_name);
 build_native_closedloop(duration,false,enabled,case_name);
 m='NearSpace_CMG_AttitudeValidation';if ~enabled,m=[m '_SurfaceOnly'];end
 m=[m '_' case_name];

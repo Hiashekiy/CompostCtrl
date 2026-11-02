@@ -45,14 +45,16 @@
 
 这里的零侧向系数是风轴系假设；机体系Y方向仍可能出现由阻力投影产生的分量，不能据此将机体系Fy强行置零。
 
-### 1.3 两套系统不要混用
+### 1.3 只剩一套 Simulink 实现
 
 | 系统 | 入口 | 控制器在哪里运行 |
 |---|---|---|
-| 本次原生迁移 | `simulink/native_startup.m`、`NearSpace_CMG_FlightControl*.slx` | MATLAB RTI + HPIPM MEX |
-| 旧 S08 移植 | `simulink/README.md`、`s08_startup.m`、`open_case.m`、`run_case.m` | 历史方案含 Python/TCP 与封装植物 S-Function |
+| 本次原生迁移（唯一保留） | `simulink/native_startup.m`、`NearSpace_CMG_FlightControl*.slx` | MATLAB RTI + HPIPM MEX |
 
-开发原生主链不需要启动旧 `ctrl_server.py`。旧结果保留供回归比较。
+早先那套 S08 Python/TCP 移植（`s08_startup.m`、`open_case.m`、`run_case.m`、`simulink/blocks/s08_*`、
+`simulink/py/ctrl_server.py`、`run_closedloop.py` 等）已于原生迁移完成后删除，不再可用；需要它时从
+`dada11d` 之前的提交里取。**删除的只是 Simulink 侧移植**：Python 参考仿真（`nearspace/`、`scripts/`、
+`configs/`、`results/torque_gap_*`）全部保留，历史结果仍可复现与对照。
 
 ### 1.4 P0 B 组曾整段失效的缺陷（已修复，勿回退）
 
@@ -556,7 +558,8 @@ HPIPM编译要读取本机官方 MATLAB类和C源，以及两个 `.dll.a` 导入
 | 闭环 | 八组P0×A/B窗口完成；修复1.4缺陷后A/B与Python同量级；公开替代模型下60s A/B完成；保存后重载通过 | **逐点轨迹等价与步长收敛仍未通过** |
 
 详细验收表为 `docs/simulink/09_ab_experiment_report.md`；最终状态 JSON 为 `simulink/results/native_delivery/finish_report.json`。
-`development_failed/` 存放开发阶段失效/错误设置的材料，不得混进正式统计。
+开发阶段失效材料的 `development_failed/` 目录已随历史残留清理删除；P0 B 组修复前的进度快照保留在
+`simulink/results/native_closedloop/p0_matrix_progress_pre_drivefix.json`，需要旧失败记录时从提交历史取。
 
 ## 14. 下一步开发任务
 
