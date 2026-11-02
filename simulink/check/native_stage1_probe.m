@@ -1,6 +1,6 @@
 function native_stage1_probe
 % Inspect installed libraries; no guessed block paths are used by the builder.
-root = fileparts(fileparts(mfilename('fullpath')));
+root=native_root;
 out = fullfile(root,'simulink','results','native_stage1');
 if ~exist(out,'dir'), mkdir(out); end
 diary(fullfile(out,'environment.txt')); cleanup=onCleanup(@() diary('off'));

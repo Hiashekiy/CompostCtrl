@@ -1,6 +1,6 @@
 function build_surrogate_flight_forces
 % Native environment and force feedback adapter. Public surrogate, not identified airframe.
-root=fileparts(fileparts(mfilename('fullpath')));addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','data'));
+root=native_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','data'));
 env=load(fullfile(root,'simulink','data','native_environment.mat'));p=vehicle_params;load_system('Surrogate_Aero_Forces');
 m='Environment_And_Surrogate_Forces';if bdIsLoaded(m),close_system(m,0);end
 new_system(m);set_param(m,'SolverType','Fixed-step','Solver','ode4','FixedStep','.001','StopTime','0','ReturnWorkspaceOutputs','on');

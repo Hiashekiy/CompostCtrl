@@ -1,6 +1,6 @@
 function build_native_cmg_geometry
 % Native algebraic CMG geometry only; drive dynamics are a separate pending step.
-root=fileparts(fileparts(mfilename('fullpath')));
+root=native_root;
 addpath(fullfile(root,'simulink','data'));
 p=vehicle_params;
 d=fullfile(root,'simulink','data','native_baseline','A4_descent_replay_S00_with_cmg');

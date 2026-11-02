@@ -11,17 +11,41 @@
 cd('D:\项目\飞轮');
 addpath('simulink');
 native_startup;
-open_system('simulink/NearSpace_CMG_FlightControl.slx');
+open_system('simulink/models/NearSpace_CMG_FlightControl.slx');
 % 点击 Run。A 组：NearSpace_CMG_FlightControl_SurfaceOnly.slx。
 ```
 
 运行依赖 Aerospace Blockset/Toolbox、Simulink、本机 `D:/Tools/hpipm` 和 `D:/Tools/blasfeo`。
 MEX 为 Windows x64。其他平台需运行 `build_hpipm_mex` 与 `build_prediction_mex` 重建。
 
+## 目录结构
+
+根目录只放入口，其余按角色分层：
+
+```text
+simulink/
+├── native_startup.m      入口：加 build/check/data/models/hpipm 到路径并初始化 HPIPM
+├── native_root.m         仓库根（避免每个脚本按目录深度数 fileparts）
+├── mlab.cmd              headless 启动（重定向 MATLAB 的 APPDATA/PREFDIR/TMP 到仓库内）
+├── NATIVE_README.md
+├── build/                构建器：生成 models/ 与 cases/ 下的 SLX、以及公开力模型
+├── check/                验证、报告与交付检查：check_*、report_*、finalize_native_delivery
+├── hpipm/                控制器：在线 RTI、QP 组装、Level-2 S-Function、HPIPM MEX 与生成的预测 C
+├── models/               组件 SLX（CMG/气动/舵机/被控对象）+ 3 个默认闭环模型
+├── cases/                16 个 P0 工况 SLX（A/B × S00–S07，由 build/ 生成）
+├── data/                 参数、参考、大气与公开力数据
+├── py/                   Python 导出与批量回归入口
+├── tests/                验证夹具（QP 对照数据、6DOF 验证模型）
+└── results/              运行证据（native_stage1/plant/actuators/cmg/closedloop/delivery）
+```
+
+`addpath('simulink')` 之后 `native_startup` 会把 `build/`、`check/`、`models/`、`hpipm/`、`data/` 一起加进路径，
+所以脚本一律按函数名调用；模型按全路径 `load_system` 打开（默认模型在 `models/`，工况模型在 `cases/`）。
+
 ## 模型定义
 
-- `NearSpace_CMG_FlightControl*.slx`：公开升阻力替代模型、MSIS2 查表、重力、真实舵机、CMG 驱动、在线 MATLAB RTI/HPIPM 的工程闭环。
-- `NearSpace_CMG_AttitudeValidation*.slx`：原有 P0 总气动力矩命令接口；不接平动力，用于姿态实验。P0 CMG 直接跟随框架速率命令；P1 保留驱动环节。
+- `models/NearSpace_CMG_FlightControl*.slx`：公开升阻力替代模型、MSIS2 查表、重力、真实舵机、CMG 驱动、在线 MATLAB RTI/HPIPM 的工程闭环。
+- `models/NearSpace_CMG_AttitudeValidation.slx` 与 `cases/NearSpace_CMG_AttitudeValidation*_S0*.slx`：原有 P0 总气动力矩命令接口；不接平动力，用于姿态实验。P0 CMG 直接跟随框架速率命令；P1 保留驱动环节。
 - 无 CMG A 组使用独立的 7 状态/3 控制预测模型与不含 CMG 的原生真值结构；B 组使用 11 状态/7 控制预测。
 - Case 模型在 ModelWorkspace 内嵌控制模板与未来参考，防止切换模型后复用别的工况。求解器代码/MEX 仍通过 native_startup 加路径。
 
@@ -37,6 +61,7 @@ check_native_allocation;
 check_native_assembly;
 check_native_rti;
 check_cmg_actuation;      % P0 B 组：框架角必须真的移动（惰性执行机构的回归门）
+check_reorg;              % 目录分层自检：脚本可解析/可解析到 build|check，模型在 models|cases
 ```
 
 Python 原始参考导出与批量实验入口在 `simulink/py/`。八组 A/B 回归入口为 `python simulink/py/run_native_p0_matrix.py`，支持断点续跑。

@@ -1,5 +1,5 @@
 function build_native_plant
-root=fileparts(fileparts(mfilename('fullpath')));addpath(fullfile(root,'simulink','data'));addpath(fullfile(root,'simulink','models'));
+root=native_root;addpath(fullfile(root,'simulink','data'));addpath(fullfile(root,'simulink','models'));
 p=vehicle_params;load_system('CMG_Cluster');load_system('aerolib6dof');
 out=fullfile(root,'simulink','results','native_plant');if ~exist(out,'dir'),mkdir(out);end
 for enabled=[false true]

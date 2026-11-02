@@ -1,5 +1,5 @@
 function report_native_closedloop
-root=fileparts(fileparts(mfilename('fullpath')));bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
+root=native_root;bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
 out=fullfile(root,'simulink','results','native_closedloop');files=dir(fullfile(out,'*_surrogate_flight_*s.mat'));
 summary=struct;
 for f=1:numel(files)

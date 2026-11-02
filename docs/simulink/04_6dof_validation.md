@@ -2,7 +2,7 @@
 
 状态：**原生模块数值验证已通过**。许可证恢复后已实际运行四组解析算例。
 
-入口：`simulink/build_native_stage1.m`。不得将已有 `results/simulink_port` 的 S-Function 移植结果作为本阶段通过证据。
+入口：`simulink/build/build_native_stage1.m`。不得将已有 `results/simulink_port` 的 S-Function 移植结果作为本阶段通过证据。
 
 ## 设计的解析算例
 

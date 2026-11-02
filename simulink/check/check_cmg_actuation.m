@@ -11,9 +11,9 @@ function check_cmg_actuation(model)
 % Usage: check_cmg_actuation                      % default S00 pitch 30 case
 %        check_cmg_actuation('NearSpace_CMG_AttitudeValidation_S02_pitch10')
 if nargin<1,model='NearSpace_CMG_AttitudeValidation_S00_pitch30';end
-root=fileparts(fileparts(mfilename('fullpath')));
+root=native_root;
 addpath(fullfile(root,'simulink'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
-load_system(fullfile(root,'simulink',[model '.slx']));
+load_system(fullfile(root,'simulink','cases',[model '.slx']));
 saved=get_param(model,'StopTime');
 set_param(model,'StopTime','2');      % in-memory override, the saved model is untouched
 out=sim(model);set_param(model,'StopTime',saved);

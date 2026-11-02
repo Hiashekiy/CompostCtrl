@@ -3,7 +3,7 @@ if nargin<1,duration=2;end
 if nargin<2,flight=false;end
 if nargin<3,enabled=true;end
 if nargin<4,case_name='';end
-root=fileparts(fileparts(mfilename('fullpath')));addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
+root=native_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
 bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
 if enabled,plant='Plant_6DOF_CMG';else,plant='Plant_6DOF_SurfaceOnly';end
 load_system(plant);
@@ -11,6 +11,7 @@ if flight,m='NearSpace_CMG_FlightControl';else,m='NearSpace_CMG_AttitudeValidati
 if ~enabled,m=[m '_SurfaceOnly'];end
 if ~isempty(case_name),m=[m '_' case_name];end
 if bdIsLoaded(m),close_system(m,0);end
+if isempty(case_name),modeldir=fullfile(root,'simulink','models');else,modeldir=fullfile(root,'simulink','cases');end
 new_system(m);set_param(m,'SolverType','Fixed-step','Solver','ode4','FixedStep','.001','StopTime',num2str(duration), ...
  'ReturnWorkspaceOutputs','on','SaveFormat','Dataset');
 mw=get_param(m,'ModelWorkspace');
@@ -79,7 +80,7 @@ r=sim(m);assert(all(isfinite(r.states.Data),'all') && all(isfinite(r.commands.Da
 if flight,tag='surrogate_flight';else,tag='attitude';end
 if enabled,arm='B';else,arm='A';end
 if isempty(case_name),suffix='';else,suffix=['_' case_name];end
-save(fullfile(out,sprintf('%s_%s_%gs%s.mat',arm,tag,duration,suffix)),'r');save_system(m,fullfile(root,'simulink',[m '.slx']));
+save(fullfile(out,sprintf('%s_%s_%gs%s.mat',arm,tag,duration,suffix)),'r');save_system(m,fullfile(modeldir,[m '.slx']));
 Simulink.BlockDiagram.arrangeSystem(m);
 set_param(m,'InitFcn','native_startup;');
 save_system(m);

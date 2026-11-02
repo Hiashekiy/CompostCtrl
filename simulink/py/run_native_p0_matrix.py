@@ -39,7 +39,7 @@ for path in cases:
         if enabled and source:
             already=already and any(r['case']==name and r['arm']==arm and r.get('config_source')==source for r in results)
         # Early development runs used the P1 drive lag. Do not count those as P0.
-        model=ROOT/'simulink'/f"NearSpace_CMG_AttitudeValidation{'_SurfaceOnly' if not enabled else ''}_{name}.slx"
+        model=ROOT/'simulink'/'cases'/f"NearSpace_CMG_AttitudeValidation{'_SurfaceOnly' if not enabled else ''}_{name}.slx"
         if already and enabled and model.exists():
             with zipfile.ZipFile(model) as z:
                 already=not any(b'Inverse_time_constant' in z.read(n) for n in z.namelist() if n.endswith('.xml'))

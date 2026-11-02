@@ -1,5 +1,5 @@
 function build_native_integrations
-root=fileparts(fileparts(mfilename('fullpath'))); models=fullfile(root,'simulink','models');
+root=native_root; models=fullfile(root,'simulink','models');
 ref=load(fullfile(root,'simulink','data','native_actuators','reference.mat'));
 out=fullfile(root,'simulink','results','native_integrations'); if ~exist(out,'dir'),mkdir(out);end
 addpath(models); load_system('CMG_Drive'); load_system('CMG_Geometry');

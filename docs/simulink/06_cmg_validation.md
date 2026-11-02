@@ -7,7 +7,7 @@
 ## 已交付
 
 - 原生模型：`simulink/models/CMG_Geometry.slx`。
-- 可重建入口：`simulink/build_native_cmg_geometry.m`。
+- 可重建入口：`simulink/build/build_native_cmg_geometry.m`。
 - 参数、参考解：`simulink/data/native_baseline/A4_descent_replay_S00_with_cmg/`。
 - 误差表、模型图、Block 清单：`simulink/results/native_cmg_geometry/`。
 

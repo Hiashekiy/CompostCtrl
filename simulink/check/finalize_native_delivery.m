@@ -1,11 +1,11 @@
 function finalize_native_delivery
 % Refresh default A/B models after case sweeps, and audit their reloadability.
-root=fileparts(fileparts(mfilename('fullpath')));native_startup;
+root=native_root;native_startup;
 build_native_closedloop(2,true,true);build_native_closedloop(2,true,false);
 models={'NearSpace_CMG_FlightControl','NearSpace_CMG_FlightControl_SurfaceOnly'};
 out=fullfile(root,'simulink','results','native_delivery');if ~exist(out,'dir'),mkdir(out);end
 for k=1:numel(models)
- name=models{k};file=fullfile(root,'simulink',[name '.slx']);load_system(file);
+ name=models{k};file=fullfile(root,'simulink','models',[name '.slx']);load_system(file);
  mw=get_param(name,'ModelWorkspace');assert(hasVariable(mw,'native_controller_template') && hasVariable(mw,'native_reference_bank'));
  set_param(name,'StopTime','60');save_system(name);
  si=Simulink.SimulationInput(name);si=si.setModelParameter('StopTime','.4');r=sim(si);assert(all(isfinite(r.states.Data),'all'));

@@ -62,7 +62,7 @@ P0（`flight=false`）用 `configure_ideal_p0_drive` 把实测过的框架驱动
 `Simulink.SubSystem.deleteContents` 会同时删掉该子系统端口在父系统上的连线，重建后驱动块与
 CMG 内部完全断开：`nu` 不到框架、`gamma` 恒为初值、`tau_CMG≡0`、`H≡H(0)=0`。
 模型仍能编译、仿真、零回退，缺陷表现为“B 组比 A 组还差”。修复方式是删前记录端口连线、
-删后清理悬空线段并重连，再加构建期端口断言；`simulink/check_cmg_actuation.m` 是专用回归门。
+删后清理悬空线段并重连，再加构建期端口断言；`simulink/check/check_cmg_actuation.m` 是专用回归门。
 改动任何“替换子系统内容”的建模代码时，必须保留“删除会带走父级连线”这条经验。
 完整证据与修复前后指标见 `08_closed_loop_validation.md`。
 
@@ -91,7 +91,7 @@ cd('D:\项目\飞轮');
 addpath('simulink');
 native_startup;
 m = 'NearSpace_CMG_FlightControl';
-load_system(fullfile('simulink', [m '.slx']));
+load_system(fullfile('simulink','models',[m '.slx']));
 in = Simulink.SimulationInput(m);
 in = in.setModelParameter('StopTime', '2'); % 仅覆盖本次运行，不修改保存的时长
 out = sim(in);
@@ -133,7 +133,8 @@ flowchart LR
   CMG --> Feedback
 ```
 
-主模型根路径为 `simulink/`；下列独立组件位于 `simulink/models/`。
+入口脚本在 `simulink/` 根；下列独立组件模型位于 `simulink/models/`，P0 工况模型位于 `simulink/cases/`，
+构建器在 `simulink/build/`，验证与报告在 `simulink/check/`。
 
 | 模型/模块 | 输入 | 输出/职责 |
 |---|---|---|
@@ -227,15 +228,24 @@ Simulink native_mpc_sfun.Start
 
 ### 5.3 主要 MATLAB 文件
 
+目录按角色分层：入口在 `simulink/` 根（`native_startup.m`、`native_root.m`、`mlab.cmd`），
+构建器在 `build/`，验证与报告在 `check/`，控制器在 `hpipm/`，组件模型在 `models/`，
+16 个 P0 工况模型在 `cases/`。`addpath('simulink')` + `native_startup` 后所有函数按名调用即可；
+模型按全路径 `load_system` 打开。新增脚本一律用 `root=native_root;`，不要按目录深度数 `fileparts`。
+
 | 文件 | 修改什么时读它 |
 |---|---|
-| `build_native_closedloop.m` | 顶层接线、模式、初始化、内嵌数据、日志、构建输出 |
-| `build_native_plant.m` | 真实 6DOF、耦合项及 A/B 物理结构 |
-| `build_native_actuators_aero.m` | 驱动、舵机、气动力矩各独立组件 |
-| `build_native_cmg_geometry.m` | CMG 基础块几何与随机样本验证 |
-| `build_native_integrations.m` | 将几何+驱动、气动+舵机构成组合模型 |
-| `build_public_force_model.m` | 公开升阻力表、力坐标变换、迎角断言 |
-| `build_surrogate_flight_forces.m` | 大气、空气数据、重力合成 |
+| `build/build_native_closedloop.m` | 顶层接线、模式、初始化、内嵌数据、日志、构建输出（默认模型写 `models/`，带 case_name 写 `cases/`） |
+| `build/build_native_plant.m` | 真实 6DOF、耦合项及 A/B 物理结构 |
+| `build/build_native_actuators_aero.m` | 驱动、舵机、气动力矩各独立组件 |
+| `build/build_native_cmg_geometry.m` | CMG 基础块几何与随机样本验证 |
+| `build/build_native_integrations.m` | 将几何+驱动、气动+舵机构成组合模型 |
+| `build/build_public_force_model.m` | 公开升阻力表、力坐标变换、迎角断言 |
+| `build/build_surrogate_flight_forces.m` | 大气、空气数据、重力合成 |
+| `check/check_cmg_actuation.m` | P0 B 组执行机构回归门（框架角必须移动） |
+| `check/check_p0_case.m` | 单工况建模+评分（复用磁盘上的模板/参考，需先导出） |
+| `check/report_native_p0_matrix.m`、`check/report_native_closedloop.m` | 由已有日志重算指标表 |
+| `check/finalize_native_delivery.m` | 重建默认 A/B 模型、块清单、重载检查 |
 | `hpipm/native_mpc_sfun.m` | Simulink调度、端口、时间、模型内嵌数据与控制器状态 |
 | `hpipm/native_rti_step.m` | RTI外层、热启动、线搜索、回退、执行端裁剪 |
 | `hpipm/assemble_native_qp.m` | Q/R/q/r/A/B/b 和边界的在线组装 |
@@ -275,7 +285,7 @@ Simulink native_mpc_sfun.Start
 ### 6.3 顶层 ModelWorkspace
 
 ```matlab
-load_system('simulink/NearSpace_CMG_FlightControl.slx');
+load_system('simulink/models/NearSpace_CMG_FlightControl.slx');
 mw = get_param('NearSpace_CMG_FlightControl','ModelWorkspace');
 s = getVariable(mw,'native_controller_template');
 bank = getVariable(mw,'native_reference_bank');
@@ -371,7 +381,7 @@ legend('roll','pitch','yaw'); xlabel('相对时间/s'); ylabel('姿态角/deg');
 | 同目录 `*_runtime_60s.json` | 对应时长的求解回退统计；无时长后缀文件只代表最近一次运行 |
 | `results/native_delivery/` | 主模型重载检查、完整块清单、导图、验收缺口 |
 | `tests/05_python_matlab_qp_equivalence/` | 固定QP、组装、在线首命令对照 |
-| `simulink/check_cmg_actuation.m` | P0 B 组“框架角必须真的移动”的回归门（修复前必然失败） |
+| `simulink/check/check_cmg_actuation.m` | P0 B 组“框架角必须真的移动”的回归门（修复前必然失败） |
 
 当前 `simulink/results/...`，不要与项目根目录的历史 `results/...` 混淆。
 短时测试可能覆盖同名短时日志；无后缀 runtime JSON 会被后续重载测试改写，应使用带时长版本作证据。
@@ -387,6 +397,7 @@ python simulink/py/finish_native_delivery.py
 只想按现有 `p0_matrix_summary.csv` 重写 `09_ab_experiment_report.md` 与 `finish_report.json` 时，加 `--report-only`，不必重跑仿真。
 回归优先使用历史 `results/torque_gap_no_cmg_comparison_rti2/P0/<case>/config_resolved.yaml`；正式实验包含基础 YAML 未记录的 `state_tr_gamma=0.5`、`state_tr_omega=1.0` 等设置。
 进度在 `p0_matrix_progress.json`。**修改算法、MEX或参数后不要盲目相信断点缓存**：当前跳过逻辑不包含全部源代码哈希。开发新版本应备份旧进度并重新运行相关项目；重建器或接线方式改动后，至少单跑 `check_cmg_actuation` 确认执行机构仍然生效。
+移动或改名脚本/模型后跑一次 `check_reorg`：它检查 `build/`、`check/` 下每个脚本能被 MATLAB 解析、能解析到正确目录，并确认默认模型在 `models/`、16 个工况模型在 `cases/`。
 
 ## 9. 怎样修改现有模型
 

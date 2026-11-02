@@ -30,7 +30,7 @@ Licensing error: -5,357.
 - `simulink/results/native_stage1/installed_products.csv`：已安装产品及版本。
 - `simulink/results/native_stage1/licenses.csv`：各产品 test、checkout 和原始诊断。
 - `simulink/results/native_stage1/library_6dof_metadata.json`：真实库路径、库版本、掩膜参数与端口数量。
-- `simulink/native_stage1_probe.m`：重新执行审计的入口。
+- `simulink/check/native_stage1_probe.m`：重新执行审计的入口。
 
 ## 已定位模块
 

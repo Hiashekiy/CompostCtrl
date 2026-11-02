@@ -41,7 +41,7 @@ Inport/Outport 块一起删除，从而删掉父系统里挂在这些端口上�
 - `configure_ideal_p0_drive`：删除前记录该子系统全部端口的上下游连线，重建后**先清除悬空线段再重新连接**，
   并对每个端口断言 `get_param(port,'Line')>0`；速率限幅改由控制模板的 `gdot` 提供，不再硬编码 1。
 - `build_native_closedloop`：P0 B 组构建后调用 `assert_connected`，逐个检查 CMG 子系统输入/输出端口均有连线，构建期即失败。
-- 新增 `simulink/check_cmg_actuation.m`：载入已保存的 P0 B 模型跑 2 s，断言框架角确实移动、框架速率命令确实到达 CMG，
+- 新增 `simulink/check/check_cmg_actuation.m`：载入已保存的 P0 B 模型跑 2 s，断言框架角确实移动、框架速率命令确实到达 CMG，
   作为“惰性执行机构”的回归门（修复前该检查必然失败：`gamma_peak=[0 0 0 0]`）。
 - `simulink/py/run_native_p0_matrix.py`：导出步骤加入锁竞争重试，避免 Windows 上 `.mat` 短暂占用导致的假失败。
 

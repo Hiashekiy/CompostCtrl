@@ -1,11 +1,11 @@
 function report_native_p0_matrix
-root=fileparts(fileparts(mfilename('fullpath')));out=fullfile(root,'simulink','results','native_closedloop');
+root=native_root;out=fullfile(root,'simulink','results','native_closedloop');
 p=jsondecode(fileread(fullfile(out,'p0_matrix_progress.json')));assert(numel(p)==16,'P0 sweep incomplete');
 rows=cell(16,6);
 for k=1:numel(p)
  if iscell(p),entry=p{k};else,entry=p(k);end
  name=['NearSpace_CMG_AttitudeValidation'];if strcmp(entry.arm,'A'),name=[name '_SurfaceOnly'];end
- name=[name '_' entry.case];load_system(fullfile(root,'simulink',[name '.slx']));
+ name=[name '_' entry.case];load_system(fullfile(root,'simulink','cases',[name '.slx']));
  mw=get_param(name,'ModelWorkspace');bank=getVariable(mw,'native_reference_bank');
  s=load(fullfile(out,sprintf('%s_attitude_%gs_%s.mat',entry.arm,entry.duration_s,entry.case)));r=s.r;t=r.states.Time;
  x=squeeze(r.states.Data);if size(x,1)~=numel(t),x=x';end
