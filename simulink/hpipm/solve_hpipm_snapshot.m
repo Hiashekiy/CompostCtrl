@@ -28,6 +28,7 @@ for k=0:N
 end
 % Round-trip the actual native structures to verify dimension/order conventions.
 matrix_error=0;
+if ~isfield(s,'validate_readback') || s.validate_readback
 for k=0:N
  matrix_error=max(matrix_error,max(abs(hpipm_qp_read(qp.C_qp,'Q',k)-s.Q(:,:,k+1)),[],'all'));
  matrix_error=max(matrix_error,max(abs(hpipm_qp_read(qp.C_qp,'q',k)-s.q(:,k+1)),[],'all'));
@@ -39,6 +40,7 @@ for k=0:N
    key=f{1}; value=s.(key); matrix_error=max(matrix_error,max(abs(hpipm_qp_read(qp.C_qp,key,k)-value(:,k+1)),[],'all'));
   end
  end
+end
 end
 solver.solve(qp,sol);
 result.status=solver.get('status'); result.time_s=solver.get('time_ext');

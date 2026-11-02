@@ -30,4 +30,5 @@ rem  compile S-functions / MEX files without extra environment juggling.
 if not defined MW_MINGW64_LOC if exist "D:\w64devkit\bin\gcc.exe" set "MW_MINGW64_LOC=D:\w64devkit"
 cd /d "%REPO%"
 "%MATLAB_HOME%\bin\matlab.exe" -nosplash -noFigureWindows -batch %*
-endlocal
+set "MATLAB_EXIT=%ERRORLEVEL%"
+endlocal & exit /b %MATLAB_EXIT%
