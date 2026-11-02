@@ -17,6 +17,21 @@ simulink\mlab.cmd "addpath('simulink'); check_plant_step"   # 2. C1 单步等价
 python simulink/py/run_closedloop.py --all             # 3. 闭环（起 Python 控制器 + 跑 MATLAB）
 ```
 
+## 打开/重跑某个已生成的模型
+
+模型读固定路径的输入快照，所以**先刷新快照再 sim**（否则会拿上一次运行的工况）：
+
+```matlab
+open_case('A4_descent_replay_S00_with_cmg_P0','replay')      % 或 'closedloop'
+sim('results/simulink_port/runs/A4_descent_replay_S00_with_cmg_P0_replay.slx')
+```
+
+闭环模型需先起控制器（端口 55901）：
+
+```bash
+python simulink/py/ctrl_server.py --case configs/torque_gap_s08/cases/A4_descent_replay_S00_with_cmg_P0.yaml --port 55901
+```
+
 ## 关键结论（详见 report.md）
 
 - **C1**：单步植物与 Python 差 1e-16（浮点结合律级）。

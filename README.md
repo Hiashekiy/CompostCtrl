@@ -197,3 +197,19 @@ CMG 力矩与 CMG 角动量都恒为零（home 位形本身净角动量为零）
 * 目标函数**没有 CMG 力矩的速率惩罚项**，B 的舵面与 CMG 力矩存在高频抖振，
   舵面平均动作量是 A 的 1.8–2.3 倍；
 * 未做 HIL 验证。
+
+## 8. 后续实验：S08 退化分析与 Simulink 移植
+
+* **S08 大迎角 / 动压退化分析**（审计 + A1–A4 受控实验 + 原始 S00/S03 复现）：
+  - 代码与模型审计：`docs/torque_gap/S08_code_audit.md`
+  - 结果报告（含逐条回答 §16 的十个问题）：`docs/torque_gap/S08_results_analysis.md`
+  - 数据：`results/torque_gap_s08/`，图：`figures/torque_gap_s08/`
+  结论摘要：退化是**配平/机动需求超过舵面可用力矩**，不是气动系数非线性；固定迎角下
+  提高动压反而改善跟踪；CMG 在 S00 把失效时刻推后 46 s，但代价是占掉 80% 角动量并把
+  `sigma_min` 压到奇异下限以下，在 S03 反而不如纯舵面。
+
+* **Simulink 移植（MIL）**：`simulink/`，规格与调试记录见
+  `docs/torque_gap/simulink_port_spec.md`，验收结果见 `results/simulink_port/report.md`。
+  植物与 Python 逐条同源（单步差 1e-16，300 步回放差 ≤4e-10）；控制器不重写，
+  由 Python RTI 进程托管（本机无可用 C 编译器）；闭环差异已用"参考模型自身 1e-9 扰动响应"
+  作为标尺归因为模型的条件敏感性（近奇异处混沌放大），而非移植误差。
