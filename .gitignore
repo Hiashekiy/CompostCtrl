@@ -26,3 +26,4 @@ pip-unpack-*/
 *.mexa64
 *.slxc
 slprj/
+*.slx.bak

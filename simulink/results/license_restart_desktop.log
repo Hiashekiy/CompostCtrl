@@ -1,0 +1,10 @@
+MATLAB checkout=1
+
+Simulink checkout=1
+
+Aerospace_Toolbox checkout=1
+
+Aerospace_Blockset checkout=1
+
+REAL_6DOF_CREATE_AND_SIM_PASS
+LICENSE_RECHECK_REPORT D:\项目\飞轮\simulink\results\license_recheck\20261102_140322

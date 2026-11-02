@@ -1,0 +1,1585 @@
+Name,Type,ReferenceBlock,Parent,Mask
+"NearSpace_CMG_FlightControl_SurfaceOnly/Actual_flight_condition",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",SubSystem,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/delta_command",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/flight_qbar_V_alpha_beta_omega",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",SubSystem,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/flight_and_surface",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Cm0",Constant,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Damping_derivatives",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Deflections",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Geometry_1",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Geometry_2",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Inputs",Demux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Moment_1",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Moment_2",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Natural_coefficients",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Normalized_damping",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Rates",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Speed_floor",Saturate,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Static_coefficient_1",Lookup_n-D,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Static_coefficient_2",Lookup_n-D,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Static_coefficient_3",Lookup_n-D,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Static_coefficients",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Surface_derivatives",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/Total_moment",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/log_total_moment",ToWorkspace,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/component_1",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/component_2",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model/total",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Aerodynamic_Model",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Flight_and_actual_surface",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",SubSystem,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/command",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/Actual_state",UnitDelay,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/Command_limit",Saturate,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/Derivative_limit",Saturate,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/Euler_increment",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/Inverse_time_constant",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/Next_state",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/State_limit",Saturate,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/Tracking_error",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/log_deriv",ToWorkspace,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/log_state",ToWorkspace,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/actual",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator/derivative",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/Surface_Actuator",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/delta_actual",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/delta_dot",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/natural_moment",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/surface_increment",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface/total_moment",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Aerodynamic_Surface",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Air_data_split",Demux,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Allocation_inputs",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Control_split",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Disturbance",FromWorkspace,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",SubSystem,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/position_NED",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/velocity_body",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/DCM_earth_to_body",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Air_data",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Alpha",Trigonometry,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Asin_domain",Saturate,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Atmosphere_range",Assertion,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Beta",Trigonometry,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Density_speed_squared",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Dynamic_pressure",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Flight_condition",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Gravity_NED",Constant,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Gravity_body",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Hbound1",Constant,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Hbound2",Constant,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Height",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Height_valid",Logic,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/MSIS2_density",Lookup_n-D,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Position",Demux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",SubSystem,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/qbar_alpha_beta",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Alpha_bound_1",Constant,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Alpha_bound_2",Constant,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Assert_alpha_domain",Assertion,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/CD",Lookup_n-D,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/CD_S",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/CD_force",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/CL",Lookup_n-D,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/CL_S",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/CL_force",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Domain_valid",Logic,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Dx",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Dy",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Dz",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Force_body",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Fx",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Fy",Gain,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Fz",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/In_domain_1",RelationalOperator,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/In_domain_2",RelationalOperator,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Inputs",Demux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Lx",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/Lz",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/cos_alpha",Trigonometry,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/cos_beta",Trigonometry,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/force_log",ToWorkspace,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/sin_alpha",Trigonometry,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/sin_beta",Trigonometry,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate/F_B",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Public_surrogate",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Sideslip_sine",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Speed",Sqrt,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Speed_floor",Saturate,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Speed_squared",DotProduct,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Total_body_force",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/ValidH1",RelationalOperator,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/ValidH2",RelationalOperator,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Velocity",Demux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/Force_B",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces/qbar_V_alpha_beta",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Environment_And_Forces",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",SubSystem,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/aero_total_moment",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/disturbance_moment",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/body_force",Inport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",SubSystem,"aerolibprivatev1p5/6DoF (Quaternion)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",6DOF Q Bridge
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/Forces
+X
+Y
+Z
+(N)",Inport,"aerolibprivatev1p5/6DoF (Quaternion)/Forces
+X
+Y
+Z
+(N)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/Moments
+L
+M
+N
+(N-m)",Inport,"aerolibprivatev1p5/6DoF (Quaternion)/Moments
+L
+M
+N
+(N-m)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",SubSystem,"aerolibobsolete/6DoF (Euler Angles)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",6DoF EoM (Body Axis)
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Forces",Inport,"aerolibobsolete/6DoF (Euler Angles)/Forces","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Moments",Inport,"aerolibobsolete/6DoF (Euler Angles)/Moments","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",SubSystem,"aerolibobsolete/DCM & Euler Angles (Quaternion)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",DCM & Euler Angles (Quaternion)
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/p q r",Inport,"aerolibobsolete/DCM & Euler Angles (Quaternion)/p q r","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Initial
+Euler Angles",Constant,"aerolibobsolete/DCM & Euler Angles (Quaternion)/Initial
+Euler Angles","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",SubSystem,"sharedtransform/Quaternions to 
+Direction Cosine Matrix","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",Quaternion2DCM
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quat",Inport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/Quat","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11",SubSystem,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A11","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11/normal(q)",Inport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A11/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11/Demux",Demux,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A11/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11/Product",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A11/Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11/Product1",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A11/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11/Product2",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A11/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11/Product3",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A11/Product3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11/Sum",Sum,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A11/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11/A11",Outport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A11/A11","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A11",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12",SubSystem,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A12","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12/normal(q)",Inport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A12/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12/Demux",Demux,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A12/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12/Gain",Gain,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A12/Gain","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12/Product2",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A12/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12/Product3",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A12/Product3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12/Sum",Sum,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A12/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12/A12",Outport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A12/A12","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A12",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13",SubSystem,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A13","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13/normal(q)",Inport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A13/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13/Demux",Demux,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A13/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13/Gain",Gain,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A13/Gain","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13/Product1",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A13/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13/Product2",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A13/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13/Sum",Sum,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A13/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13/A13",Outport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A13/A13","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A13",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21",SubSystem,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A21","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21/normal(q)",Inport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A21/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21/Demux",Demux,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A21/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21/Gain",Gain,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A21/Gain","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21/Product2",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A21/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21/Product3",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A21/Product3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21/Sum",Sum,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A21/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21/A21",Outport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A21/A21","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A21",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22",SubSystem,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A22","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22/normal(q)",Inport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A22/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22/Demux",Demux,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A22/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22/Product",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A22/Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22/Product1",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A22/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22/Product2",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A22/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22/Product3",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A22/Product3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22/Sum",Sum,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A22/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22/A22",Outport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A22/A22","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A22",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23",SubSystem,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A23","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23/normal(q)",Inport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A23/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23/Demux",Demux,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A23/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23/Gain",Gain,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A23/Gain","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23/Product1",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A23/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23/Product2",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A23/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23/Sum",Sum,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A23/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23/A23",Outport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A23/A23","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A23",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31",SubSystem,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A31","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31/normal(q)",Inport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A31/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31/Demux",Demux,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A31/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31/Gain",Gain,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A31/Gain","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31/Product1",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A31/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31/Product2",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A31/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31/Sum",Sum,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A31/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31/A31",Outport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A31/A31","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A31",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32",SubSystem,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A32","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32/normal(q)",Inport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A32/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32/Demux",Demux,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A32/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32/Gain",Gain,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A32/Gain","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32/Product1",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A32/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32/Product2",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A32/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32/Sum",Sum,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A32/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32/A32",Outport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A32/A32","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A32",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33",SubSystem,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A33","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33/normal(q)",Inport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A33/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33/Demux",Demux,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A33/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33/Product",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A33/Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33/Product1",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A33/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33/Product2",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A33/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33/Product3",Product,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A33/Product3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33/Sum",Sum,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A33/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33/A33",Outport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/A33/A33","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/A33",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",SubSystem,"sharedutil/Create 3x3 Matrix","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",Create 3x3 Matrix
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/M11",Inport,"sharedutil/Create 3x3 Matrix/M11","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/M12",Inport,"sharedutil/Create 3x3 Matrix/M12","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/M13",Inport,"sharedutil/Create 3x3 Matrix/M13","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/M21",Inport,"sharedutil/Create 3x3 Matrix/M21","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/M22",Inport,"sharedutil/Create 3x3 Matrix/M22","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/M23",Inport,"sharedutil/Create 3x3 Matrix/M23","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/M31",Inport,"sharedutil/Create 3x3 Matrix/M31","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/M32",Inport,"sharedutil/Create 3x3 Matrix/M32","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/M33",Inport,"sharedutil/Create 3x3 Matrix/M33","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/Reshape
+(9) to [3x3]
+column-major",Reshape,"sharedutil/Create 3x3 Matrix/Reshape
+(9) to [3x3]
+column-major","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/Vector
+Concatenate",Concatenate,"sharedutil/Create 3x3 Matrix/Vector
+Concatenate","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix/Matrix",Outport,"sharedutil/Create 3x3 Matrix/Matrix","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Create 3x3 Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize",SubSystem,"sharedutil/Quaternion
+Normalize","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",Quaternion Normalize
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/q",Inport,"sharedutil/Quaternion
+Normalize/q","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Demux",Demux,"sharedutil/Quaternion
+Normalize/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Mux",Mux,"sharedutil/Quaternion
+Normalize/Mux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Product",Product,"sharedutil/Quaternion
+Normalize/Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Product1",Product,"sharedutil/Quaternion
+Normalize/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Product2",Product,"sharedutil/Quaternion
+Normalize/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Product3",Product,"sharedutil/Quaternion
+Normalize/Product3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus",SubSystem,"sharedutil/Quaternion
+Modulus","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize",Quaternion Modulus
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/q",Inport,"sharedutil/Quaternion
+Modulus/q","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",SubSystem,"sharedutil/Quaternion
+Norm","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus",Quaternion Norm
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/q",Inport,"sharedutil/Quaternion
+Norm/q","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Demux",Demux,"sharedutil/Quaternion
+Norm/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Product",Product,"sharedutil/Quaternion
+Norm/Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Product1",Product,"sharedutil/Quaternion
+Norm/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Product2",Product,"sharedutil/Quaternion
+Norm/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Product3",Product,"sharedutil/Quaternion
+Norm/Product3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Sum",Sum,"sharedutil/Quaternion
+Norm/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/norm(q)",Outport,"sharedutil/Quaternion
+Norm/norm(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/sqrt",Sqrt,"sharedutil/Quaternion
+Modulus/sqrt","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus/|q|",Outport,"sharedutil/Quaternion
+Modulus/|q|","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/Quaternion
+Modulus",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize/normal(q)",Outport,"sharedutil/Quaternion
+Normalize/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix/DCM",Outport,"sharedtransform/Quaternions to 
+Direction Cosine Matrix/DCM","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to 
+Direction Cosine Matrix",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles",SubSystem,"sharedtransform/Quaternions to Rotation Angles","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",Quat2Ang
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/q",Inport,"sharedtransform/Quaternions to Rotation Angles/q","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",SubSystem,"sharedtransformsys/Non-Singular","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/q",Inport,"sharedtransformsys/Non-Singular/q","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/r11",Inport,"sharedtransformsys/Non-Singular/r11","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/r12",Inport,"sharedtransformsys/Non-Singular/r12","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/r21",Inport,"sharedtransformsys/Non-Singular/r21","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/In4",Inport,"sharedtransformsys/Non-Singular/In4","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/r32",Inport,"sharedtransformsys/Non-Singular/r32","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input",SubSystem,"sharedtransformsys/Protect asincos input","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/In",Inport,"sharedtransformsys/Protect asincos input/In","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If",If,"sharedtransformsys/Protect asincos input/If","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem",SubSystem,"sharedtransformsys/Protect asincos input/If Action
+Subsystem","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem/Action Port",ActionPort,"sharedtransformsys/Protect asincos input/If Action
+Subsystem/Action Port","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem/Constant",Constant,"sharedtransformsys/Protect asincos input/If Action
+Subsystem/Constant","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem/OutputPos1",Outport,"sharedtransformsys/Protect asincos input/If Action
+Subsystem/OutputPos1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem1",SubSystem,"sharedtransformsys/Protect asincos input/If Action
+Subsystem1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem1/Action Port",ActionPort,"sharedtransformsys/Protect asincos input/If Action
+Subsystem1/Action Port","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem1/Constant",Constant,"sharedtransformsys/Protect asincos input/If Action
+Subsystem1/Constant","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem1/OutputNeg1",Outport,"sharedtransformsys/Protect asincos input/If Action
+Subsystem1/OutputNeg1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem2",SubSystem,"sharedtransformsys/Protect asincos input/If Action
+Subsystem2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem2/In",Inport,"sharedtransformsys/Protect asincos input/If Action
+Subsystem2/In","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem2",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem2/Action Port",ActionPort,"sharedtransformsys/Protect asincos input/If Action
+Subsystem2/Action Port","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem2",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem2/OutOrig",Outport,"sharedtransformsys/Protect asincos input/If Action
+Subsystem2/OutOrig","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action
+Subsystem2",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/Merge",Merge,"sharedtransformsys/Protect asincos input/Merge","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/Out",Outport,"sharedtransformsys/Protect asincos input/Out","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Terminator",Terminator,"sharedtransformsys/Non-Singular/Terminator","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Trigonometric
+Function1",Trigonometry,"sharedtransformsys/Non-Singular/Trigonometric
+Function1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Trigonometric
+Function3",Trigonometry,"sharedtransformsys/Non-Singular/Trigonometric
+Function3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/Vector
+Concatenate",Concatenate,"sharedtransformsys/Non-Singular/Vector
+Concatenate","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/trigFcn",Trigonometry,"sharedtransformsys/Non-Singular/trigFcn","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation/R1,R2,R3",Outport,"sharedtransformsys/Non-Singular/R1,R2,R3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Angle Calculation",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize",SubSystem,"sharedutil/Quaternion
+Normalize","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles",Quaternion Normalize
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/q",Inport,"sharedutil/Quaternion
+Normalize/q","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Demux",Demux,"sharedutil/Quaternion
+Normalize/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Mux",Mux,"sharedutil/Quaternion
+Normalize/Mux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Product",Product,"sharedutil/Quaternion
+Normalize/Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Product1",Product,"sharedutil/Quaternion
+Normalize/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Product2",Product,"sharedutil/Quaternion
+Normalize/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Product3",Product,"sharedutil/Quaternion
+Normalize/Product3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus",SubSystem,"sharedutil/Quaternion
+Modulus","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize",Quaternion Modulus
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/q",Inport,"sharedutil/Quaternion
+Modulus/q","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",SubSystem,"sharedutil/Quaternion
+Norm","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus",Quaternion Norm
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/q",Inport,"sharedutil/Quaternion
+Norm/q","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Demux",Demux,"sharedutil/Quaternion
+Norm/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Product",Product,"sharedutil/Quaternion
+Norm/Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Product1",Product,"sharedutil/Quaternion
+Norm/Product1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Product2",Product,"sharedutil/Quaternion
+Norm/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Product3",Product,"sharedutil/Quaternion
+Norm/Product3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/Sum",Sum,"sharedutil/Quaternion
+Norm/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm/norm(q)",Outport,"sharedutil/Quaternion
+Norm/norm(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/Quaternion
+Norm",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/sqrt",Sqrt,"sharedutil/Quaternion
+Modulus/sqrt","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus/|q|",Outport,"sharedutil/Quaternion
+Modulus/|q|","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/Quaternion
+Modulus",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize/normal(q)",Outport,"sharedutil/Quaternion
+Normalize/normal(q)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/Quaternion
+Normalize",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/fcn1",Fcn,"sharedtransform/Quaternions to Rotation Angles/fcn1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/fcn2",Fcn,"sharedtransform/Quaternions to Rotation Angles/fcn2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/fcn3",Fcn,"sharedtransform/Quaternions to Rotation Angles/fcn3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/fcn4",Fcn,"sharedtransform/Quaternions to Rotation Angles/fcn4","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/fcn5",Fcn,"sharedtransform/Quaternions to Rotation Angles/fcn5","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles/R1,R2,R3",Outport,"sharedtransform/Quaternions to Rotation Angles/R1,R2,R3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Quaternions to Rotation Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",SubSystem,"sharedtransform/Rotation Angles to Quaternions","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",Ang2Quat
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions/R1, R2, R3",Inport,"sharedtransform/Rotation Angles to Quaternions/R1, R2, R3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions/1//2",Gain,"sharedtransform/Rotation Angles to Quaternions/1//2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions/Mux1",Mux,"sharedtransform/Rotation Angles to Quaternions/Mux1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions/Mux2",Mux,"sharedtransform/Rotation Angles to Quaternions/Mux2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions/q0",Fcn,"sharedtransform/Rotation Angles to Quaternions/q0","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions/q1",Fcn,"sharedtransform/Rotation Angles to Quaternions/q1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions/q2",Fcn,"sharedtransform/Rotation Angles to Quaternions/q2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions/q3",Fcn,"sharedtransform/Rotation Angles to Quaternions/q3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions/sincos",Trigonometry,"sharedtransform/Rotation Angles to Quaternions/sincos","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions/Quat",Outport,"sharedtransform/Rotation Angles to Quaternions/Quat","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Rotation Angles to Quaternions",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Selector",Selector,"aerolibobsolete/DCM & Euler Angles (Quaternion)/Selector","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Selector1",Selector,"aerolibobsolete/DCM & Euler Angles (Quaternion)/Selector1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/q0
+q1
+q2
+q3",Integrator,"aerolibobsolete/DCM & Euler Angles (Quaternion)/q0
+q1
+q2
+q3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",SubSystem,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/p
+q
+r",Inport,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/p
+q
+r","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/q0
+q1
+q2
+q3",Inport,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/q0
+q1
+q2
+q3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/Constant",Constant,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/Constant","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/Dot Product",DotProduct,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/Dot Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/High Gain
+Quaternion
+Normalization",Gain,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/High Gain
+Quaternion
+Normalization","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/Mux1",Mux,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/Mux1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/Mux2",Mux,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/Mux2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/Sum",Sum,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/q0dot",Fcn,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/q0dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/q1dot",Fcn,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/q1dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/q2dot",Fcn,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/q2dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/q3dot",Fcn,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/q3dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot/qdot",Outport,"aerolibobsolete/DCM & Euler Angles (Quaternion)/qdot/qdot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/qdot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/DCM",Outport,"aerolibobsolete/DCM & Euler Angles (Quaternion)/DCM","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles/Euler",Outport,"aerolibobsolete/DCM & Euler Angles (Quaternion)/Euler","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate DCM &
+Euler Angles",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",SubSystem,"shared6dofsys/Calculate omega_dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/p q r",Inport,"shared6dofsys/Calculate omega_dot/p q r","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I, I_dot",Inport,"shared6dofsys/Calculate omega_dot/I, I_dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/Moments",Inport,"shared6dofsys/Calculate omega_dot/Moments","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product",SubSystem,"sharedutil/3x3 Cross Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",CrossProduct
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/A",Inport,"sharedutil/3x3 Cross Product/A","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/B",Inport,"sharedutil/3x3 Cross Product/B","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/A ",InportShadow,"sharedutil/3x3 Cross Product/A ","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/B ",InportShadow,"sharedutil/3x3 Cross Product/B ","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem",SubSystem,"sharedutil/3x3 Cross Product/Subsystem","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem/A",Inport,"sharedutil/3x3 Cross Product/Subsystem/A","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem/B",Inport,"sharedutil/3x3 Cross Product/Subsystem/B","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem/Demux",Demux,"sharedutil/3x3 Cross Product/Subsystem/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem/Demux1",Demux,"sharedutil/3x3 Cross Product/Subsystem/Demux1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem/Mux",Mux,"sharedutil/3x3 Cross Product/Subsystem/Mux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem/i x j",Product,"sharedutil/3x3 Cross Product/Subsystem/i x j","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem/j x k",Product,"sharedutil/3x3 Cross Product/Subsystem/j x k","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem/k x i",Product,"sharedutil/3x3 Cross Product/Subsystem/k x i","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem/Out1",Outport,"sharedutil/3x3 Cross Product/Subsystem/Out1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1",SubSystem,"sharedutil/3x3 Cross Product/Subsystem1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1/A",Inport,"sharedutil/3x3 Cross Product/Subsystem1/A","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1/B",Inport,"sharedutil/3x3 Cross Product/Subsystem1/B","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1/Demux",Demux,"sharedutil/3x3 Cross Product/Subsystem1/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1/Demux1",Demux,"sharedutil/3x3 Cross Product/Subsystem1/Demux1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1/Mux",Mux,"sharedutil/3x3 Cross Product/Subsystem1/Mux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1/i x k",Product,"sharedutil/3x3 Cross Product/Subsystem1/i x k","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1/j x i",Product,"sharedutil/3x3 Cross Product/Subsystem1/j x i","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1/k x j",Product,"sharedutil/3x3 Cross Product/Subsystem1/k x j","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1/Out1",Outport,"sharedutil/3x3 Cross Product/Subsystem1/Out1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/Sum",Sum,"sharedutil/3x3 Cross Product/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product/C",Outport,"sharedutil/3x3 Cross Product/C","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/3x3 Cross Product",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w",SubSystem,"shared6dofsys/Calculate omega_dot/I x w","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w/p q r",Inport,"shared6dofsys/Calculate omega_dot/I x w/p q r","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w/Inertia",Inport,"shared6dofsys/Calculate omega_dot/I x w/Inertia","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w/Product",Product,"shared6dofsys/Calculate omega_dot/I x w/Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w/Reshape1",Reshape,"shared6dofsys/Calculate omega_dot/I x w/Reshape1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w/Reshape2",Reshape,"shared6dofsys/Calculate omega_dot/I x w/Reshape2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w/I * w",Outport,"shared6dofsys/Calculate omega_dot/I x w/I * w","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1",SubSystem,"shared6dofsys/Calculate omega_dot/I x w1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1/I_dot",Inport,"shared6dofsys/Calculate omega_dot/I x w1/I_dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1/p q r",Inport,"shared6dofsys/Calculate omega_dot/I x w1/p q r","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1/Product",Product,"shared6dofsys/Calculate omega_dot/I x w1/Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1/Reshape1",Reshape,"shared6dofsys/Calculate omega_dot/I x w1/Reshape1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1/Reshape2",Reshape,"shared6dofsys/Calculate omega_dot/I x w1/Reshape2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1/Id * w",Outport,"shared6dofsys/Calculate omega_dot/I x w1/Id * w","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/I x w1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/Product2",Product,"shared6dofsys/Calculate omega_dot/Product2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/Reshape",Reshape,"shared6dofsys/Calculate omega_dot/Reshape","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/Reshape1",Reshape,"shared6dofsys/Calculate omega_dot/Reshape1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/Selector",Selector,"shared6dofsys/Calculate omega_dot/Selector","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/Selector1",Selector,"shared6dofsys/Calculate omega_dot/Selector1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/Selector2",Selector,"shared6dofsys/Calculate omega_dot/Selector2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/Sum2",Sum,"shared6dofsys/Calculate omega_dot/Sum2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot/pdot qdot rdot",Outport,"shared6dofsys/Calculate omega_dot/pdot qdot rdot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Calculate omega_dot",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",SubSystem,"aerolibobsolete/Mass & Inertia (fixed)6DoF","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",Mass & Inertia (fixed)
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/Vb",Inport,"aerolibobsolete/Mass & Inertia (fixed)6DoF/Vb","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/forces",Inport,"aerolibobsolete/Mass & Inertia (fixed)6DoF/forces","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/mass ",Inport,"aerolibobsolete/Mass & Inertia (fixed)6DoF/mass ","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/m_dot",Inport,"aerolibobsolete/Mass & Inertia (fixed)6DoF/m_dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/I",Inport,"aerolibobsolete/Mass & Inertia (fixed)6DoF/I","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/I_dot",Inport,"aerolibobsolete/Mass & Inertia (fixed)6DoF/I_dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/Constant",Constant,"aerolibobsolete/Mass & Inertia (fixed)6DoF/Constant","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/Constant1",Constant,"aerolibobsolete/Mass & Inertia (fixed)6DoF/Constant1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/Ground",Ground,"aerolibobsolete/Mass & Inertia (fixed)6DoF/Ground","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/Terminator",Terminator,"aerolibobsolete/Mass & Inertia (fixed)6DoF/Terminator","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/Terminator1",Terminator,"aerolibobsolete/Mass & Inertia (fixed)6DoF/Terminator1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/Terminator2",Terminator,"aerolibobsolete/Mass & Inertia (fixed)6DoF/Terminator2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/Terminator3",Terminator,"aerolibobsolete/Mass & Inertia (fixed)6DoF/Terminator3","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/Terminator4",Terminator,"aerolibobsolete/Mass & Inertia (fixed)6DoF/Terminator4","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/forces ",Outport,"aerolibobsolete/Mass & Inertia (fixed)6DoF/forces ","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/mass",Outport,"aerolibobsolete/Mass & Inertia (fixed)6DoF/mass","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/inertia, 0",Outport,"aerolibobsolete/Mass & Inertia (fixed)6DoF/inertia, 0","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia/Out9",Outport,"aerolibobsolete/Mass & Inertia (fixed)6DoF/Out9","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Determine Force, 
+Mass & Inertia",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/I",Ground,"aerolibobsolete/6DoF (Euler Angles)/I","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/I_dot",Ground,"aerolibobsolete/6DoF (Euler Angles)/I_dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Out9",Terminator,"aerolibobsolete/6DoF (Euler Angles)/Out9","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Product",Product,"aerolibobsolete/6DoF (Euler Angles)/Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Sum",Sum,"aerolibobsolete/6DoF (Euler Angles)/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Transpose",Math,"aerolibobsolete/6DoF (Euler Angles)/Transpose","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw",SubSystem,"sharedutil/3x3 Cross Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",CrossProduct
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/A",Inport,"sharedutil/3x3 Cross Product/A","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/B",Inport,"sharedutil/3x3 Cross Product/B","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/A ",InportShadow,"sharedutil/3x3 Cross Product/A ","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/B ",InportShadow,"sharedutil/3x3 Cross Product/B ","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem",SubSystem,"sharedutil/3x3 Cross Product/Subsystem","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem/A",Inport,"sharedutil/3x3 Cross Product/Subsystem/A","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem/B",Inport,"sharedutil/3x3 Cross Product/Subsystem/B","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem/Demux",Demux,"sharedutil/3x3 Cross Product/Subsystem/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem/Demux1",Demux,"sharedutil/3x3 Cross Product/Subsystem/Demux1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem/Mux",Mux,"sharedutil/3x3 Cross Product/Subsystem/Mux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem/i x j",Product,"sharedutil/3x3 Cross Product/Subsystem/i x j","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem/j x k",Product,"sharedutil/3x3 Cross Product/Subsystem/j x k","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem/k x i",Product,"sharedutil/3x3 Cross Product/Subsystem/k x i","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem/Out1",Outport,"sharedutil/3x3 Cross Product/Subsystem/Out1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1",SubSystem,"sharedutil/3x3 Cross Product/Subsystem1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1/A",Inport,"sharedutil/3x3 Cross Product/Subsystem1/A","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1/B",Inport,"sharedutil/3x3 Cross Product/Subsystem1/B","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1/Demux",Demux,"sharedutil/3x3 Cross Product/Subsystem1/Demux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1/Demux1",Demux,"sharedutil/3x3 Cross Product/Subsystem1/Demux1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1/Mux",Mux,"sharedutil/3x3 Cross Product/Subsystem1/Mux","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1/i x k",Product,"sharedutil/3x3 Cross Product/Subsystem1/i x k","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1/j x i",Product,"sharedutil/3x3 Cross Product/Subsystem1/j x i","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1/k x j",Product,"sharedutil/3x3 Cross Product/Subsystem1/k x j","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1/Out1",Outport,"sharedutil/3x3 Cross Product/Subsystem1/Out1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Subsystem1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/Sum",Sum,"sharedutil/3x3 Cross Product/Sum","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw/C",Outport,"sharedutil/3x3 Cross Product/C","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vbxw",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion",SubSystem,"aerolibconvert2/Velocity Conversion","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",Velocity Conversion
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion/In1",Inport,"aerolibconvert2/Velocity Conversion/In1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion/Disallow CGS",UnitConfiguration,"aerolibconvert2/Velocity Conversion/Disallow CGS","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion/Unit Conversion",UnitConversion,"aerolibconvert2/Velocity Conversion/Unit Conversion","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion/Out1",Outport,"aerolibconvert2/Velocity Conversion/Out1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion1",SubSystem,"aerolibconvert2/Velocity Conversion","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",Velocity Conversion
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion1/In1",Inport,"aerolibconvert2/Velocity Conversion/In1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion1/Disallow CGS",UnitConfiguration,"aerolibconvert2/Velocity Conversion/Disallow CGS","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion1/Unit Conversion",UnitConversion,"aerolibconvert2/Velocity Conversion/Unit Conversion","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion1/Out1",Outport,"aerolibconvert2/Velocity Conversion/Out1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Velocity Conversion1",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/m_dot",Ground,"aerolibobsolete/6DoF (Euler Angles)/m_dot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/mass",Ground,"aerolibobsolete/6DoF (Euler Angles)/mass","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/p,q,r ",Integrator,"aerolibobsolete/6DoF (Euler Angles)/p,q,r ","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes ",SubSystem,"aerolibobsolete/6DoF (Euler Angles)/transform to
+Inertial axes ","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",Vector Transformation
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes /x
+y
+z",Inport,"aerolibobsolete/6DoF (Euler Angles)/transform to
+Inertial axes /x
+y
+z","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes ",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes /transform
+coefficients",Inport,"aerolibobsolete/6DoF (Euler Angles)/transform to
+Inertial axes /transform
+coefficients","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes ",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes /Product",Product,"aerolibobsolete/6DoF (Euler Angles)/transform to
+Inertial axes /Product","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes ",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes /Reshape1",Reshape,"aerolibobsolete/6DoF (Euler Angles)/transform to
+Inertial axes /Reshape1","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes ",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes /Reshape2",Reshape,"aerolibobsolete/6DoF (Euler Angles)/transform to
+Inertial axes /Reshape2","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes ",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes /Ve",Outport,"aerolibobsolete/6DoF (Euler Angles)/transform to
+Inertial axes /Ve","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/transform to
+Inertial axes ",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/ub,vb,wb",Integrator,"aerolibobsolete/6DoF (Euler Angles)/ub,vb,wb","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/xe,ye,ze",Integrator,"aerolibobsolete/6DoF (Euler Angles)/xe,ye,ze","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Ve",Outport,"aerolibobsolete/6DoF (Euler Angles)/Ve","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Xe",Outport,"aerolibobsolete/6DoF (Euler Angles)/Xe","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Euler",Outport,"aerolibobsolete/6DoF (Euler Angles)/Euler","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/DCM",Outport,"aerolibobsolete/6DoF (Euler Angles)/DCM","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Vb",Outport,"aerolibobsolete/6DoF (Euler Angles)/Vb","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/p,q,r",Outport,"aerolibobsolete/6DoF (Euler Angles)/p,q,r","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/pdot,qdot,rdot",Outport,"aerolibobsolete/6DoF (Euler Angles)/pdot,qdot,rdot","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)/Ab",Outport,"aerolibobsolete/6DoF (Euler Angles)/Ab","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/6DoF (Quaternion)",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/Terminator",Terminator,"aerolibprivatev1p5/6DoF (Quaternion)/Terminator","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/Ve
+(m//s)",Outport,"aerolibprivatev1p5/6DoF (Quaternion)/Ve
+(m//s)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/Xe
+(m)",Outport,"aerolibprivatev1p5/6DoF (Quaternion)/Xe
+(m)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/Euler
+(rad)",Outport,"aerolibprivatev1p5/6DoF (Quaternion)/Euler
+(rad)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/DCM",Outport,"aerolibprivatev1p5/6DoF (Quaternion)/DCM","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/Vb
+(m//s)",Outport,"aerolibprivatev1p5/6DoF (Quaternion)/Vb
+(m//s)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/p,q,r
+(rad//s)",Outport,"aerolibprivatev1p5/6DoF (Quaternion)/p,q,r
+(rad//s)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF/pdot,qdot,rdot
+(rad//s^2)",Outport,"aerolibprivatev1p5/6DoF (Quaternion)/pdot,qdot,rdot
+(rad//s^2)","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Aircraft_6DOF",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Cross_1_1",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Cross_1_2",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Cross_2_1",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Cross_2_2",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Cross_3_1",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Cross_3_2",Product,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Cross_component_1",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Cross_component_2",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Cross_component_3",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/H_components",Demux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Omega_components",Demux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Omega_cross_H",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Total_equivalent_moment",Sum,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Zero_H",Constant,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Ve",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Xe",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Euler",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/DCM",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/Vb",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/omega",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant/omega_dot",Outport,"","NearSpace_CMG_FlightControl_SurfaceOnly/Native_Plant",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Online_RTI_HPIPM",M-S-Function,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/State_feedback",Mux,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/Surface_control_allocation",M-S-Function,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/commands",ToWorkspace,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/flight_conditions",ToWorkspace,"","NearSpace_CMG_FlightControl_SurfaceOnly",
+"NearSpace_CMG_FlightControl_SurfaceOnly/states",ToWorkspace,"","NearSpace_CMG_FlightControl_SurfaceOnly",

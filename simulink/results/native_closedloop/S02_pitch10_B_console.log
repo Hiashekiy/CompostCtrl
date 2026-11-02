@@ -1,0 +1,5 @@
+[����: The model name 'NearSpace_CMG_AttitudeValidation_S02_pitch10' is shadowing another name in the MATLAB workspace or path. Type "which -all
+NearSpace_CMG_AttitudeValidation_S02_pitch10" at the command line to find the other uses of this name. You should change the name of the model to avoid problems.] 
+[> λ�ã�build_native_closedloop (�� 14 ��)] 
+ONLINE_MPC fallbacks=0
+NATIVE_CLOSEDLOOP_PASS duration=60

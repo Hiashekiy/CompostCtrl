@@ -1,0 +1,22 @@
+{
+  "name": "Betts shuttle-like reentry surrogate",
+  "source": "https://jump.dev/JuMP.jl/stable/tutorials/nonlinear/space_shuttle_reentry_trajectory/",
+  "corroborating_source": "https://openmdao.github.io/dymos/examples/reentry/reentry.html",
+  "original_reference": "Betts, Practical Methods for Optimal Control and Estimation Using Nonlinear Programming (2010)",
+  "coefficient_angle_unit": "degree; Simulink table breakpoint unit radian",
+  "chosen_alpha_domain_deg": [
+    -40,
+    40
+  ],
+  "domain_note": "Chosen guard interval inside the public Dymos benchmark control bounds [-90,90] deg; not experimental vehicle validity",
+  "limitations": [
+    "Not identified for this 1200 kg vehicle",
+    "No Mach/Reynolds dependence",
+    "CY=0 is an added symmetry assumption; no lateral-force validation",
+    "Force polar only; existing moment model remains separate",
+    "Zero thrust represents unpowered glide, not a powered vehicle engine",
+    "Outside alpha domain must raise a diagnostic; do not silently extrapolate"
+  ],
+  "propulsion": "Unpowered glide: thrust=0",
+  "status": "PUBLIC_SURROGATE_FOR_ENGINEERING_INTEGRATION_ONLY"
+}

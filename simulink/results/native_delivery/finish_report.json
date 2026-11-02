@@ -1,0 +1,11 @@
+{
+  "status": "RUNNABLE_DELIVERY_WITH_VALIDATION_GAPS",
+  "p0_runs": 16,
+  "limitations": [
+    "P0 closed-loop metrics differ from historical Python; full trajectory equivalence not accepted",
+    "Public aerodynamic surrogate, not identified airframe",
+    "ABC and uncertainty campaigns not completed",
+    "Direct attitude reference mode only",
+    "GUI parameter screenshots unavailable after capture timeouts"
+  ]
+}

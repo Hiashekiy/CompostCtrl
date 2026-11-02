@@ -1,0 +1,53 @@
+{
+  "A_surrogate_flight_2s": {
+    "duration_s": 2,
+    "max_attitude_error_deg": 0.00017917859306515571,
+    "rms_attitude_error_deg": 9.2696418786552E-5,
+    "final_attitude_error_deg": 5.6219552182940477E-5,
+    "finite": true,
+    "alpha_min_deg": 1.7934427037901353,
+    "alpha_max_deg": 2.0000000000000013,
+    "qbar_min_Pa": 14.836256291878257,
+    "qbar_max_Pa": 18.147390362318525
+  },
+  "A_surrogate_flight_60s": {
+    "duration_s": 60,
+    "max_attitude_error_deg": 15.317285763404287,
+    "rms_attitude_error_deg": 6.2454376898758364,
+    "final_attitude_error_deg": 15.317285763404287,
+    "finite": true,
+    "alpha_min_deg": -0.29444652384699355,
+    "alpha_max_deg": 33.106717514510073,
+    "qbar_min_Pa": 0.54736835069864875,
+    "qbar_max_Pa": 18.147390362318525
+  },
+  "B_surrogate_flight_10s": {
+    "duration_s": 10,
+    "max_attitude_error_deg": 0.004180115182396903,
+    "rms_attitude_error_deg": 0.0017340140630523028,
+    "final_attitude_error_deg": 0.004180115182396903,
+    "finite": true
+  },
+  "B_surrogate_flight_2s": {
+    "duration_s": 2,
+    "max_attitude_error_deg": 0.00071797439816146931,
+    "rms_attitude_error_deg": 0.00050649321843762379,
+    "final_attitude_error_deg": 0.00049217958805482947,
+    "finite": true,
+    "alpha_min_deg": 1.7933828822762603,
+    "alpha_max_deg": 2.0000000000000013,
+    "qbar_min_Pa": 14.836256292035008,
+    "qbar_max_Pa": 18.147390362318525
+  },
+  "B_surrogate_flight_60s": {
+    "duration_s": 60,
+    "max_attitude_error_deg": 2.4492937631767133,
+    "rms_attitude_error_deg": 1.1806424605403989,
+    "final_attitude_error_deg": 2.1169118176614723,
+    "finite": true,
+    "alpha_min_deg": -1.283993545735858,
+    "alpha_max_deg": 24.779958024246262,
+    "qbar_min_Pa": 0.54737491494174173,
+    "qbar_max_Pa": 18.147390362318525
+  }
+}
