@@ -1,0 +1,48 @@
+{
+  "status": "PYTHON_REFERENCE_VALIDATED_SIMULINK_PENDING",
+  "seed": 20261102,
+  "sources": [
+    {
+      "path": "configs/torque_gap_s08/cases/A4_descent_replay_S00_with_cmg.yaml",
+      "sha256": "f78146f4bcc9938f75bbd4489a201e29722ec27b89795fc8aa1bb9c7ed5a6c32"
+    },
+    {
+      "path": "configs/torque_gap_s08/scenarios/A4_descent_replay_S00.yaml",
+      "sha256": "dfa9600161715b0e9fb42596492869baf7143edb74a52becaf8f40ad5c493cba"
+    },
+    {
+      "path": "configs/torque_gap_s08/base.yaml",
+      "sha256": "47c9b73135a1fa010a6e5b5256e22e3f775ed8edd4dc22664f4d2d9e2decdb05"
+    },
+    {
+      "path": "configs/torque_gap_no_cmg_comparison/base.yaml",
+      "sha256": "adefb09d27034e82ce0fed40be24c84ba10ec1a4cec3f22c9a11bd97fbbbe526"
+    },
+    {
+      "path": "configs/torque_gap_m50/cases/c1_pitch30.yaml",
+      "sha256": "218786f5ef31523fd87dbb3b4dbefec06570624646a62490a28baf8e1c415439"
+    },
+    {
+      "path": "configs/torque_gap_unlimited/cases/c1_pitch30.yaml",
+      "sha256": "55c90f0fc20bf45a80ba6b40a495d53112eb1789894550f66b0be92f5cde1a81"
+    },
+    {
+      "path": "configs/torque_gap/cases/c1_pitch30.yaml",
+      "sha256": "e1b055a52644ee901a1e4a3d58bbb71392470e639cb7de298e09f22165da2ae0"
+    },
+    {
+      "path": "configs/torque_gap/base.yaml",
+      "sha256": "9eb795ea67bf6055e6c152809e40fe5d4f80d77ee66e0c5296f4cd35fb37aae1"
+    },
+    {
+      "path": "config.yaml",
+      "sha256": "7559c804a227f5cb0e5265920d8a824c925843d747e28136306b504cdbcdac11"
+    }
+  ],
+  "samples_cmg": 67,
+  "samples_aerodynamic": 96,
+  "jacobian_fd_max_error": 4.214528104284909e-08,
+  "momentum_periodic_max_error": 1.8503571613294467e-13,
+  "equivalent_moment_acceleration_error": 1.5265566588595902e-16,
+  "aerodynamic_decomposition_error": 5.820766091346741e-11
+}
