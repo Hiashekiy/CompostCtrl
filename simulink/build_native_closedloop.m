@@ -15,7 +15,8 @@ new_system(m);set_param(m,'SolverType','Fixed-step','Solver','ode4','FixedStep',
  'ReturnWorkspaceOutputs','on','SaveFormat','Dataset');
 mw=get_param(m,'ModelWorkspace');
 if enabled,template_file='production_online_qp.mat';else,template_file='production_online_A_qp.mat';end
-assignin(mw,'native_controller_template',load(fullfile(root,'simulink','tests','05_python_matlab_qp_equivalence',template_file)));
+template=load(fullfile(root,'simulink','tests','05_python_matlab_qp_equivalence',template_file));
+assignin(mw,'native_controller_template',template);
 assignin(mw,'native_reference_bank',bank);
 add_block('built-in/SubSystem',[m '/Native_Plant'],'Position',[500 60 770 330]);
 Simulink.BlockDiagram.copyContentsToSubsystem(plant,[m '/Native_Plant']);
@@ -23,29 +24,14 @@ q=bank.x0(1:4);w=q(1);x=q(2);y=q(3);z=q(4);
 eul=[atan2(2*(w*x+y*z),1-2*(x*x+y*y));asin(2*(w*y-z*x));atan2(2*(w*z+x*y),1-2*(y*y+z*z))];
 set_param([m '/Native_Plant/Aircraft_6DOF'],'pm_0',mat2str(bank.x0(5:7),17),'eul_0',mat2str(eul,17));
 if enabled,set_param([m '/Native_Plant/CMG/Drive/Unwrapped_gamma'],'InitialCondition',mat2str(bank.x0(8:11),17));end
-if enabled && ~flight,configure_ideal_p0_drive([m '/Native_Plant/CMG/Drive'],bank.x0(8:11));end
+if enabled && ~flight,configure_ideal_p0_drive([m '/Native_Plant/CMG/Drive'],bank.x0(8:11),template.gdot);end
+if enabled,assert_connected([m '/Native_Plant/CMG']);end
 add_block('simulink/User-Defined Functions/Level-2 MATLAB S-Function',[m '/Online_RTI_HPIPM'],'FunctionName','native_mpc_sfun','Position',[90 60 280 145]);
 if enabled,outputs='[3 4]';n='3';else,outputs='3';n='2';end
 if enabled
  add_block('built-in/Demux',[m '/Control_split'],'Outputs',outputs,'Position',[340 65 345 145]);
 else
  add_block('built-in/Gain',[m '/Control_split'],'Gain','1','Position',[330 65 370 105]);
-end
-function configure_ideal_p0_drive(path,gamma0)
-% P0 uses commanded rate directly; P1 retains the independently tested drive.
-Simulink.SubSystem.deleteContents(path);
-add_block('built-in/Inport',[path '/command'],'PortDimensions','4','Position',[20 60 50 80]);
-add_block('built-in/Saturate',[path '/Rate_limit'],'UpperLimit','1','LowerLimit','-1','Position',[100 50 175 90]);
-add_block('built-in/UnitDelay',[path '/Unwrapped_gamma'],'InitialCondition',mat2str(gamma0,17),'SampleTime','.001','Position',[300 180 390 220]);
-add_block('built-in/Gain',[path '/Angle_increment'],'Gain','.001','Position',[220 80 280 115]);
-add_block('built-in/Sum',[path '/Next_gamma'],'Inputs','++','Position',[340 80 370 115]);
-add_block('built-in/Constant',[path '/Ideal_acceleration_diagnostic'],'Value','zeros(4,1)','Position',[100 280 230 315]);
-for k=1:3
- names={'actual','derivative','gamma'};add_block('built-in/Outport',[path '/' names{k}],'Port',num2str(k),'Position',[470 70*k 500 70*k+20]);
-end
-add_line(path,'command/1','Rate_limit/1');add_line(path,'Rate_limit/1','actual/1');add_line(path,'Rate_limit/1','Angle_increment/1');
-add_line(path,'Angle_increment/1','Next_gamma/1');add_line(path,'Unwrapped_gamma/1','Next_gamma/2');add_line(path,'Next_gamma/1','Unwrapped_gamma/1');
-add_line(path,'Unwrapped_gamma/1','gamma/1');add_line(path,'Ideal_acceleration_diagnostic/1','derivative/1');
 end
 add_line(m,'Online_RTI_HPIPM/1','Control_split/1');add_line(m,'Control_split/1','Native_Plant/1');if enabled,add_line(m,'Control_split/2','Native_Plant/4');end
 add_block('built-in/Mux',[m '/State_feedback'],'Inputs',n,'Position',[840 150 845 275]);
@@ -97,5 +83,72 @@ save(fullfile(out,sprintf('%s_%s_%gs%s.mat',arm,tag,duration,suffix)),'r');save_
 Simulink.BlockDiagram.arrangeSystem(m);
 set_param(m,'InitFcn','native_startup;');
 save_system(m);
-print(['-s' m],'-dpng',fullfile(out,'model.png'));close_system(m,0);fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g\n',duration);
+try,print(['-s' m],'-dpng',fullfile(out,'model.png'));catch,warning('model screenshot skipped');end
+close_system(m,0);fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g\n',duration);
+end
+
+function configure_ideal_p0_drive(path,gamma0,gdot)
+% P0 executes the commanded gimbal rate directly; P1/flight keeps the tested drive.
+% Simulink.SubSystem.deleteContents also deletes the parent-level lines attached to
+% this subsystem's ports.  They are captured first and restored afterwards, because
+% an unconnected drive leaves the gimbals frozen at gamma0: the CMG then produces no
+% reaction torque while the MPC still optimises the four rate commands.
+parent=get_param(path,'Parent');
+ph=get_param(path,'PortHandles');
+out_targets=cell(1,numel(ph.Outport));in_sources=cell(1,numel(ph.Inport));
+for k=1:numel(ph.Outport)
+ line=get_param(ph.Outport(k),'Line');
+ if line>0,out_targets{k}=get_param(line,'DstPortHandle');end
+end
+for k=1:numel(ph.Inport)
+ line=get_param(ph.Inport(k),'Line');
+ if line>0,in_sources{k}=get_param(line,'SrcPortHandle');end
+end
+Simulink.SubSystem.deleteContents(path);
+add_block('built-in/Inport',[path '/command'],'PortDimensions','4','Position',[20 60 50 80]);
+add_block('built-in/Saturate',[path '/Rate_limit'],'UpperLimit',num2str(gdot,17), ...
+ 'LowerLimit',num2str(-gdot,17),'Position',[100 50 175 90]);
+add_block('built-in/UnitDelay',[path '/Unwrapped_gamma'],'InitialCondition',mat2str(gamma0,17),'SampleTime','.001','Position',[300 180 390 220]);
+add_block('built-in/Gain',[path '/Angle_increment'],'Gain','.001','Position',[220 80 280 115]);
+add_block('built-in/Sum',[path '/Next_gamma'],'Inputs','++','Position',[340 80 370 115]);
+add_block('built-in/Constant',[path '/Ideal_acceleration_diagnostic'],'Value','zeros(4,1)','Position',[100 280 230 315]);
+for k=1:3
+ names={'actual','derivative','gamma'};add_block('built-in/Outport',[path '/' names{k}],'Port',num2str(k),'Position',[470 70*k 500 70*k+20]);
+end
+add_line(path,'command/1','Rate_limit/1');add_line(path,'Rate_limit/1','actual/1');add_line(path,'Rate_limit/1','Angle_increment/1');
+add_line(path,'Angle_increment/1','Next_gamma/1');add_line(path,'Unwrapped_gamma/1','Next_gamma/2');add_line(path,'Next_gamma/1','Unwrapped_gamma/1');
+add_line(path,'Unwrapped_gamma/1','gamma/1');add_line(path,'Ideal_acceleration_diagnostic/1','derivative/1');
+ph=get_param(path,'PortHandles');
+for k=1:numel(out_targets)
+ for h=reshape(out_targets{k},1,[])
+  if h<=0,continue;end
+  % deleteContents leaves the destination segments dangling; remove them first.
+  line=get_param(h,'Line');
+  if line>0,delete_line(line);end
+  add_line(parent,ph.Outport(k),h,'autorouting','on');
+ end
+end
+for k=1:numel(in_sources)
+ if isempty(in_sources{k}) || in_sources{k}(1)<=0,continue;end
+ line=get_param(ph.Inport(k),'Line');
+ if line>0,delete_line(line);end
+ add_line(parent,in_sources{k}(1),ph.Inport(k),'autorouting','on');
+end
+for k=1:numel(ph.Outport)
+ assert(get_param(ph.Outport(k),'Line')>0,'%s: output port %d is unconnected',path,k);
+end
+for k=1:numel(ph.Inport)
+ assert(get_param(ph.Inport(k),'Line')>0,'%s: input port %d is unconnected',path,k);
+end
+end
+function assert_connected(path)
+% Fail at build time instead of silently running an inert actuator.
+for type={'Inport','Outport'}
+ blocks=find_system(path,'SearchDepth',1,'BlockType',type{1});
+ for i=1:numel(blocks)
+  lh=get_param(blocks{i},'LineHandles');
+  if strcmp(type{1},'Inport'),h=lh.Outport;else,h=lh.Inport;end
+  assert(h>0,'%s: %s %s is unconnected',path,get_param(blocks{i},'Name'),type{1});
+ end
+end
 end

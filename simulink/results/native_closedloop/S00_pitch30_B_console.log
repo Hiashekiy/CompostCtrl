@@ -1,5 +1,19 @@
+Unable to load ApplicationService for command `client-v1`
+Unable to load ApplicationService for command `client-v1`
+Unable to load ApplicationService for command `client-v1`
+Unable to load ApplicationService for command `client-v1`
+Unable to load ApplicationService for command `client-v1`
+Unable to load ApplicationService for command `client-v1`
+Unable to load ApplicationService for command `client-v1`
 [����: The model name 'NearSpace_CMG_AttitudeValidation_S00_pitch30' is shadowing another name in the MATLAB workspace or path. Type "which -all
 NearSpace_CMG_AttitudeValidation_S00_pitch30" at the command line to find the other uses of this name. You should change the name of the model to avoid problems.] 
 [> λ�ã�build_native_closedloop (�� 14 ��)] 
+Unable to load ApplicationService for command `client-v1`
+Unable to load ApplicationService for command `client-v1`
+Unable to load ApplicationService for command `client-v1`
 ONLINE_MPC fallbacks=0
+[����: model screenshot skipped] 
+[> λ�ã�build_native_closedloop (�� 86 ��)] 
 NATIVE_CLOSEDLOOP_PASS duration=60
+Unable to load ApplicationService for command `client-v1`
+Unable to load ApplicationService for command `client-v1`

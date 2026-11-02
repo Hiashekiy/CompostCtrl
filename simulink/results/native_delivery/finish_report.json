@@ -2,7 +2,7 @@
   "status": "RUNNABLE_DELIVERY_WITH_VALIDATION_GAPS",
   "p0_runs": 16,
   "limitations": [
-    "P0 closed-loop metrics differ from historical Python; full trajectory equivalence not accepted",
+    "P0 B-arm CMG drive disconnection found and fixed (docs/simulink/08); residual gap to the Python baseline is integration scheme and disturbance sampling, no pointwise trajectory equivalence",
     "Public aerodynamic surrogate, not identified airframe",
     "ABC and uncertainty campaigns not completed",
     "Direct attitude reference mode only",

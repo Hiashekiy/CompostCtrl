@@ -35,12 +35,15 @@ check_native_integrations;
 check_native_allocation;
 check_native_assembly;
 check_native_rti;
+check_cmg_actuation;      % P0 B 组：框架角必须真的移动（惰性执行机构的回归门）
 ```
 
 Python 原始参考导出与批量实验入口在 `simulink/py/`。八组 A/B 回归入口为 `python simulink/py/run_native_p0_matrix.py`，支持断点续跑。
+单工况快速复核（不写进度缓存）：`check_p0_case('S00_pitch30',true)`。
 
 ## 交付边界
 
 公开升阻极曲线是工程替代，不是当前飞行器的辨识结果；侧向系数假设为零，推力为零，代表无动力滑翔。
 当前为直接姿态参考模式；没有完成自主位置/速度制导、实时部署、代码生成或真实飞行器全包线认证。
+八组 P0 A/B 指标与历史 Python 同量级；P0 B 组曾因框架驱动接线丢失而整段失效，已修复并加回归门，详见 `docs/simulink/08_closed_loop_validation.md`。
 名义未来环境与实际平动的预测更新、ABC 机制实验、鲁棒性实验及 GUI 参数截图的状态见 `docs/simulink/08_closed_loop_validation.md` 和最终验收报告。

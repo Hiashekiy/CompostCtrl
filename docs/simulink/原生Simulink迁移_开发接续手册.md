@@ -35,7 +35,9 @@
 
 ### 1.2 不能视为已经完成的内容
 
-**P0 闭环与历史 Python 指标仍有明显差异，精度一致性没有验收通过。** 单步/固定 QP 对照通过、运行不报错、零回退，不能替代全闭环一致性证明。
+**P0 闭环已与历史 Python 同量级，但精度一致性仍未验收通过。** 八组 A/B 的最大/RMS 与 Python 对照见 `09_ab_experiment_report.md`：
+修复 1.4 的缺陷后 B 组从 3–40 度回落到与 Python 同一量级，A 组逐条吻合。剩余差异来自真值积分格式与扰动采样（见 `08_closed_loop_validation.md` 末节），
+逐点轨迹等价、控制序列回放、步长收敛与敏感性分析均未完成。单步/固定 QP 对照通过、运行不报错、零回退，不能替代全闭环一致性证明。
 
 还没有完成：ABC 预测机制完整实验、多初态/参数不确定性完整实验、自主位置速度制导、依据实际飞行反馈重建全部未来预测环境、GUI 参数对话框截图、实时部署和代码生成验收。
 
@@ -51,6 +53,16 @@
 | 旧 S08 移植 | `simulink/README.md`、`s08_startup.m`、`open_case.m`、`run_case.m` | 历史方案含 Python/TCP 与封装植物 S-Function |
 
 开发原生主链不需要启动旧 `ctrl_server.py`。旧结果保留供回归比较。
+
+### 1.4 P0 B 组曾整段失效的缺陷（已修复，勿回退）
+
+P0（`flight=false`）用 `configure_ideal_p0_drive` 把实测过的框架驱动换成理想速率执行。
+`Simulink.SubSystem.deleteContents` 会同时删掉该子系统端口在父系统上的连线，重建后驱动块与
+CMG 内部完全断开：`nu` 不到框架、`gamma` 恒为初值、`tau_CMG≡0`、`H≡H(0)=0`。
+模型仍能编译、仿真、零回退，缺陷表现为“B 组比 A 组还差”。修复方式是删前记录端口连线、
+删后清理悬空线段并重连，再加构建期端口断言；`simulink/check_cmg_actuation.m` 是专用回归门。
+改动任何“替换子系统内容”的建模代码时，必须保留“删除会带走父级连线”这条经验。
+完整证据与修复前后指标见 `08_closed_loop_validation.md`。
 
 ## 2. 环境与第一次运行
 
@@ -150,6 +162,7 @@ flowchart LR
 | case_name | 可选工况后缀；省略时重建默认模型，可能覆盖现有同名 SLX |
 
 P0 构建器会改写复制进去的 `CMG/Drive` 为理想速率执行加角积分。其“加速度诊断零输出”不是实际物理加速度，不可用于 P0 驱动加速度论证。工程飞行模式保留独立验证的一阶驱动与真实限幅。
+该改写会调用 `deleteContents`，删前删后必须保住端口连线——这正是 1.4 节缺陷的由来，改这段代码后务必跑 `check_cmg_actuation`。
 
 ## 4. 坐标、单位与动力学
 
@@ -351,10 +364,12 @@ legend('roll','pitch','yaw'); xlabel('相对时间/s'); ylabel('姿态角/deg');
 | `results/native_plant/` | 独立角动量耦合检查、CSV、Python对照 |
 | `results/native_actuators_aero/`、`native_integrations/` | 驱动、舵机、气动、组合验证 |
 | `results/native_closedloop/p0_matrix_summary.csv` | 16项P0最大误差、RMS、回退次数 |
+| 同目录 `p0_matrix_progress_pre_drivefix.json` | P0 B 组修复前的进度快照（证明哪些项已重跑） |
 | 同目录 `tracking_report.json` | 默认工程飞行模式A/B跟踪指标 |
 | 同目录 `*_runtime_60s.json` | 对应时长的求解回退统计；无时长后缀文件只代表最近一次运行 |
 | `results/native_delivery/` | 主模型重载检查、完整块清单、导图、验收缺口 |
 | `tests/05_python_matlab_qp_equivalence/` | 固定QP、组装、在线首命令对照 |
+| `simulink/check_cmg_actuation.m` | P0 B 组“框架角必须真的移动”的回归门（修复前必然失败） |
 
 当前 `simulink/results/...`，不要与项目根目录的历史 `results/...` 混淆。
 短时测试可能覆盖同名短时日志；无后缀 runtime JSON 会被后续重载测试改写，应使用带时长版本作证据。
@@ -367,8 +382,9 @@ python simulink/py/finish_native_delivery.py
 ```
 
 第二条会检查/补跑回归、恢复默认导出、刷新默认模型、做重载检查并重写汇总报告，不是只格式化文档。
+只想按现有 `p0_matrix_summary.csv` 重写 `09_ab_experiment_report.md` 与 `finish_report.json` 时，加 `--report-only`，不必重跑仿真。
 回归优先使用历史 `results/torque_gap_no_cmg_comparison_rti2/P0/<case>/config_resolved.yaml`；正式实验包含基础 YAML 未记录的 `state_tr_gamma=0.5`、`state_tr_omega=1.0` 等设置。
-进度在 `p0_matrix_progress.json`。**修改算法、MEX或参数后不要盲目相信断点缓存**：当前跳过逻辑不包含全部源代码哈希。开发新版本应备份旧进度并重新运行相关项目。
+进度在 `p0_matrix_progress.json`。**修改算法、MEX或参数后不要盲目相信断点缓存**：当前跳过逻辑不包含全部源代码哈希。开发新版本应备份旧进度并重新运行相关项目；重建器或接线方式改动后，至少单跑 `check_cmg_actuation` 确认执行机构仍然生效。
 
 ## 9. 怎样修改现有模型
 
@@ -537,24 +553,23 @@ HPIPM编译要读取本机官方 MATLAB类和C源，以及两个 `.dll.a` 导入
 | 耦合刚体 | A/B独立RK4角速度对照约6e-17 | 不代表全部闭环逐点相同 |
 | QP/在线算法 | 固定数据、读回、组装、首命令、热启动和故障注入 | 不代表实时运行达标 |
 | 舵面分配 | 100组BVLS相对目标差约4.4e-16 | 不代表分配后的姿态任务必然可达 |
-| 闭环 | 八组P0×A/B窗口完成；公开替代模型下60s A/B完成；保存后重载通过 | **历史Python精度一致性仍未通过** |
+| 闭环 | 八组P0×A/B窗口完成；修复1.4缺陷后A/B与Python同量级；公开替代模型下60s A/B完成；保存后重载通过 | **逐点轨迹等价与步长收敛仍未通过** |
 
 详细验收表为 `docs/simulink/09_ab_experiment_report.md`；最终状态 JSON 为 `simulink/results/native_delivery/finish_report.json`。
 `development_failed/` 存放开发阶段失效/错误设置的材料，不得混进正式统计。
 
 ## 14. 下一步开发任务
 
-### 优先级1：定位 P0 闭环与历史 Python 的差异
+### 优先级1：把“同量级”推进到“逐点等价”
 
-不要先调权重掩盖差异。建议顺序：
+P0 B 组的致命缺陷（1.4 节）已定位修复，剩下的差异不再是数百个百分点的失效，而是积分与采样口径差异。建议顺序：
 
-1. 锁定相同 resolved 配置、初值、预测网格、参考、扰动、MEX物理常量与版本。
-2. 从历史 `results/torque_gap_no_cmg_comparison_rti2/P0/<case>/timeseries.csv` 读取控制：`tauc_cmd_x/y/z`、`nuc1..4`；注意 q、omega 等日志状态属于 `t_next`，不是 t。
-3. 给原生 P0 真值回放同一控制序列，独立比较 q、omega、gamma，先排除控制器。
-4. 对比扰动采样：旧Python在物理子步中点查询，当前主模型 From Workspace 使用控制时序保持，不能默认相同。
-5. 检查P0理想速率执行与P1驱动没有混用；做0.001→更小步长收敛，特别检查离散gamma与连续刚体耦合。
-6. 对比姿态复合旋转、Euler转q、初值与时间对齐；逐控制周期对比预测X/U、首QP、线搜索与首命令。
-7. 再分析奇异附近的敏感性。旧项目有敏感性记录，但不能只用“混沌”作为当前差异的未经验证解释。
+1. 从历史 `results/torque_gap_no_cmg_comparison_rti2/P0/<case>/timeseries.csv` 读取控制：`tauc_cmd_x/y/z`、`nuc1..4`；注意 q、omega 等日志状态属于 `t_next`，不是 t。
+2. 给原生 P0 真值回放同一控制序列，逐步比较 q、omega、gamma，把残余差异归因到真值积分而不是控制器。
+3. 对比扰动采样：旧Python在物理子步中点查询，当前主模型 From Workspace 使用零阶保持；需要时改为插值或加密采样。
+4. 做 0.001→更小步长收敛，特别检查离散 gamma 与连续刚体耦合。
+5. 逐控制周期对比预测 X/U、首QP、线搜索与首命令，确认剩余差异不来自求解器容差。
+6. 再分析奇异附近的敏感性。旧项目有敏感性记录，但不能只用“混沌”作为差异的未经验证解释。
 
 ### 优先级2及以后
 
@@ -581,6 +596,9 @@ HPIPM编译要读取本机官方 MATLAB类和C源，以及两个 `.dll.a` 导入
 | 批处理报错却返回0 | 使用已修复退出码透传的mlab.cmd，并检查成功标记/产物 |
 | 迎角或高度Assertion停止 | 查实际alpha与高度，不要直接关断言；当前alpha[-40,40]°、大气[0,120000]m |
 | 换配置但输出没变 | 顶层是否仍用旧内嵌数据/复制块、预测MEX是否旧常量、进度缓存是否跳过 |
+| B组比A组还差、框架角恒为初值 | P0理想驱动的端口连线是否还在（`check_cmg_actuation`）；`deleteContents`/删块会带走父级连线 |
+| 模型能跑但某个执行机构毫无作用 | 先给该子系统单独喂常值输入看输出，再看父级端口是否存在连线，不要只看闭环曲线 |
+| `.mat` 导出报 EINVAL/无效参数 | Windows 上刚结束的 MATLAB 会话仍占用文件；用 `run_with_retry` 或稍后重试 |
 | GUI修改消失 | 同名构建器重新new_system覆盖；将永久变更回写生成器 |
 
 不确定数据结构时先 `out.who`、`whos('-file',file)`、`size(...)`，不要靠转置试错后只比较终值。

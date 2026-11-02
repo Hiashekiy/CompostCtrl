@@ -3,7 +3,7 @@
 Each saved SLX embeds its controller template and future reference schedule.
 """
 from pathlib import Path
-import subprocess,os,sys,json,zipfile
+import subprocess,os,sys,json,zipfile,time
 from scipy.io import loadmat
 ROOT=Path(__file__).resolve().parents[2]
 sys.stdout.reconfigure(encoding='utf-8',errors='replace')
@@ -14,6 +14,21 @@ env=os.environ.copy();env['MATLAB_HOME']=r'D:\Program Files\MATLAB\R2024a'
 env['PYTHONIOENCODING']='utf-8'
 progress=ROOT/'simulink/results/native_closedloop/p0_matrix_progress.json'
 results=json.loads(progress.read_text(encoding='utf-8')) if progress.exists() else []
+
+
+def run_with_retry(args, attempts=4, delay=10.0):
+    """Retry transient Windows lock errors on the exported MAT files."""
+    for attempt in range(1, attempts + 1):
+        try:
+            subprocess.run(args, cwd=ROOT, env=env, check=True)
+            return
+        except subprocess.CalledProcessError:
+            if attempt == attempts:
+                raise
+            print('RETRY', attempt, 'of', attempts, flush=True)
+            time.sleep(delay)
+
+
 for path in cases:
     name=path.stem.removesuffix('_with_cmg')
     for enabled in [True,False]:
@@ -36,8 +51,9 @@ for path in cases:
         args=[sys.executable,str(ROOT/'simulink/py/export_hpipm_qp.py'),'--config',str(case)]
         if not enabled:args+=['--surface-only']
         print('EXPORT',name,'B' if enabled else 'A',flush=True)
-        subprocess.run(args,cwd=ROOT,env=env,check=True)
-        subprocess.run([sys.executable,str(ROOT/'simulink/py/export_online_plan_bank.py'),'--config',str(case)],cwd=ROOT,env=env,check=True)
+        # A just-closed MATLAB session may still hold the template .mat on Windows.
+        run_with_retry(args)
+        run_with_retry([sys.executable,str(ROOT/'simulink/py/export_online_plan_bank.py'),'--config',str(case)])
         bank=loadmat(ROOT/'simulink/data/online_plan_bank.mat');duration=float(bank['time'].ravel()[-1])
         expression=f"maxNumCompThreads(1); addpath('simulink'); build_native_closedloop({duration},false,{'true' if enabled else 'false'},'{name}')"
         print('RUN',name,'B' if enabled else 'A','duration',duration,flush=True)
