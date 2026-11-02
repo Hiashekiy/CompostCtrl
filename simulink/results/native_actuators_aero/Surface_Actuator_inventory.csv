@@ -1,0 +1,14 @@
+Block,Type
+Surface_Actuator/command,Inport
+Surface_Actuator/Actual_state,UnitDelay
+Surface_Actuator/Command_limit,Saturate
+Surface_Actuator/Derivative_limit,Saturate
+Surface_Actuator/Euler_increment,Gain
+Surface_Actuator/Inverse_time_constant,Gain
+Surface_Actuator/Next_state,Sum
+Surface_Actuator/State_limit,Saturate
+Surface_Actuator/Tracking_error,Sum
+Surface_Actuator/log_deriv,ToWorkspace
+Surface_Actuator/log_state,ToWorkspace
+Surface_Actuator/actual,Outport
+Surface_Actuator/derivative,Outport

@@ -2,6 +2,8 @@
 
 2026-11-02。保留历史 S08 S-Function 目录和结果，仅供回归对照；新增原生模型放入 `simulink/models/`。
 
+后续更新：用户要求继续迁移后，已生成并验证 `CMG_Drive`、`CMG_Cluster`、`Surface_Actuator`、`Aerodynamic_Model`、`Aerodynamic_Surface` 和 `HPIPM_Interface` 的 SLX。HPIPM MEX 与真实 22 阶段 QP 一致性测试通过。在线 MPC 组装、控制分配和完整 6DOF 闭环仍未完成。
+
 ## 当前实施状态
 
 | 对象 | 状态 |
@@ -10,17 +12,17 @@
 | 6DOF 原生验证 | 脚本已编写，未执行成功 |
 | 参数字典与继承链溯源 | 已导出首个 S00 B 基线 |
 | CMG 几何映射 | 原生 SLX，67 个静态样本测试通过 |
-| CMG 驱动和框架积分 | 待实现 |
-| 气动力矩参考数据 | 96 个 Python 样本，分解检查通过，未生成原生气动模型 |
-| HPIPM MATLAB/MEX | 已定位本机源码目录，未编译或求解 |
+| CMG 驱动和框架积分 | 已生成原生 SLX，8001 点及组合数值对照通过 |
+| 气动与舵面 | 原生查表力矩和舵机 SLX；96 个静态样本及组合对照通过；控制分配待接入 |
+| HPIPM MATLAB/MEX | 19 个 MEX 已编译；真实 QP 与 Simulink 接口测试通过；在线组装待迁移 |
 | 位置速度外环、完整气动力、主模型、闭环 A/B | 待实施 |
 
 ## 下一步可独立推进
 
-1. 将 CMG 几何图封装为显式 gamma、nu 输入和 H、A、tau 输出；驱动动态独立搭建，不藏入几何函数。
-2. 实现参数化气动力矩和舵面执行机构，按 `aerodynamic_reference.csv` 做逐点验证；气动力数据不足时明确记录缺口。
-3. 在仓库内部构建 HPIPM MEX 输出。官方本机目录为 `D:/Tools/hpipm/interfaces/matlab_octave`，依赖 BLASFEO；官方 Simulink S-Function 在 `interfaces/simulink/hpipm_sfun.c`，需要配合生成的 QP 数据 C 文件，不能直接等同于通用动态 OCP-QP 接口。
-4. 从真实 RTI 导出固定 QP，建立矩阵、控制序列、目标和残差的 Python/MATLAB 对照。
+1. 迁移 MPC 总气动力矩到舵偏角的有界控制分配。
+2. 补齐空气数据、大气、三轴气动力所需的可追溯输入数据。
+3. 迁移在线 LTV/QP 组装、热启动和失败回退，并将已验证的 HPIPM 接口接入。
+4. 增加 A 组与其他工况的独立 QP 一致性测试。
 5. Aerospace 许可恢复后，先完成原生 6DOF 解析验证，再接入已独立验证的各子系统。
 
 ## 信号约定

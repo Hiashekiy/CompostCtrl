@@ -2,6 +2,8 @@
 
 2026-11-02。本次按用户后续授权，在 Aerospace 许可恢复前，继续独立的基础 Simulink 子系统迁移。
 
+后续更新：驱动动态与几何连接已实现为 `simulink/models/CMG_Cluster.slx`，8001 点运行及 Python 组合对照通过；详见 `05_aerodynamic_surface_validation.md`。下文“尚未完成”列表记录前一轮仅几何阶段的状态，已由该后续验证覆盖框架积分、实际速率/加速度限幅与驱动时间常数；摩擦、-omega×H 和原生 6DOF 连接仍待实现。
+
 ## 已交付
 
 - 原生模型：`simulink/models/CMG_Geometry.slx`。
