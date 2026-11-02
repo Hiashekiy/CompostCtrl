@@ -41,4 +41,4 @@
 - 图形参数对话框截图因 Windows 捕获工具超时未取得。已提供真实模型导出图、参数 JSON 与完整 Block 清单。
 - 本次不验收实时部署、代码生成及真实飞行器全包线可信性。
 
-打开模型与重现入口：simulink/NATIVE_README.md。原 Python 仿真、历史论文与图表未被覆盖。
+打开模型与重现入口：simulink/README.md。原 Python 仿真、历史论文与图表未被覆盖。

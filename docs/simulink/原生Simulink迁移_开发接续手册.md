@@ -49,7 +49,7 @@
 
 | 系统 | 入口 | 控制器在哪里运行 |
 |---|---|---|
-| 本次原生迁移（唯一保留） | `simulink/native_startup.m`、`NearSpace_CMG_FlightControl*.slx` | MATLAB RTI + HPIPM MEX |
+| 本次原生迁移（唯一保留） | `simulink/init_paths.m`、`NearSpace_CMG_FlightControl*.slx` | MATLAB RTI + HPIPM MEX |
 
 早先那套 S08 Python/TCP 移植（`s08_startup.m`、`open_case.m`、`run_case.m`、`simulink/blocks/s08_*`、
 `simulink/py/ctrl_server.py`、`run_closedloop.py` 等）已于原生迁移完成后删除，不再可用；需要它时从
@@ -62,7 +62,7 @@ P0（`flight=false`）用 `configure_ideal_p0_drive` 把实测过的框架驱动
 `Simulink.SubSystem.deleteContents` 会同时删掉该子系统端口在父系统上的连线，重建后驱动块与
 CMG 内部完全断开：`nu` 不到框架、`gamma` 恒为初值、`tau_CMG≡0`、`H≡H(0)=0`。
 模型仍能编译、仿真、零回退，缺陷表现为“B 组比 A 组还差”。修复方式是删前记录端口连线、
-删后清理悬空线段并重连，再加构建期端口断言；`simulink/check/check_cmg_actuation.m` 是专用回归门。
+删后清理悬空线段并重连，再加构建期端口断言；`simulink/verify/check_actuation.m` 是专用回归门。
 改动任何“替换子系统内容”的建模代码时，必须保留“删除会带走父级连线”这条经验。
 完整证据与修复前后指标见 `08_closed_loop_validation.md`。
 
@@ -89,7 +89,7 @@ CMG 内部完全断开：`nu` 不到框架、`gamma` 恒为初值、`tau_CMG≡0
 ```matlab
 cd('D:\项目\飞轮');
 addpath('simulink');
-native_startup;
+init_paths;
 m = 'NearSpace_CMG_FlightControl';
 load_system(fullfile('simulink','models',[m '.slx']));
 in = Simulink.SimulationInput(m);
@@ -107,7 +107,7 @@ A 组把模型名改成 `NearSpace_CMG_FlightControl_SurfaceOnly`。默认保存
 ```powershell
 Set-Location -LiteralPath 'D:\项目\飞轮'
 $env:MATLAB_HOME='D:\Program Files\MATLAB\R2024a'
-.\simulink\mlab.cmd "maxNumCompThreads(1); addpath('simulink'); native_startup; check_native_rti"
+.\simulink\mlab.cmd "maxNumCompThreads(1); addpath('simulink'); init_paths; check_native_rti"
 ```
 
 `mlab.cmd` 把 MATLAB 临时目录、偏好目录重定向到项目中的 `.matlab_*`，并透传 MATLAB 退出码。`maxNumCompThreads(1)` 用于本次小矩阵批处理，不代表实时性能认证。
@@ -134,7 +134,7 @@ flowchart LR
 ```
 
 入口脚本在 `simulink/` 根；下列独立组件模型位于 `simulink/models/`，P0 工况模型位于 `simulink/cases/`，
-构建器在 `simulink/build/`，验证与报告在 `simulink/check/`。
+构建器在 `simulink/modelgen/`，验证与报告在 `simulink/verify/`。
 
 | 模型/模块 | 输入 | 输出/职责 |
 |---|---|---|
@@ -154,7 +154,7 @@ flowchart LR
 
 ### 3.2 P0 与工程飞行模式
 
-`build_native_closedloop(duration, flight, enabled, case_name)`：
+`build_closedloop(duration, flight, enabled, case_name)`：
 
 | 参数 | 含义 |
 |---|---|
@@ -165,7 +165,7 @@ flowchart LR
 | case_name | 可选工况后缀；省略时重建默认模型，可能覆盖现有同名 SLX |
 
 P0 构建器会改写复制进去的 `CMG/Drive` 为理想速率执行加角积分。其“加速度诊断零输出”不是实际物理加速度，不可用于 P0 驱动加速度论证。工程飞行模式保留独立验证的一阶驱动与真实限幅。
-该改写会调用 `deleteContents`，删前删后必须保住端口连线——这正是 1.4 节缺陷的由来，改这段代码后务必跑 `check_cmg_actuation`。
+该改写会调用 `deleteContents`，删前删后必须保住端口连线——这正是 1.4 节缺陷的由来，改这段代码后务必跑 `check_actuation`。
 
 ## 4. 坐标、单位与动力学
 
@@ -228,24 +228,24 @@ Simulink native_mpc_sfun.Start
 
 ### 5.3 主要 MATLAB 文件
 
-目录按角色分层：入口在 `simulink/` 根（`native_startup.m`、`native_root.m`、`mlab.cmd`），
-构建器在 `build/`，验证与报告在 `check/`，控制器在 `hpipm/`，组件模型在 `models/`，
-16 个 P0 工况模型在 `cases/`。`addpath('simulink')` + `native_startup` 后所有函数按名调用即可；
-模型按全路径 `load_system` 打开。新增脚本一律用 `root=native_root;`，不要按目录深度数 `fileparts`。
+目录按角色分层：入口在 `simulink/` 根（`init_paths.m`、`repo_root.m`、`mlab.cmd`），
+构建器在 `modelgen/`，验证与报告在 `verify/`，控制器在 `hpipm/`，组件模型在 `models/`，
+16 个 P0 工况模型在 `cases/`。`addpath('simulink')` + `init_paths` 后所有函数按名调用即可；
+模型按全路径 `load_system` 打开。新增脚本一律用 `root=repo_root;`，不要按目录深度数 `fileparts`。
 
 | 文件 | 修改什么时读它 |
 |---|---|
-| `build/build_native_closedloop.m` | 顶层接线、模式、初始化、内嵌数据、日志、构建输出（默认模型写 `models/`，带 case_name 写 `cases/`） |
-| `build/build_native_plant.m` | 真实 6DOF、耦合项及 A/B 物理结构 |
-| `build/build_native_actuators_aero.m` | 驱动、舵机、气动力矩各独立组件 |
-| `build/build_native_cmg_geometry.m` | CMG 基础块几何与随机样本验证 |
-| `build/build_native_integrations.m` | 将几何+驱动、气动+舵机构成组合模型 |
-| `build/build_public_force_model.m` | 公开升阻力表、力坐标变换、迎角断言 |
-| `build/build_surrogate_flight_forces.m` | 大气、空气数据、重力合成 |
-| `check/check_cmg_actuation.m` | P0 B 组执行机构回归门（框架角必须移动） |
-| `check/check_p0_case.m` | 单工况建模+评分（复用磁盘上的模板/参考，需先导出） |
-| `check/report_native_p0_matrix.m`、`check/report_native_closedloop.m` | 由已有日志重算指标表 |
-| `check/finalize_native_delivery.m` | 重建默认 A/B 模型、块清单、重载检查 |
+| `modelgen/build_closedloop.m` | 顶层接线、模式、初始化、内嵌数据、日志、构建输出（默认模型写 `models/`，带 case_name 写 `cases/`） |
+| `modelgen/build_plant.m` | 真实 6DOF、耦合项及 A/B 物理结构 |
+| `modelgen/build_actuators_aero.m` | 驱动、舵机、气动力矩各独立组件 |
+| `modelgen/build_cmg_geometry.m` | CMG 基础块几何与随机样本验证 |
+| `modelgen/build_integrations.m` | 将几何+驱动、气动+舵机构成组合模型 |
+| `modelgen/build_public_force_model.m` | 公开升阻力表、力坐标变换、迎角断言 |
+| `modelgen/build_surrogate_flight_forces.m` | 大气、空气数据、重力合成 |
+| `verify/check_actuation.m` | P0 B 组执行机构回归门（框架角必须移动） |
+| `verify/check_p0_case.m` | 单工况建模+评分（复用磁盘上的模板/参考，需先导出） |
+| `verify/report_p0_matrix.m`、`verify/report_closedloop.m` | 由已有日志重算指标表 |
+| `verify/finalize_delivery.m` | 重建默认 A/B 模型、块清单、重载检查 |
 | `hpipm/native_mpc_sfun.m` | Simulink调度、端口、时间、模型内嵌数据与控制器状态 |
 | `hpipm/native_rti_step.m` | RTI外层、热启动、线搜索、回退、执行端裁剪 |
 | `hpipm/assemble_native_qp.m` | Q/R/q/r/A/B/b 和边界的在线组装 |
@@ -364,7 +364,7 @@ plot(t, rad2deg(state(:,1:3))); grid on;
 legend('roll','pitch','yaw'); xlabel('相对时间/s'); ylabel('姿态角/deg');
 ```
 
-`states` 是反馈输入拼接，不含真值四元数；不能用 Euler 重构四元数的单位范数证明积分四元数范数合格。后者应读取原生模块积分状态，参考 `build_native_stage1.m`。
+`states` 是反馈输入拼接，不含真值四元数；不能用 Euler 重构四元数的单位范数证明积分四元数范数合格。后者应读取原生模块积分状态，参考 `build_stage1.m`。
 `commands` 为绝对命令；工程模式另有 `flight_conditions=[qbar,V,alpha,beta]`。
 `native_subsystem_log_XXXX` 是为避免重名使用的编号，编号不稳定；查 Block 清单/To Workspace 的实际块路径定位，不要跨版本硬编码编号。
 
@@ -381,7 +381,7 @@ legend('roll','pitch','yaw'); xlabel('相对时间/s'); ylabel('姿态角/deg');
 | 同目录 `*_runtime_60s.json` | 对应时长的求解回退统计；无时长后缀文件只代表最近一次运行 |
 | `results/native_delivery/` | 主模型重载检查、完整块清单、导图、验收缺口 |
 | `tests/05_python_matlab_qp_equivalence/` | 固定QP、组装、在线首命令对照 |
-| `simulink/check/check_cmg_actuation.m` | P0 B 组“框架角必须真的移动”的回归门（修复前必然失败） |
+| `simulink/verify/check_actuation.m` | P0 B 组“框架角必须真的移动”的回归门（修复前必然失败） |
 
 当前 `simulink/results/...`，不要与项目根目录的历史 `results/...` 混淆。
 短时测试可能覆盖同名短时日志；无后缀 runtime JSON 会被后续重载测试改写，应使用带时长版本作证据。
@@ -396,8 +396,8 @@ python simulink/py/finish_native_delivery.py
 第二条会检查/补跑回归、恢复默认导出、刷新默认模型、做重载检查并重写汇总报告，不是只格式化文档。
 只想按现有 `p0_matrix_summary.csv` 重写 `09_ab_experiment_report.md` 与 `finish_report.json` 时，加 `--report-only`，不必重跑仿真。
 回归优先使用历史 `results/torque_gap_no_cmg_comparison_rti2/P0/<case>/config_resolved.yaml`；正式实验包含基础 YAML 未记录的 `state_tr_gamma=0.5`、`state_tr_omega=1.0` 等设置。
-进度在 `p0_matrix_progress.json`。**修改算法、MEX或参数后不要盲目相信断点缓存**：当前跳过逻辑不包含全部源代码哈希。开发新版本应备份旧进度并重新运行相关项目；重建器或接线方式改动后，至少单跑 `check_cmg_actuation` 确认执行机构仍然生效。
-移动或改名脚本/模型后跑一次 `check_reorg`：它检查 `build/`、`check/` 下每个脚本能被 MATLAB 解析、能解析到正确目录，并确认默认模型在 `models/`、16 个工况模型在 `cases/`。
+进度在 `p0_matrix_progress.json`。**修改算法、MEX或参数后不要盲目相信断点缓存**：当前跳过逻辑不包含全部源代码哈希。开发新版本应备份旧进度并重新运行相关项目；重建器或接线方式改动后，至少单跑 `check_actuation` 确认执行机构仍然生效。
+移动或改名脚本/模型后跑一次 `check_layout`：它检查 `modelgen/`、`verify/` 下每个脚本能被 MATLAB 解析、能解析到正确目录，并确认默认模型在 `models/`、16 个工况模型在 `cases/`。
 
 ## 9. 怎样修改现有模型
 
@@ -469,10 +469,10 @@ python simulink/py/export_online_plan_bank.py --config configs/my_case_with_cmg.
 MATLAB：
 
 ```matlab
-native_startup;
+init_paths;
 % 如果预测数学/物理常量有变化，应先重编译：
 build_prediction_mex;
-build_native_closedloop(2, false, true, 'MyCase');
+build_closedloop(2, false, true, 'MyCase');
 % 确认短时结果后，再用完整参考窗口构建/运行。
 ```
 
@@ -483,7 +483,7 @@ python simulink/py/export_hpipm_qp.py --surface-only --config configs/my_case_no
 python simulink/py/export_online_plan_bank.py --config configs/my_case_no_cmg.yaml
 ```
 
-再运行 `build_prediction_mex; build_native_closedloop(2,false,false,'MyCase')`。
+再运行 `build_prediction_mex; build_closedloop(2,false,false,'MyCase')`。
 `--surface-only` 控制导出文件和函数名，配置文件控制实际物理维数，二者必须一致，不能只改旗标。
 P0新参考/算法实验优先保持原物理参数。若同时换物理参数，请执行第9节完整同步链，尤其是分配器默认参数与共享MEX。
 
@@ -494,7 +494,7 @@ P0新参考/算法实验优先保持原物理参数。若同时换物理参数�
 先对固定 X_nom/U_nom 组装：
 
 ```matlab
-native_startup;
+init_paths;
 s = load('simulink/tests/05_python_matlab_qp_equivalence/production_online_qp.mat');
 qp = assemble_native_qp(s,s.X_nom,s.U_nom);
 result = solve_hpipm_snapshot(qp);
@@ -536,24 +536,24 @@ python simulink/py/export_online_plan_bank.py
 ### 12.2 构建与验证（MATLAB）
 
 ```matlab
-addpath('simulink'); native_startup;
+addpath('simulink'); init_paths;
 build_hpipm_mex;       % HPIPM/BLASFEO或ABI变化时才需要
 build_prediction_mex;
-build_native_stage1;
-build_native_cmg_geometry;
-build_native_actuators_aero;
-build_native_integrations;
-check_native_integrations;
-build_native_plant;
+build_stage1;
+build_cmg_geometry;
+build_actuators_aero;
+build_integrations;
+check_integrations;
+build_plant;
 build_public_force_model;
 build_surrogate_flight_forces;
 check_native_allocation;
 check_native_rti;
-finalize_native_delivery;
+finalize_delivery;
 ```
 
 `check_native_assembly` 和 `check_hpipm_snapshot` 使用旧固定夹具 `production_qp.mat`。测试新配置时应明确更新其输入或写新测试，不要把旧夹具通过当新配置通过。
-`export_native_plant_logs` 后再执行 `python simulink/py/check_native_plant.py` 可做独立耦合对照。
+`export_plant_logs` 后再执行 `python simulink/py/check_native_plant.py` 可做独立耦合对照。
 
 HPIPM编译要读取本机官方 MATLAB类和C源，以及两个 `.dll.a` 导入库。`-lhpipm` 在本机未识别该文件名，构建脚本已使用明确路径。不要修改官方外部安装目录来迁就本项目。
 
@@ -598,7 +598,7 @@ P0 B 组的致命缺陷（1.4 节）已定位修复，剩下的差异不再是�
 
 | 现象 | 首先检查 |
 |---|---|
-| 找不到MEX或S-Function | 先native_startup，再which；确认mexw64与平台匹配 |
+| 找不到MEX或S-Function | 先 `init_paths`，再 which；确认 mexw64 与平台匹配 |
 | Aerospace许可test=1但不能建块 | 用license checkout实际签出；重启后检查真实块创建和sim |
 | 长时运行DLL加载失败 | PATH是否重复增长；不要恢复旧的每QP重复追加路径写法 |
 | 工作区read-only | Start内用getVariable，避免evalin |
@@ -610,7 +610,7 @@ P0 B 组的致命缺陷（1.4 节）已定位修复，剩下的差异不再是�
 | 批处理报错却返回0 | 使用已修复退出码透传的mlab.cmd，并检查成功标记/产物 |
 | 迎角或高度Assertion停止 | 查实际alpha与高度，不要直接关断言；当前alpha[-40,40]°、大气[0,120000]m |
 | 换配置但输出没变 | 顶层是否仍用旧内嵌数据/复制块、预测MEX是否旧常量、进度缓存是否跳过 |
-| B组比A组还差、框架角恒为初值 | P0理想驱动的端口连线是否还在（`check_cmg_actuation`）；`deleteContents`/删块会带走父级连线 |
+| B组比A组还差、框架角恒为初值 | P0理想驱动的端口连线是否还在（`check_actuation`）；`deleteContents`/删块会带走父级连线 |
 | 模型能跑但某个执行机构毫无作用 | 先给该子系统单独喂常值输入看输出，再看父级端口是否存在连线，不要只看闭环曲线 |
 | `.mat` 导出报 EINVAL/无效参数 | Windows 上刚结束的 MATLAB 会话仍占用文件；用 `run_with_retry` 或稍后重试 |
 | GUI修改消失 | 同名构建器重新new_system覆盖；将永久变更回写生成器 |

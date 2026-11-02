@@ -10,13 +10,13 @@ function check_p0_case(case_name,enabled)
 %   python simulink/py/export_hpipm_qp.py --config <case config_resolved.yaml>
 %   python simulink/py/export_online_plan_bank.py --config <case config_resolved.yaml>
 % For a fully consistent sweep use run_native_p0_matrix.py instead.
-root=native_root;
+root=repo_root;
 addpath(fullfile(root,'simulink'));addpath(fullfile(root,'simulink','hpipm'));
 if ischar(enabled),enabled=logical(str2double(enabled));end
 bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
 duration=double(bank.time(end));
 fprintf('bank on disk: window 0-%g s, %d control instants (must match %s)\n',duration,numel(bank.time),case_name);
-build_native_closedloop(duration,false,enabled,case_name);
+build_closedloop(duration,false,enabled,case_name);
 m='NearSpace_CMG_AttitudeValidation';if ~enabled,m=[m '_SurfaceOnly'];end
 m=[m '_' case_name];
 out=fullfile(root,'simulink','results','native_closedloop');

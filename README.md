@@ -208,7 +208,7 @@ CMG 力矩与 CMG 角动量都恒为零（home 位形本身净角动量为零）
   提高动压反而改善跟踪；CMG 在 S00 把失效时刻推后 46 s，但代价是占掉 80% 角动量并把
   `sigma_min` 压到奇异下限以下，在 S03 反而不如纯舵面。
 
-* **Simulink 移植**：原生迁移已完成，入口见 `simulink/NATIVE_README.md`，
+* **Simulink 移植**：原生迁移已完成，入口见 `simulink/README.md`，
   开发与接口说明见 `docs/simulink/原生Simulink迁移_开发接续手册.md`，
   八组 P0 A/B 与历史 Python 的对照见 `docs/simulink/09_ab_experiment_report.md`。
   真值、气动、执行机构与 CMG 全部改用工具箱/基础模块，控制器为 MATLAB 在线 RTI + HPIPM MEX。

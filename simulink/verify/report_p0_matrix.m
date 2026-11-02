@@ -1,5 +1,5 @@
-function report_native_p0_matrix
-root=native_root;out=fullfile(root,'simulink','results','native_closedloop');
+function report_p0_matrix
+root=repo_root;out=fullfile(root,'simulink','results','native_closedloop');
 p=jsondecode(fileread(fullfile(out,'p0_matrix_progress.json')));assert(numel(p)==16,'P0 sweep incomplete');
 rows=cell(16,6);
 for k=1:numel(p)

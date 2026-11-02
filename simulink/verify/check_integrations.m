@@ -1,5 +1,5 @@
-function check_native_integrations
-root=native_root; addpath(fullfile(root,'simulink','models'));
+function check_integrations
+root=repo_root; addpath(fullfile(root,'simulink','models'));
 out=fullfile(root,'simulink','results','native_integrations');
 ref=load(fullfile(root,'simulink','data','native_actuators','reference.mat'));
 a=load(fullfile(out,'cmg_integrated_run.mat')); r=a.r;

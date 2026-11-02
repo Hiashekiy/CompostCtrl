@@ -1,9 +1,9 @@
-function build_native_closedloop(duration,flight,enabled,case_name)
+function build_closedloop(duration,flight,enabled,case_name)
 if nargin<1,duration=2;end
 if nargin<2,flight=false;end
 if nargin<3,enabled=true;end
 if nargin<4,case_name='';end
-root=native_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
+root=repo_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
 bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
 if enabled,plant='Plant_6DOF_CMG';else,plant='Plant_6DOF_SurfaceOnly';end
 load_system(plant);
@@ -82,7 +82,7 @@ if enabled,arm='B';else,arm='A';end
 if isempty(case_name),suffix='';else,suffix=['_' case_name];end
 save(fullfile(out,sprintf('%s_%s_%gs%s.mat',arm,tag,duration,suffix)),'r');save_system(m,fullfile(modeldir,[m '.slx']));
 Simulink.BlockDiagram.arrangeSystem(m);
-set_param(m,'InitFcn','native_startup;');
+set_param(m,'InitFcn','init_paths;');
 save_system(m);
 try,print(['-s' m],'-dpng',fullfile(out,'model.png'));catch,warning('model screenshot skipped');end
 close_system(m,0);fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g\n',duration);

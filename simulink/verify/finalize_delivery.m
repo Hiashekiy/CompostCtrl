@@ -1,7 +1,7 @@
-function finalize_native_delivery
+function finalize_delivery
 % Refresh default A/B models after case sweeps, and audit their reloadability.
-root=native_root;native_startup;
-build_native_closedloop(2,true,true);build_native_closedloop(2,true,false);
+root=repo_root;init_paths;
+build_closedloop(2,true,true);build_closedloop(2,true,false);
 models={'NearSpace_CMG_FlightControl','NearSpace_CMG_FlightControl_SurfaceOnly'};
 out=fullfile(root,'simulink','results','native_delivery');if ~exist(out,'dir'),mkdir(out);end
 for k=1:numel(models)
@@ -16,5 +16,5 @@ for k=1:numel(models)
  writetable(cell2table(rows,'VariableNames',{'Name','Type','ReferenceBlock','Parent','Mask'}),fullfile(out,[name '_inventory.csv']));
  print(['-s' name],'-dpng',fullfile(out,[name '.png']));close_system(name,0);
 end
-report_native_closedloop;fprintf('NATIVE_DELIVERY_RELOAD_PASS\n');
+report_closedloop;fprintf('NATIVE_DELIVERY_RELOAD_PASS\n');
 end

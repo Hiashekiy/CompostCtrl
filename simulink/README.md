@@ -10,7 +10,7 @@
 ```matlab
 cd('D:\项目\飞轮');
 addpath('simulink');
-native_startup;
+init_paths;
 open_system('simulink/models/NearSpace_CMG_FlightControl.slx');
 % 点击 Run。A 组：NearSpace_CMG_FlightControl_SurfaceOnly.slx。
 ```
@@ -24,30 +24,33 @@ MEX 为 Windows x64。其他平台需运行 `build_hpipm_mex` 与 `build_predict
 
 ```text
 simulink/
-├── native_startup.m      入口：加 build/check/data/models/hpipm 到路径并初始化 HPIPM
-├── native_root.m         仓库根（避免每个脚本按目录深度数 fileparts）
+├── init_paths.m          入口：把 modelgen/verify/data/models/hpipm 加进路径并初始化 HPIPM
+├── repo_root.m           仓库根（避免每个脚本按目录深度数 fileparts）
 ├── mlab.cmd              headless 启动（重定向 MATLAB 的 APPDATA/PREFDIR/TMP 到仓库内）
-├── NATIVE_README.md
-├── build/                构建器：生成 models/ 与 cases/ 下的 SLX、以及公开力模型
-├── check/                验证、报告与交付检查：check_*、report_*、finalize_native_delivery
+├── README.md
+├── modelgen/             生成脚本：产出 models/ 与 cases/ 下的 SLX、公开力模型（build_*）
+├── verify/               验证与报告：check_*、report_*、finalize_delivery、probe_stage1
 ├── hpipm/                控制器：在线 RTI、QP 组装、Level-2 S-Function、HPIPM MEX 与生成的预测 C
 ├── models/               组件 SLX（CMG/气动/舵机/被控对象）+ 3 个默认闭环模型
-├── cases/                16 个 P0 工况 SLX（A/B × S00–S07，由 build/ 生成）
+├── cases/                16 个 P0 工况 SLX（A/B × S00–S07，由 modelgen/ 生成）
 ├── data/                 参数、参考、大气与公开力数据
 ├── py/                   Python 导出与批量回归入口
 ├── tests/                验证夹具（QP 对照数据、6DOF 验证模型）
 └── results/              运行证据（native_stage1/plant/actuators/cmg/closedloop/delivery）
 ```
 
-`addpath('simulink')` 之后 `native_startup` 会把 `build/`、`check/`、`models/`、`hpipm/`、`data/` 一起加进路径，
+`addpath('simulink')` 之后 `init_paths` 会把 `modelgen/`、`verify/`、`models/`、`hpipm/`、`data/` 一起加进路径，
 所以脚本一律按函数名调用；模型按全路径 `load_system` 打开（默认模型在 `models/`，工况模型在 `cases/`）。
+命名约定：目录表示角色，文件名表示"动词+对象"（`build_plant.m`、`check_actuation.m`），不再加 `native_`；
+`hpipm/` 里的 `native_mpc_sfun`、`native_rti_step`、`native_F_B` 等保留原名，因为它们已写进已保存模型的
+S-Function 块参数和预测 MEX 文件名，改名需要重建全部模型并重编 C/MEX。
 
 ## 模型定义
 
 - `models/NearSpace_CMG_FlightControl*.slx`：公开升阻力替代模型、MSIS2 查表、重力、真实舵机、CMG 驱动、在线 MATLAB RTI/HPIPM 的工程闭环。
 - `models/NearSpace_CMG_AttitudeValidation.slx` 与 `cases/NearSpace_CMG_AttitudeValidation*_S0*.slx`：原有 P0 总气动力矩命令接口；不接平动力，用于姿态实验。P0 CMG 直接跟随框架速率命令；P1 保留驱动环节。
 - 无 CMG A 组使用独立的 7 状态/3 控制预测模型与不含 CMG 的原生真值结构；B 组使用 11 状态/7 控制预测。
-- Case 模型在 ModelWorkspace 内嵌控制模板与未来参考，防止切换模型后复用别的工况。求解器代码/MEX 仍通过 native_startup 加路径。
+- Case 模型在 ModelWorkspace 内嵌控制模板与未来参考，防止切换模型后复用别的工况。求解器代码/MEX 仍通过 init_paths 加路径。
 
 所有物理部分使用可检查的工具箱/基础模块。两个自定义 Level-2 MATLAB S-Function 仅负责 MPC 算法及舵面控制分配。
 生成的 C/MEX 预测模型仅用于控制器预测与导数，不承担真值刚体或执行器动力学。
@@ -55,13 +58,13 @@ simulink/
 ## 重现验证
 
 ```matlab
-build_native_stage1;
-check_native_integrations;
+build_stage1;
+check_integrations;
 check_native_allocation;
 check_native_assembly;
 check_native_rti;
-check_cmg_actuation;      % P0 B 组：框架角必须真的移动（惰性执行机构的回归门）
-check_reorg;              % 目录分层自检：脚本可解析/可解析到 build|check，模型在 models|cases
+check_actuation;      % P0 B 组：框架角必须真的移动（惰性执行机构的回归门）
+check_layout;              % 目录分层自检：脚本可解析/可解析到 build|check，模型在 models|cases
 ```
 
 Python 原始参考导出与批量实验入口在 `simulink/py/`。八组 A/B 回归入口为 `python simulink/py/run_native_p0_matrix.py`，支持断点续跑。

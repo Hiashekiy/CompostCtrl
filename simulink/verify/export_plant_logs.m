@@ -1,5 +1,5 @@
-function export_native_plant_logs
-root=native_root;out=fullfile(root,'simulink','results','native_plant');
+function export_plant_logs
+root=repo_root;out=fullfile(root,'simulink','results','native_plant');
 for enabled=[false true]
  if enabled,name='Plant_6DOF_CMG';else,name='Plant_6DOF_SurfaceOnly';end
 v=load(fullfile(out,[name '.mat']));r=v.r;t=r.yout{6}.Values.Time;

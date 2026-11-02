@@ -1,4 +1,4 @@
-function check_cmg_actuation(model)
+function check_actuation(model)
 % Regression guard for the P0 CMG path: the gimbal angles must actually move.
 %
 % Background: the P0 builder replaces the tested gimbal drive with an ideal
@@ -8,10 +8,10 @@ function check_cmg_actuation(model)
 % reaction torque while the MPC keeps optimising four gimbal-rate commands.
 % This check fails loudly instead of returning a plausible but inert B-arm run.
 %
-% Usage: check_cmg_actuation                      % default S00 pitch 30 case
-%        check_cmg_actuation('NearSpace_CMG_AttitudeValidation_S02_pitch10')
+% Usage: check_actuation                      % default S00 pitch 30 case
+%        check_actuation('NearSpace_CMG_AttitudeValidation_S02_pitch10')
 if nargin<1,model='NearSpace_CMG_AttitudeValidation_S00_pitch30';end
-root=native_root;
+root=repo_root;
 addpath(fullfile(root,'simulink'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
 load_system(fullfile(root,'simulink','cases',[model '.slx']));
 saved=get_param(model,'StopTime');

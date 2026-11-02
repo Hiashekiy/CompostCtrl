@@ -30,7 +30,7 @@ Licensing error: -5,357.
 - `simulink/results/native_stage1/installed_products.csv`：已安装产品及版本。
 - `simulink/results/native_stage1/licenses.csv`：各产品 test、checkout 和原始诊断。
 - `simulink/results/native_stage1/library_6dof_metadata.json`：真实库路径、库版本、掩膜参数与端口数量。
-- `simulink/check/native_stage1_probe.m`：重新执行审计的入口。
+- `simulink/verify/probe_stage1.m`：重新执行审计的入口。
 
 ## 已定位模块
 
@@ -67,5 +67,5 @@ Licensing error: -5,357.
 ## 下一步前置条件
 
 在本机 MATLAB 中恢复可正常签出的 Aerospace Blockset 及其报告缺少的 Aerospace Toolbox 许可。
-之后重跑审计和 `build_native_stage1`，完成原生模型、解析对照、模型清单与 GUI 证据。
+之后重跑审计和 `build_stage1`，完成原生模型、解析对照、模型清单与 GUI 证据。
 本阶段尚未验收，不进入气动/舵面建模。

@@ -1,6 +1,6 @@
-function build_native_actuators_aero
+function build_actuators_aero
 % Explicit discrete servo/drive graphs and linear-derivative aerodynamic moments.
-root=native_root; addpath(fullfile(root,'simulink','data'));
+root=repo_root; addpath(fullfile(root,'simulink','data'));
 p=vehicle_params; v=p.vehicle; c=p.cmg;
 out=fullfile(root,'simulink','results','native_actuators_aero');
 if ~exist(out,'dir'), mkdir(out); end

@@ -54,7 +54,7 @@ def write_report():
         '- ABC 预测机制、参数不确定性和多初态实验尚未完成；不能据本次单套参数回归声称鲁棒性验收。',
         '- 图形参数对话框截图因 Windows 捕获工具超时未取得。已提供真实模型导出图、参数 JSON 与完整 Block 清单。',
         '- 本次不验收实时部署、代码生成及真实飞行器全包线可信性。', '',
-        '打开模型与重现入口：simulink/NATIVE_README.md。原 Python 仿真、历史论文与图表未被覆盖。']
+        '打开模型与重现入口：simulink/README.md。原 Python 仿真、历史论文与图表未被覆盖。']
     (ROOT/'docs/simulink/09_ab_experiment_report.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
     print('NATIVE_DELIVERY_REPORT_WRITTEN',flush=True)
 
@@ -78,6 +78,6 @@ if __name__=='__main__':
     run([sys.executable,str(ROOT/'simulink/py/export_hpipm_qp.py')])
     run([sys.executable,str(ROOT/'simulink/py/export_hpipm_qp.py'),'--surface-only'])
     run([sys.executable,str(ROOT/'simulink/py/export_online_plan_bank.py')])
-    run([str(ROOT/'simulink/mlab.cmd'),"maxNumCompThreads(1); addpath('simulink'); native_startup; check_native_rti; report_native_p0_matrix; finalize_native_delivery"])
+    run([str(ROOT/'simulink/mlab.cmd'),"maxNumCompThreads(1); addpath('simulink'); init_paths; check_native_rti; report_p0_matrix; finalize_delivery"])
     write_report()
     print('NATIVE_DELIVERY_FINISH_PASS',flush=True)

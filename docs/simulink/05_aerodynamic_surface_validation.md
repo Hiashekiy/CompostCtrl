@@ -12,7 +12,7 @@
 | `Aerodynamic_Model.slx` | [qbar,V,alpha,beta,p,q,r,de,da,dr] | 自然力矩、舵面增量力矩、总力矩 |
 | `Aerodynamic_Surface.slx` | delta_cmd；[qbar,V,alpha,beta,p,q,r] | 实际偏角/速度，及三种气动力矩 |
 
-模型保存在 `simulink/models/`。构建入口为 `build_native_actuators_aero.m` 和 `build_native_integrations.m`。
+模型保存在 `simulink/models/`。构建入口为 `build_actuators_aero.m` 和 `build_integrations.m`。
 所有物理模型仅含可检查的基础模块；对应 inventory CSV 已导出，程序断言无 Fcn、MATLAB Function、S-Function。
 气动输入要求 qbar≥0、V≥0、alpha/beta 为物理有效流角；当前没有在模型内部提供完整空气数据估计、密度大气模型、三轴气动力或位置速度外环。
 
@@ -64,7 +64,7 @@ Python 参考生成：`simulink/py/export_actuator_reference.py`；验证随机�
 ```powershell
 python simulink/py/export_actuator_reference.py
 $env:MATLAB_HOME='D:\Program Files\MATLAB\R2024a'
-.\simulink\mlab.cmd "addpath('simulink'); build_native_actuators_aero; build_native_integrations; check_native_integrations"
+.\simulink\mlab.cmd "addpath('simulink'); build_actuators_aero; build_integrations; check_integrations"
 ```
 
 测试中的跨周初始角仅作用于验证运行；保存的生产模型初始框架角为零，实际任务初态后续需统一接入参数字典。

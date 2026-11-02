@@ -55,7 +55,7 @@ for path in cases:
         run_with_retry(args)
         run_with_retry([sys.executable,str(ROOT/'simulink/py/export_online_plan_bank.py'),'--config',str(case)])
         bank=loadmat(ROOT/'simulink/data/online_plan_bank.mat');duration=float(bank['time'].ravel()[-1])
-        expression=f"maxNumCompThreads(1); addpath('simulink'); build_native_closedloop({duration},false,{'true' if enabled else 'false'},'{name}')"
+        expression=f"maxNumCompThreads(1); addpath('simulink'); build_closedloop({duration},false,{'true' if enabled else 'false'},'{name}')"
         print('RUN',name,'B' if enabled else 'A','duration',duration,flush=True)
         completed=subprocess.run([str(ROOT/'simulink/mlab.cmd'),expression],cwd=ROOT,env=env,check=True,
             stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,encoding='utf-8',errors='replace')

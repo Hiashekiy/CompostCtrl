@@ -1,5 +1,5 @@
 function build_public_force_model
-root=native_root;addpath(fullfile(root,'simulink','data'));p=vehicle_params;
+root=repo_root;addpath(fullfile(root,'simulink','data'));p=vehicle_params;
 table=load(fullfile(root,'simulink','data','public_surrogate','force_polar.mat'));
 m='Surrogate_Aero_Forces';if bdIsLoaded(m),close_system(m,0);end
 new_system(m);set_param(m,'SolverType','Fixed-step','Solver','FixedStepDiscrete','FixedStep','.001','StopTime','0','ReturnWorkspaceOutputs','on');

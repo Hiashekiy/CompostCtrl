@@ -26,7 +26,7 @@ A 组能对上、B 组对不上，说明被控对象、舵机、气动、参考�
 
 ### 根因
 
-`build_native_closedloop` 的 `configure_ideal_p0_drive` 用 `Simulink.SubSystem.deleteContents`
+`build_closedloop` 的 `configure_ideal_p0_drive` 用 `Simulink.SubSystem.deleteContents`
 把实测过的 P1 二阶框架驱动替换为理想速率执行加角积分。**deleteContents 会连同该子系统的
 Inport/Outport 块一起删除，从而删掉父系统里挂在这些端口上的连线**，并在目的端口留下无源线段。
 重建后的驱动块本身接线正确（孤立测试可正常积分），但它在 CMG 内部不再连到任何东西，
@@ -40,8 +40,8 @@ Inport/Outport 块一起删除，从而删掉父系统里挂在这些端口上�
 
 - `configure_ideal_p0_drive`：删除前记录该子系统全部端口的上下游连线，重建后**先清除悬空线段再重新连接**，
   并对每个端口断言 `get_param(port,'Line')>0`；速率限幅改由控制模板的 `gdot` 提供，不再硬编码 1。
-- `build_native_closedloop`：P0 B 组构建后调用 `assert_connected`，逐个检查 CMG 子系统输入/输出端口均有连线，构建期即失败。
-- 新增 `simulink/check/check_cmg_actuation.m`：载入已保存的 P0 B 模型跑 2 s，断言框架角确实移动、框架速率命令确实到达 CMG，
+- `build_closedloop`：P0 B 组构建后调用 `assert_connected`，逐个检查 CMG 子系统输入/输出端口均有连线，构建期即失败。
+- 新增 `simulink/verify/check_actuation.m`：载入已保存的 P0 B 模型跑 2 s，断言框架角确实移动、框架速率命令确实到达 CMG，
   作为“惰性执行机构”的回归门（修复前该检查必然失败：`gamma_peak=[0 0 0 0]`）。
 - `simulink/py/run_native_p0_matrix.py`：导出步骤加入锁竞争重试，避免 Windows 上 `.mat` 短暂占用导致的假失败。
 
@@ -70,7 +70,7 @@ S03 属算法本身在该工况下过冲较大的既有现象（Python 也是 B 
 - 真值积分：本模型 ode4/1 ms；Python P0 用 8 个 RK4 子步（h=25 ms）。
 - 扰动力矩：本模型 `From Workspace` 零阶保持（控制周期采样）；Python 在子步中点查询连续扰动。
 - 因此指标与 Python 同量级但非逐点等价；逐点轨迹等价、控制序列回放与步长收敛仍属未完成项。
-  `check_cmg_actuation` 只锁住“执行机构是否真的动”这一类失效，不代替上述验收。
+  `check_actuation` 只锁住“执行机构是否真的动”这一类失效，不代替上述验收。
 
 ## 已通过的数值验证
 
@@ -111,7 +111,7 @@ S03 属算法本身在该工况下过冲较大的既有现象（Python 也是 B 
 6. ModelWorkspace 在仿真启动时只读，已用 getVariable 读取嵌入的参数和参考，避免 evalin。
 7. Windows 批处理未透传 MATLAB 错误码，已修复 mlab.cmd；回归脚本同时检查仿真成功标记。
 8. GBK 打印 MATLAB 输出导致回归调度器退出；已统一 UTF-8、保存原始日志并加入断点续跑。
-9. P0 B 组 CMG 驱动接线被 `deleteContents` 一并删除，几何/角动量/力矩全部失效却仍能编译运行；已按上文“修复”小节重建连线并加入构建期与运行期断言，另加 `check_cmg_actuation` 回归门。
+9. P0 B 组 CMG 驱动接线被 `deleteContents` 一并删除，几何/角动量/力矩全部失效却仍能编译运行；已按上文“修复”小节重建连线并加入构建期与运行期断言，另加 `check_actuation` 回归门。
 
 ## 仍在执行或待补齐
 

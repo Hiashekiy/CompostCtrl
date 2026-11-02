@@ -1,6 +1,6 @@
-function build_native_stage1
+function build_stage1
 % Rebuild and validate the genuine Aerospace Blockset rigid-body block.
-root=native_root;
+root=repo_root;
 out=fullfile(root,'simulink','results','native_stage1');
 td=fullfile(root,'simulink','tests');
 if ~exist(out,'dir'), mkdir(out); end
