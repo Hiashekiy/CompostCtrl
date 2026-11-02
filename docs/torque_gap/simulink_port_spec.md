@@ -132,6 +132,20 @@ C1/C3 的残差量级（1e-16 / 1e-9）分别对应"浮点结合律"与"参考 C
 | 实测 | `mex simulink/mexopts/s08_hello.c` → 编译成功、运行输出 `gcc 15.2.0`、`2*21 = 42` |
 | 提示 | MATLAB 警告"该 MinGW 版本不在官方支持列表"（官方仅支持附加组件版本）。功能正常，但属非官方支持组合，升级 MATLAB 后需复验 |
 
+**CasADi C 代码生成 → mex 全链路也已实测**（`simulink/mexopts/codegen/`）：
+
+| 环节 | 结论 |
+|---|---|
+| `casadi.Function.generate()` | 可用。**坑**：参数必须是"纯文件名"，给带目录的路径会触发 `Function::check_name` 断言失败（`Assertion "Function::check_name(this->name)" failed`） |
+| 生成的 C | **自包含**：只 `#include <math.h>`，自带 `casadi_real`/`casadi_int` 定义，不需要 `casadi_c.h` |
+| 符号命名 | 导出函数按 **`casadi.Function` 名字**命名（`probef`），不是文件名（`probef_plain.c`）；入口为 `int probef(const casadi_real** arg, casadi_real** res, casadi_int* iw, casadi_real* w, int mem)` |
+| 网关编写 | `casadi_int` 在 win64 是 `long long int`（不是 `int`）；`arg`/`res` 尺寸要用 `<name>_work()` 查询，输出缓冲区同时作为最后一个 arg 传入 |
+| 编译运行 | `mex probef_mex.c probef_plain.c` 成功；`probef_mex([3;0]) = 9`、`probef_mex([2;1]) = 4`，与 `x0²` 一致 |
+
+**HPIPM 也不缺**：`.pydeps/casadi/libhpipm.dll`（1.9 MB）现成，w64devkit 带
+`gendef` / `dlltool`，可据此生成导入库链接。也就是说 D2① 的"生成 C + 编译"链路
+现在没有任何环境未知项，剩下的只是**把 RTI 的 SQP 循环移植到 C** 的工作量。
+
 ### 6.2 闭环通信开销：Nagle 算法
 
 第一版闭环 300 步耗时 **87.6 s**（0.29 s/步），而进程内 Python 闭环只要 0.12 s/步。
