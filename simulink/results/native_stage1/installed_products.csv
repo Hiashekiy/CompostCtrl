@@ -1,0 +1,114 @@
+Name,Version,Release,Date
+5G Toolbox,24.1,(R2024a),19-Nov-2023
+AUTOSAR Blockset,24.1,(R2024a),19-Nov-2023
+Aerospace Blockset,24.1,(R2024a),19-Nov-2023
+Aerospace Toolbox,24.1,(R2024a),19-Nov-2023
+Antenna Toolbox,24.1,(R2024a),23-Jan-2024
+Audio Toolbox,24.1,(R2024a),19-Nov-2023
+Automated Driving Toolbox,24.1,(R2024a),19-Nov-2023
+Bioinformatics Toolbox,24.1,(R2024a),19-Nov-2023
+Bluetooth Toolbox,24.1,(R2024a),19-Nov-2023
+C2000 Microcontroller Blockset,24.1,(R2024a),19-Nov-2023
+Communications Toolbox,24.1,(R2024a),19-Nov-2023
+Computer Vision Toolbox,24.1,(R2024a),19-Nov-2023
+Control System Toolbox,24.1,(R2024a),19-Nov-2023
+Curve Fitting Toolbox,24.1,(R2024a),19-Nov-2023
+DDS Blockset,24.1,(R2024a),19-Nov-2023
+DSP HDL Toolbox,24.1,(R2024a),19-Nov-2023
+DSP System Toolbox,24.1,(R2024a),19-Nov-2023
+Data Acquisition Toolbox,24.1,(R2024a),19-Nov-2023
+Database Toolbox,24.1,(R2024a),19-Nov-2023
+Datafeed Toolbox,24.1,(R2024a),19-Nov-2023
+Deep Learning HDL Toolbox,24.1,(R2024a),12-Jan-2024
+Deep Learning Toolbox,24.1,(R2024a),28-Dec-2023
+Econometrics Toolbox,24.1,(R2024a),19-Nov-2023
+Embedded Coder,24.1,(R2024a),19-Nov-2023
+Filter Design HDL Coder,24.1,(R2024a),19-Nov-2023
+Financial Instruments Toolbox,24.1,(R2024a),19-Nov-2023
+Financial Toolbox,24.1,(R2024a),19-Nov-2023
+Fixed-Point Designer,24.1,(R2024a),19-Nov-2023
+Fuzzy Logic Toolbox,24.1,(R2024a),19-Nov-2023
+GPU Coder,24.1,(R2024a),19-Nov-2023
+Global Optimization Toolbox,24.1,(R2024a),19-Nov-2023
+HDL Coder,24.1,(R2024a),19-Nov-2023
+HDL Verifier,24.1,(R2024a),19-Nov-2023
+Image Acquisition Toolbox,24.1,(R2024a),19-Nov-2023
+Image Processing Toolbox,24.1,(R2024a),19-Nov-2023
+Industrial Communication Toolbox,24.1,(R2024a),19-Nov-2023
+Instrument Control Toolbox,24.1,(R2024a),19-Nov-2023
+LTE Toolbox,24.1,(R2024a),19-Nov-2023
+Lidar Toolbox,24.1,(R2024a),19-Nov-2023
+MATLAB,24.1,(R2024a),19-Nov-2023
+MATLAB Coder,24.1,(R2024a),19-Nov-2023
+MATLAB Compiler,24.1,(R2024a),19-Nov-2023
+MATLAB Compiler SDK,24.1,(R2024a),19-Nov-2023
+MATLAB Report Generator,24.1,(R2024a),19-Nov-2023
+MATLAB Test,24.1,(R2024a),19-Nov-2023
+Mapping Toolbox,24.1,(R2024a),19-Nov-2023
+Medical Imaging Toolbox,24.1,(R2024a),19-Nov-2023
+Mixed-Signal Blockset,24.1,(R2024a),19-Nov-2023
+Model Predictive Control Toolbox,24.1,(R2024a),19-Nov-2023
+Model-Based Calibration Toolbox,24.1,(R2024a),19-Nov-2023
+Motor Control Blockset,24.1,(R2024a),19-Nov-2023
+Navigation Toolbox,24.1,(R2024a),19-Nov-2023
+Optimization Toolbox,24.1,(R2024a),19-Nov-2023
+Parallel Computing Toolbox,24.1,(R2024a),19-Nov-2023
+Partial Differential Equation Toolbox,24.1,(R2024a),19-Nov-2023
+Phased Array System Toolbox,24.1,(R2024a),19-Nov-2023
+Powertrain Blockset,24.1,(R2024a),19-Nov-2023
+Predictive Maintenance Toolbox,24.1,(R2024a),19-Nov-2023
+RF Blockset,24.1,(R2024a),19-Nov-2023
+RF PCB Toolbox,24.1,(R2024a),19-Nov-2023
+RF Toolbox,24.1,(R2024a),19-Nov-2023
+ROS Toolbox,24.1,(R2024a),19-Nov-2023
+Radar Toolbox,24.1,(R2024a),19-Nov-2023
+Reinforcement Learning Toolbox,24.1,(R2024a),19-Nov-2023
+Requirements Toolbox,24.1,(R2024a),19-Nov-2023
+Risk Management Toolbox,24.1,(R2024a),19-Nov-2023
+Robotics System Toolbox,24.1,(R2024a),23-Jan-2024
+Robust Control Toolbox,24.1,(R2024a),19-Nov-2023
+Satellite Communications Toolbox,24.1,(R2024a),19-Nov-2023
+Sensor Fusion and Tracking Toolbox,24.1,(R2024a),19-Nov-2023
+SerDes Toolbox,24.1,(R2024a),19-Nov-2023
+Signal Integrity Toolbox,24.1,(R2024a),19-Nov-2023
+Signal Processing Toolbox,24.1,(R2024a),19-Nov-2023
+SimBiology,24.1,(R2024a),19-Nov-2023
+SimEvents,24.1,(R2024a),22-May-2023
+Simscape,24.1,(R2024a),19-Nov-2023
+Simscape Battery,24.1,(R2024a),19-Nov-2023
+Simscape Driveline,24.1,(R2024a),19-Nov-2023
+Simscape Electrical,24.1,(R2024a),19-Nov-2023
+Simscape Fluids,24.1,(R2024a),19-Nov-2023
+Simscape Multibody,24.1,(R2024a),19-Nov-2023
+Simulink,24.1,(R2024a),19-Nov-2023
+Simulink 3D Animation,24.1,(R2024a),19-Nov-2023
+Simulink Check,24.1,(R2024a),19-Nov-2023
+Simulink Code Inspector,24.1,(R2024a),19-Nov-2023
+Simulink Coder,24.1,(R2024a),19-Nov-2023
+Simulink Compiler,24.1,(R2024a),21-Feb-2024
+Simulink Control Design,24.1,(R2024a),19-Nov-2023
+Simulink Coverage,24.1,(R2024a),19-Nov-2023
+Simulink Design Optimization,24.1,(R2024a),19-Nov-2023
+Simulink Design Verifier,24.1,(R2024a),19-Nov-2023
+Simulink Desktop Real-Time,24.1,(R2024a),19-Nov-2023
+Simulink Fault Analyzer,24.1,(R2024a),19-Nov-2023
+Simulink PLC Coder,24.1,(R2024a),19-Nov-2023
+Simulink Real-Time,24.1,(R2024a),19-Nov-2023
+Simulink Report Generator,24.1,(R2024a),19-Nov-2023
+Simulink Test,24.1,(R2024a),19-Nov-2023
+SoC Blockset,24.1,(R2024a),19-Nov-2023
+Spreadsheet Link,24.1,(R2024a),19-Nov-2023
+Stateflow,24.1,(R2024a),19-Nov-2023
+Statistics and Machine Learning Toolbox,24.1,(R2024a),19-Nov-2023
+Symbolic Math Toolbox,24.1,(R2024a),19-Nov-2023
+System Composer,24.1,(R2024a),19-Nov-2023
+System Identification Toolbox,24.1,(R2024a),19-Nov-2023
+Text Analytics Toolbox,24.1,(R2024a),19-Nov-2023
+UAV Toolbox,24.1,(R2024a),19-Nov-2023
+Vehicle Dynamics Blockset,24.1,(R2024a),19-Nov-2023
+Vehicle Network Toolbox,24.1,(R2024a),19-Nov-2023
+Vision HDL Toolbox,24.1,(R2024a),19-Nov-2023
+WLAN Toolbox,24.1,(R2024a),19-Nov-2023
+Wavelet Toolbox,24.1,(R2024a),19-Nov-2023
+Wireless HDL Toolbox,24.1,(R2024a),19-Nov-2023
+Wireless Testbench,24.1,(R2024a),19-Nov-2023

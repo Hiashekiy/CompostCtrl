@@ -1,0 +1,34 @@
+{
+  "Path": "aerolib6dof/6DoF (Quaternion)",
+  "LibraryVersion": 24.1,
+  "Names": [
+    "xme_0",
+    "Vm_0",
+    "eul_0",
+    "pm_0",
+    "Mass",
+    "Inertia",
+    "k_quat"
+  ],
+  "Values": [
+    "[0 0 0]",
+    "[0 0 0]",
+    "[0 0 0]",
+    "[0 0 0]",
+    "1.0",
+    "eye(3)",
+    "1"
+  ],
+  "Ports": [
+    2,
+    7,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}

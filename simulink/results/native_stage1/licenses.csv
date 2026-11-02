@@ -1,0 +1,39 @@
+Feature,Test,Checkout,Diagnostic
+MATLAB,1,1,""
+Simulink,1,1,""
+Aerospace_Blockset,1,0,"License checkout failed.
+License Manager Error -5
+Cannot find a license for Aerospace_Toolbox.
+
+Troubleshoot this issue by visiting: 
+https://www.mathworks.com/support/lme/5
+
+Diagnostic Information:
+Feature: Aerospace_Toolbox 
+License path: C:\Users\zz\AppData\Roaming\MathWorks\MATLAB\R2024a_licenses;D:\Program Files\MATLAB\R2024a\licenses\license.dat;D:\Program Files\MATLAB\R2024a\licenses\license_DESKTOP-334FKIJ_968398_R2024a.lic 
+Licensing error: -5,357."
+Aerospace_Toolbox,0,0,"License checkout failed.
+License Manager Error -5
+Cannot find a license for Aerospace_Toolbox.
+
+Troubleshoot this issue by visiting: 
+https://www.mathworks.com/support/lme/5
+
+Diagnostic Information:
+Feature: Aerospace_Toolbox 
+License path: C:\Users\zz\AppData\Roaming\MathWorks\MATLAB\R2024a_licenses;D:\Program Files\MATLAB\R2024a\licenses\license.dat;D:\Program Files\MATLAB\R2024a\licenses\license_DESKTOP-334FKIJ_968398_R2024a.lic 
+Licensing error: -5,357."
+Simscape,1,1,""
+SimMechanics,1,1,""
+Optimization_Toolbox,1,1,""
+Instrument_Control_Toolbox,0,0,"License checkout failed.
+License Manager Error -5
+Cannot find a license for Instrument_Control_Toolbox.
+
+Troubleshoot this issue by visiting: 
+https://www.mathworks.com/support/lme/5
+
+Diagnostic Information:
+Feature: Instrument_Control_Toolbox 
+License path: C:\Users\zz\AppData\Roaming\MathWorks\MATLAB\R2024a_licenses;D:\Program Files\MATLAB\R2024a\licenses\license.dat;D:\Program Files\MATLAB\R2024a\licenses\license_DESKTOP-334FKIJ_968398_R2024a.lic 
+Licensing error: -5,357."
