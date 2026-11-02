@@ -17,20 +17,28 @@ simulink\mlab.cmd "addpath('simulink'); check_plant_step"   # 2. C1 单步等价
 python simulink/py/run_closedloop.py --all             # 3. 闭环（起 Python 控制器 + 跑 MATLAB）
 ```
 
-## 打开/重跑某个已生成的模型
+## 打开/重跑某个已生成的模型（手动操作）
 
-模型读固定路径的输入快照，所以**先刷新快照再 sim**（否则会拿上一次运行的工况）：
+在**你自己的 MATLAB 桌面**里（不要用 `mlab.cmd`，那个是给无人值守 `-batch` 用的）：
 
 ```matlab
-open_case('A4_descent_replay_S00_with_cmg_P0','replay')      % 或 'closedloop'
-sim('results/simulink_port/runs/A4_descent_replay_S00_with_cmg_P0_replay.slx')
+cd D:\项目\飞轮
+run('simulink/s08_startup.m')                          % 加路径 + 列出模型
+open_case('A4_descent_replay_S00_with_cmg_P0','replay') % 刷新该工况输入并打开模型
+% 然后直接点 Run
 ```
 
-闭环模型需先起控制器（端口 55901）：
+闭环模型额外需要 Python 控制器在跑（另开一个终端）：
 
 ```bash
 python simulink/py/ctrl_server.py --case configs/torque_gap_s08/cases/A4_descent_replay_S00_with_cmg_P0.yaml --port 55901
 ```
+
+然后 `open_case('A4_descent_replay_S00_with_cmg_P0','closedloop')` → Run。
+
+> 为什么必须走 `open_case`：模型从**固定路径** `results/simulink_port/data/CURRENT_case.json`
+> 与 `CURRENT_u.csv` 读输入（Level-2 S-Function 的 setup 拿不到其它通道），
+> 直接双击 .slx 会复用"上一次运行"的工况快照；A 组是 7 状态、B 组是 11 状态，维度不符会直接报错。
 
 ## 关键结论（详见 report.md）
 
