@@ -2,6 +2,8 @@
 
 日期：2026-11-02。分支：`experiment/simulink-native-flight-control`。
 
+最新复查（2026-11-02 14:03，新启动 MATLAB 桌面会话）：MATLAB、Simulink、Aerospace_Toolbox、Aerospace_Blockset 实际 checkout 均为 1；真实 `aerolib6dof/6DoF (Quaternion)` 已成功创建并完成 0.1 s 固定步长仿真。原许可证阻塞已不再复现。证据：`simulink/results/license_recheck/20261102_140322/report.json`、同目录 SLX 与 MAT。本次仅为许可证与模块运行冒烟验证，完整阶段 1 解析验收仍需执行。下文保留首次失败审计记录。
+
 后续授权更新：用户随后明确要求暂缓许可证处理、继续后续迁移。因此已推进独立于 Aerospace 的参数审计和基础 Simulink CMG 几何验证；原生 6DOF 验收仍为阻塞状态。下文关于阶段门禁的表述记录的是首次审计时状态。
 
 ## 当前结论：第一阶段被许可证阻塞

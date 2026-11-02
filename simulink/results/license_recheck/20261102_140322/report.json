@@ -1,0 +1,23 @@
+{
+  "version": "24.1.0.2537033 (R2024a)",
+  "time": "2026-11-02 14:03:22",
+  "matlabroot": "D:\\Program Files\\MATLAB\\R2024a",
+  "MATLAB": {
+    "checkout": 1,
+    "message": ""
+  },
+  "Simulink": {
+    "checkout": 1,
+    "message": ""
+  },
+  "Aerospace_Toolbox": {
+    "checkout": 1,
+    "message": ""
+  },
+  "Aerospace_Blockset": {
+    "checkout": 1,
+    "message": ""
+  },
+  "block_create": true,
+  "simulation": true
+}

@@ -1,0 +1,12 @@
+{
+  "Plant_6DOF_SurfaceOnly": {
+    "omega_error_rad_s": 5.898059818321144e-17,
+    "samples": 801,
+    "tolerance": 2e-05
+  },
+  "Plant_6DOF_CMG": {
+    "omega_error_rad_s": 5.0306980803327406e-17,
+    "samples": 801,
+    "tolerance": 2e-05
+  }
+}

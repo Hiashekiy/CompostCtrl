@@ -1,0 +1,33 @@
+{
+  "ReferenceBlock": "aerolibprivatev1p5/6DoF (Quaternion)",
+  "Names": [
+    "xme_0",
+    "Vm_0",
+    "eul_0",
+    "pm_0",
+    "Mass",
+    "Inertia",
+    "k_quat"
+  ],
+  "Values": [
+    "[0 0 0]",
+    "[0 0 0]",
+    "[0 0 0]",
+    "[0 0 0]",
+    "10",
+    "diag([2 3 4])",
+    "1"
+  ],
+  "Ports": [
+    2,
+    7,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}

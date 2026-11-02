@@ -1,0 +1,5 @@
+Row,position_error_m,velocity_error_mps,omega_error_radps,euler_error_rad,quaternion_norm_error
+rest,0,0,0,0,0
+coast,2.18935980456081e-13,0,0,0,0
+constant_force,1.08801856413265e-13,2.18935980456081e-13,0,0,0
+constant_moment,0,0,1.0946799022804e-13,3.35287353436797e-14,2.29816166097407e-14
