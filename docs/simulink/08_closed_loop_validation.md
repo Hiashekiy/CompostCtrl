@@ -97,6 +97,12 @@ S03 属算法本身在该工况下过冲较大的既有现象（Python 也是 B 
 
 证据：`simulink/results/native_closedloop/tracking_report.json` 及 MAT 日志。指标只支持该特定工程模型和工况，不外推为真实飞行器结论。
 
+**A/B 数据对比图**：`simulink/results/native_closedloop/FlightControl_AB_comparison_60s.png`（指标表另存为
+`FlightControl_AB_metrics_60s.csv`）。十个面板依次为姿态角、姿态误差、俯仰/偏航角速度（deg/s）、俯仰总气动力矩命令、
+B 组框架速率命令、B 组框架角、动压、迎角/侧滑角、速度；A 组用虚线、B 组用实线。
+重新生成：`addpath('simulink'); init_paths; plot_flight_ab`（脚本 `verify/plot_flight_ab.m`，读同一批 MAT 日志，
+不需要重跑仿真；其它时长用 `plot_flight_ab('2s')`）。
+
 当前参考管理器保存整段未来序列，控制器每周期选择下一组未来 N+1 点；QP 在 MATLAB 侧实时重建和调用 HPIPM。它不是回放 Python 控制序列。
 预测参考与能力包络仍来自冻结场景的名义未来轨迹，尚未完成按实际位置/速度重建全部预测环境的扩展验证。
 位置/速度自主制导尚未实现，当前采用方案允许的直接姿态参考模式。

@@ -63,8 +63,11 @@ check_integrations;
 check_native_allocation;
 check_native_assembly;
 check_native_rti;
-check_actuation;      % P0 B 组：框架角必须真的移动（惰性执行机构的回归门）
-check_layout;              % 目录分层自检：脚本可解析/可解析到 build|check，模型在 models|cases
+check_actuation;          % P0 B 组：框架角必须真的移动（惰性执行机构的回归门）
+check_layout;             % 目录分层自检：脚本可解析、模型在 models|cases
+report_p0_matrix;         % 由已有日志重算 16 组 P0 指标表
+report_closedloop;        % 工程飞行模式的跟踪指标 JSON
+plot_flight_ab;           % 工程飞行 A/B 数据对比图（读 60 s 日志，不重跑仿真）
 ```
 
 Python 原始参考导出与批量实验入口在 `simulink/py/`。八组 A/B 回归入口为 `python simulink/py/run_native_p0_matrix.py`，支持断点续跑。
