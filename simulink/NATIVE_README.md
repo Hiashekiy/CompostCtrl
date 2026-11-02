@@ -1,5 +1,7 @@
 # 原生 Simulink 迁移交付入口
 
+后续开发请优先阅读完整的[开发接续手册](../docs/simulink/原生Simulink迁移_开发接续手册.md)，包含模块接口、代码、修改与重建步骤、Simulink联动和已知缺口。
+
 本入口与旧 `simulink/README.md` 的 S08 Python/TCP 版本分开。原生主链不依赖运行 Python 控制服务器。
 
 在 MATLAB R2024a 中：
