@@ -103,6 +103,23 @@ B 组框架速率命令、B 组框架角、动压、迎角/侧滑角、速度；
 重新生成：`addpath('simulink'); init_paths; plot_flight_ab`（脚本 `verify/plot_flight_ab.m`，读同一批 MAT 日志，
 不需要重跑仿真；其它时长用 `plot_flight_ab('2s')`）。
 
+## 八组 P0 的 A/B 对比图（与论文图同风格）
+
+`verify/plot_p0_ab.m` 按论文侧 `figures/torque_gap_no_cmg_comparison/<phase>/<case>_AB.png` 的四面板风格，
+为每组 P0 工况画一张 A（仅舵面，橙）对 B（舵面+CMG，蓝）的对比图：
+
+| 面板 | 内容 |
+|---|---|
+| (a) | 该工况机动轴的姿态跟踪（参考虚线 / A / B），浅蓝底为参考机动区间 |
+| (b) | 三轴短弧姿态误差范数，图例内含全程 RMSE 与峰值 |
+| (c) | 该轴力矩分工：气动可行区间与上下限（绿）、参考需求 τ_nom、A/B 气动总力矩、B 的 CMG 力矩（青） |
+| (d) | CMG 该轴角动量 H(γ) 与 ±4h₀ 参考（A 组无 CMG） |
+
+机动轴按工况自动选择：`*roll*` → 滚转、`*yaw*` → 偏航、其余 → 俯仰。
+生成：`plot_p0_ab`（全部 8 组）或 `plot_p0_ab('S00_pitch30')`（单组）。
+输出：`results/native_closedloop/P0_<case>_AB.png` 与 `P0_<case>_metrics.csv`（最大/RMS/终值误差与该轴力矩峰值）。
+RMSE/峰值与该目录的 `p0_matrix_summary.csv` 一致；这些图只读已保存日志，重跑仿真不是前提。
+
 当前参考管理器保存整段未来序列，控制器每周期选择下一组未来 N+1 点；QP 在 MATLAB 侧实时重建和调用 HPIPM。它不是回放 Python 控制序列。
 预测参考与能力包络仍来自冻结场景的名义未来轨迹，尚未完成按实际位置/速度重建全部预测环境的扩展验证。
 位置/速度自主制导尚未实现，当前采用方案允许的直接姿态参考模式。

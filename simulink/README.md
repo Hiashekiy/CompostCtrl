@@ -67,6 +67,7 @@ check_actuation;          % P0 B 组：框架角必须真的移动（惰性执�
 check_layout;             % 目录分层自检：脚本可解析、模型在 models|cases
 report_p0_matrix;         % 由已有日志重算 16 组 P0 指标表
 report_closedloop;        % 工程飞行模式的跟踪指标 JSON
+plot_p0_ab;               % 八组 P0 的 A/B 四面板对比图（P0_<case>_AB.png + metrics.csv）
 plot_flight_ab;           % 工程飞行 A/B 数据对比图（读 60 s 日志，不重跑仿真）
 ```
 
