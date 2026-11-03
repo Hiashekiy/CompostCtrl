@@ -51,6 +51,9 @@ S-Function 块参数和预测 MEX 文件名，改名需要重建全部模型并�
 - `models/NearSpace_CMG_AttitudeValidation.slx` 与 `cases/NearSpace_CMG_AttitudeValidation*_S0*.slx`：原有 P0 总气动力矩命令接口；不接平动力，用于姿态实验。P0 CMG 直接跟随框架速率命令；P1 保留驱动环节。
 - 无 CMG A 组使用独立的 7 状态/3 控制预测模型与不含 CMG 的原生真值结构；B 组使用 11 状态/7 控制预测。
 - Case 模型在 ModelWorkspace 内嵌控制模板与未来参考，防止切换模型后复用别的工况。求解器代码/MEX 仍通过 init_paths 加路径。
+- 工程飞行模型另有一个 `Reference_Manager` 子系统：把内嵌参考库以普通信号（姿态参考/角速度参考/名义力矩）引出，
+  接到日志和 `Attitude_vs_Reference` 示波器，方便看图核对参考；控制器仍读内嵌库（未来序列不是因果信号），
+  两处数据都由构建器从同一个 bank 派生。详见手册 §6.4。
 
 所有物理部分使用可检查的工具箱/基础模块。两个自定义 Level-2 MATLAB S-Function 仅负责 MPC 算法及舵面控制分配。
 生成的 C/MEX 预测模型仅用于控制器预测与导数，不承担真值刚体或执行器动力学。

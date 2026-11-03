@@ -65,6 +65,40 @@ if flight
 end
 mw=get_param(m,'ModelWorkspace');dist=[bank.time(:) squeeze(bank.tau_d(:,1,:))'];assignin(mw,'disturbance_schedule',dist);
 add_block('simulink/Sources/From Workspace',[m '/Disturbance'],'VariableName','disturbance_schedule','Interpolate','off','OutputAfterFinalValue','Holding final value','Position',[290 180 430 220]);add_line(m,'Disturbance/1','Native_Plant/2');
+if flight
+ % The reference the controller consumes lives in the model workspace (it has to:
+ % the MPC needs the FUTURE sequence, which is not a causal signal).  This
+ % subsystem exposes that same schedule as ordinary signals so the diagram shows
+ % where the attitude/rate/torque reference comes from, and so it can be logged
+ % and watched live.  Both copies are derived from the same bank below.
+ ref_att=[bank.time(:) euldeg(squeeze(bank.q_ref(:,1,:))')];   % euldeg already returns degrees
+ ref_rate=[bank.time(:) squeeze(bank.omega_ref(:,1,:))'];
+ ref_tau=[bank.time(:) squeeze(bank.tau_nom(:,1,:))'];
+ assignin(mw,'reference_attitude_deg',ref_att);
+ assignin(mw,'reference_body_rate',ref_rate);
+ assignin(mw,'reference_torque_nom',ref_tau);
+ rm=[m '/Reference_Manager'];
+ add_block('built-in/SubSystem',rm,'Position',[1300 40 1600 250]);
+ srcs={'attitude_deg','reference_attitude_deg'; ...
+       'body_rate','reference_body_rate'; ...
+       'torque_nom','reference_torque_nom'};
+ for k=1:size(srcs,1)
+  add_block('simulink/Sources/From Workspace',[rm '/' srcs{k,1}],'VariableName',srcs{k,2}, ...
+   'Interpolate','off','OutputAfterFinalValue','Holding final value','Position',[25 25+70*(k-1) 185 60+70*(k-1)]);
+  add_block('built-in/Outport',[rm sprintf('/ref%d',k)],'Port',num2str(k), ...
+   'Position',[230 30+70*(k-1) 260 55+70*(k-1)]);
+  add_line(rm,[srcs{k,1} '/1'],sprintf('ref%d/1',k));
+ end
+ add_block('built-in/ToWorkspace',[m '/reference_log'],'VariableName','reference_log_att_deg', ...
+  'SaveFormat','Timeseries','MaxDataPoints','inf','Position',[1310 270 1450 310]);
+ add_line(m,'Reference_Manager/1','reference_log/1');
+ add_block('built-in/Gain',[m '/Euler_to_deg'],'Gain',num2str(180/pi,17),'Position',[1150 300 1190 340]);
+ add_line(m,'Native_Plant/3','Euler_to_deg/1');
+ add_block('built-in/Mux',[m '/Attitude_compare'],'Inputs','2','Position',[1230 300 1235 400]);
+ add_line(m,'Euler_to_deg/1','Attitude_compare/1');add_line(m,'Reference_Manager/1','Attitude_compare/2');
+ add_block('built-in/Scope',[m '/Attitude_vs_Reference'],'Position',[1290 330 1360 380]);
+ add_line(m,'Attitude_compare/1','Attitude_vs_Reference/1');
+end
 for pair={'State_feedback/1','Online_RTI_HPIPM/1'}
  src=pair{1};if startsWith(src,'State'),name='states';else,name='commands';end
  add_block('built-in/ToWorkspace',[m '/' name],'VariableName',name,'SaveFormat','Timeseries','MaxDataPoints','inf');add_line(m,src,[name '/1'],'autorouting','on');
@@ -80,12 +114,26 @@ r=sim(m);assert(all(isfinite(r.states.Data),'all') && all(isfinite(r.commands.Da
 if flight,tag='surrogate_flight';else,tag='attitude';end
 if enabled,arm='B';else,arm='A';end
 if isempty(case_name),suffix='';else,suffix=['_' case_name];end
-save(fullfile(out,sprintf('%s_%s_%gs%s.mat',arm,tag,duration,suffix)),'r');save_system(m,fullfile(modeldir,[m '.slx']));
+save_with_retry(fullfile(out,sprintf('%s_%s_%gs%s.mat',arm,tag,duration,suffix)),r);
+save_system(m,fullfile(modeldir,[m '.slx']));
 Simulink.BlockDiagram.arrangeSystem(m);
 set_param(m,'InitFcn','init_paths;');
 save_system(m);
 try,print(['-s' m],'-dpng',fullfile(out,'model.png'));catch,warning('model screenshot skipped');end
 close_system(m,0);fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g\n',duration);
+end
+function save_with_retry(file,result)
+% On Windows a just-closed MATLAB process can still hold the target file, which
+% makes save fail with "Invalid argument"; retry before giving up.
+r=result;                                   % saved under the same variable name as before
+for attempt=1:6
+ try
+  save(file,'r');return;
+ catch err
+  if attempt==6,rethrow(err);end
+  fprintf('SAVE_RETRY %d %s (%s)\n',attempt,file,err.identifier);pause(15);
+ end
+end
 end
 
 function configure_ideal_p0_drive(path,gamma0,gdot)
@@ -152,4 +200,12 @@ for type={'Inport','Outport'}
   assert(h>0,'%s: %s %s is unconnected',path,get_param(blocks{i},'Name'),type{1});
  end
 end
+end
+function e=euldeg(q)
+% Quaternion (scalar first) to roll/pitch/yaw in degrees, row-wise.
+q=q./vecnorm(q,2,2);
+w=q(:,1);x=q(:,2);y=q(:,3);z=q(:,4);
+e=rad2deg([atan2(2*(w.*x+y.*z),1-2*(x.^2+y.^2)), ...
+           asin(max(-1,min(1,2*(w.*y-z.*x)))), ...
+           atan2(2*(w.*z+x.*y),1-2*(y.^2+z.^2))]);
 end

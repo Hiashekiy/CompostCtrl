@@ -294,6 +294,21 @@ bank = getVariable(mw,'native_reference_bank');
 - `native_controller_template`：nx、nu、N、dts、权重、QP结构、信赖域、J/CMG常量等。
 - `native_reference_bank`：`time`、`x0`，以及每个控制时刻的未来 `q_ref/omega_ref/tau_d/tau_min/tau_max/tau_nom/gap`。
 - `disturbance_schedule`：供 From Workspace 使用的扰动时序。
+- 工程飞行模型另有 `reference_attitude_deg`、`reference_body_rate`、`reference_torque_nom`：由同一个 bank 派生的
+  参考姿态/角速度/名义力矩时序，只供图上的 `Reference_Manager` 使用（见 6.4）。
+
+### 6.4 参考数据在图上如何呈现（工程飞行模型）
+
+控制器必须读**未来序列**（不是因果信号），所以参考只能以内嵌库的形式给 S-Function；为了让这条数据链在图上看得到，
+工程飞行模型（`flight=true`）额外有一个 `Reference_Manager` 子系统，内含三个 From Workspace 分别加载
+`reference_attitude_deg`（姿态参考，单位由四元数换算成度）、`reference_body_rate`、`reference_torque_nom`，并引出到：
+
+- `reference_log_att_deg`（To Workspace）：参考姿态日志，可与实测姿态逐点比较；
+- `Attitude_compare` + `Attitude_vs_Reference`（Scope）：实测欧拉角（经 `Euler_to_deg` 换算）与参考姿态叠加显示。
+
+两者的数据都由 `modelgen/build_closedloop` 从**同一个 bank** 派生，不存在两个独立数据源。
+**注意**：这里的可见信号只用于显示与记录，控制器仍读内嵌库；改参考必须改场景配置后重新导出并重建模型，
+直接改 `Reference_Manager` 里 From Workspace 指向的变量不会改变控制行为。P0 工况模型（`cases/`）暂未加这套显示块。
 
 bank.time 是从0开始的仿真相对时间，原场景可能从90 s开始；Python已将绝对时间查询转换为 bank 内容。不要再在 MATLAB 中重复加90 s。
 名义预测环境并非由实际位置速度每周期重新生成。

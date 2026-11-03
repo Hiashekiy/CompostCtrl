@@ -18,7 +18,15 @@ for f=1:numel(files)
  key=matlab.lang.makeValidName(erase(files(f).name,'.mat'));summary.(key)=report;
  writematrix([t angle],fullfile(out,[key '_attitude_error.csv']));
 end
-fid=fopen(fullfile(out,'tracking_report.json'),'w');fprintf(fid,'%s',jsonencode(summary,'PrettyPrint',true));fclose(fid);disp(summary);
+fid=fopen(fullfile(out,'tracking_report.json'),'w');
+if fid<=0
+ for attempt=1:5
+  pause(10);fid=fopen(fullfile(out,'tracking_report.json'),'w');if fid>0,break;end
+  fprintf('JSON_RETRY %d\n',attempt);
+ end
+end
+if fid>0,fprintf(fid,'%s',jsonencode(summary,'PrettyPrint',true));fclose(fid);else,warning('TRACKING_REPORT_SKIPPED (file locked)');end
+disp(summary);
 end
 function data=samples(ts)
 data=squeeze(ts.Data);if size(data,1)~=numel(ts.Time),data=data';end

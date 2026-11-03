@@ -13,8 +13,23 @@ for k=1:numel(models)
  for j=1:numel(blocks)
   b=blocks{j};rows(j,:)={b,get_param(b,'BlockType'),get_param(b,'ReferenceBlock'),get_param(b,'Parent'),get_param(b,'MaskType')};
  end
- writetable(cell2table(rows,'VariableNames',{'Name','Type','ReferenceBlock','Parent','Mask'}),fullfile(out,[name '_inventory.csv']));
- print(['-s' name],'-dpng',fullfile(out,[name '.png']));close_system(name,0);
+ retry_write(@() writetable(cell2table(rows,'VariableNames',{'Name','Type','ReferenceBlock','Parent','Mask'}), ...
+  fullfile(out,[name '_inventory.csv'])),[name '_inventory.csv']);
+ retry_write(@() print(['-s' name],'-dpng',fullfile(out,[name '.png'])),[name '.png']);close_system(name,0);
 end
 report_closedloop;fprintf('NATIVE_DELIVERY_RELOAD_PASS\n');
+end
+function retry_write(fn,label)
+% Evidence files can be held for a few seconds by the MATLAB process that just
+% closed; retry instead of aborting the delivery audit.
+for attempt=1:5
+ try
+  fn();return;
+ catch err
+  if attempt==5
+   warning('EVIDENCE_WRITE_SKIPPED %s (%s)',label,err.identifier);return;
+  end
+  fprintf('WRITE_RETRY %d %s\n',attempt,label);pause(10);
+ end
+end
 end
