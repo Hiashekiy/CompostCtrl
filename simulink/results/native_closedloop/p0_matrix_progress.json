@@ -1,59 +1,19 @@
 [
   {
     "case": "S00_pitch30",
-    "arm": "A",
-    "duration_s": 60.0,
-    "status": "SIMULATION_FINITE_PASS"
-  },
-  {
-    "case": "S01_pitch_minus30",
-    "arm": "A",
-    "duration_s": 60.0,
-    "status": "SIMULATION_FINITE_PASS"
-  },
-  {
-    "case": "S02_pitch10",
-    "arm": "A",
-    "duration_s": 60.0,
-    "status": "SIMULATION_FINITE_PASS"
-  },
-  {
-    "case": "S03_pitch45",
-    "arm": "A",
-    "duration_s": 60.0,
-    "status": "SIMULATION_FINITE_PASS"
-  },
-  {
-    "case": "S04_roll30",
-    "arm": "A",
-    "duration_s": 60.0,
-    "status": "SIMULATION_FINITE_PASS"
-  },
-  {
-    "case": "S05_yaw30",
-    "arm": "A",
-    "duration_s": 60.0,
-    "status": "SIMULATION_FINITE_PASS"
-  },
-  {
-    "case": "S06_pitch30_roll20",
-    "arm": "A",
-    "duration_s": 60.0,
-    "status": "SIMULATION_FINITE_PASS"
-  },
-  {
-    "case": "S07_sequential",
-    "arm": "A",
-    "duration_s": 90.0,
-    "status": "SIMULATION_FINITE_PASS"
-  },
-  {
-    "case": "S00_pitch30",
     "arm": "B",
     "duration_s": 60.0,
     "status": "SIMULATION_FINITE_PASS",
     "plant_mode": "P0_IDEAL",
     "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S00_pitch30_with_cmg\\config_resolved.yaml"
+  },
+  {
+    "case": "S00_pitch30",
+    "arm": "A",
+    "duration_s": 60.0,
+    "status": "SIMULATION_FINITE_PASS",
+    "plant_mode": "P0_IDEAL",
+    "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S00_pitch30_no_cmg\\config_resolved.yaml"
   },
   {
     "case": "S01_pitch_minus30",
@@ -64,12 +24,28 @@
     "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S01_pitch_minus30_with_cmg\\config_resolved.yaml"
   },
   {
+    "case": "S01_pitch_minus30",
+    "arm": "A",
+    "duration_s": 60.0,
+    "status": "SIMULATION_FINITE_PASS",
+    "plant_mode": "P0_IDEAL",
+    "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S01_pitch_minus30_no_cmg\\config_resolved.yaml"
+  },
+  {
     "case": "S02_pitch10",
     "arm": "B",
     "duration_s": 60.0,
     "status": "SIMULATION_FINITE_PASS",
     "plant_mode": "P0_IDEAL",
     "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S02_pitch10_with_cmg\\config_resolved.yaml"
+  },
+  {
+    "case": "S02_pitch10",
+    "arm": "A",
+    "duration_s": 60.0,
+    "status": "SIMULATION_FINITE_PASS",
+    "plant_mode": "P0_IDEAL",
+    "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S02_pitch10_no_cmg\\config_resolved.yaml"
   },
   {
     "case": "S03_pitch45",
@@ -80,12 +56,28 @@
     "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S03_pitch45_with_cmg\\config_resolved.yaml"
   },
   {
+    "case": "S03_pitch45",
+    "arm": "A",
+    "duration_s": 60.0,
+    "status": "SIMULATION_FINITE_PASS",
+    "plant_mode": "P0_IDEAL",
+    "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S03_pitch45_no_cmg\\config_resolved.yaml"
+  },
+  {
     "case": "S04_roll30",
     "arm": "B",
     "duration_s": 60.0,
     "status": "SIMULATION_FINITE_PASS",
     "plant_mode": "P0_IDEAL",
     "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S04_roll30_with_cmg\\config_resolved.yaml"
+  },
+  {
+    "case": "S04_roll30",
+    "arm": "A",
+    "duration_s": 60.0,
+    "status": "SIMULATION_FINITE_PASS",
+    "plant_mode": "P0_IDEAL",
+    "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S04_roll30_no_cmg\\config_resolved.yaml"
   },
   {
     "case": "S05_yaw30",
@@ -96,6 +88,14 @@
     "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S05_yaw30_with_cmg\\config_resolved.yaml"
   },
   {
+    "case": "S05_yaw30",
+    "arm": "A",
+    "duration_s": 60.0,
+    "status": "SIMULATION_FINITE_PASS",
+    "plant_mode": "P0_IDEAL",
+    "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S05_yaw30_no_cmg\\config_resolved.yaml"
+  },
+  {
     "case": "S06_pitch30_roll20",
     "arm": "B",
     "duration_s": 60.0,
@@ -104,11 +104,27 @@
     "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S06_pitch30_roll20_with_cmg\\config_resolved.yaml"
   },
   {
+    "case": "S06_pitch30_roll20",
+    "arm": "A",
+    "duration_s": 60.0,
+    "status": "SIMULATION_FINITE_PASS",
+    "plant_mode": "P0_IDEAL",
+    "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S06_pitch30_roll20_no_cmg\\config_resolved.yaml"
+  },
+  {
     "case": "S07_sequential",
     "arm": "B",
     "duration_s": 90.0,
     "status": "SIMULATION_FINITE_PASS",
     "plant_mode": "P0_IDEAL",
     "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S07_sequential_with_cmg\\config_resolved.yaml"
+  },
+  {
+    "case": "S07_sequential",
+    "arm": "A",
+    "duration_s": 90.0,
+    "status": "SIMULATION_FINITE_PASS",
+    "plant_mode": "P0_IDEAL",
+    "config_source": "results\\torque_gap_no_cmg_comparison_rti2\\P0\\S07_sequential_no_cmg\\config_resolved.yaml"
   }
 ]
