@@ -27,3 +27,7 @@ pip-unpack-*/
 *.slxc
 slprj/
 *.slx.bak
+
+# Simulink autosave / recovery files
+*.slx.autosave
+*.mdl.autosave
