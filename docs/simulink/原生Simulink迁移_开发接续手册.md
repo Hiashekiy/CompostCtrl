@@ -318,8 +318,12 @@ bank = getVariable(mw,'native_reference_bank');
 - 改参考仍要改场景配置后重新导出并重建模型；`Reference_Manager` 里变量的值在每次构建时重写。
 - **当前已升级的模型**：两个工程飞行模型与十六组 P0 工况模型（`models/`、`cases/`）都已升级为 2 端口走信号通路，
   由 `verify/upgrade_reference_wiring` 就地升级（读各模型自带的参考库，不重新导出、不重跑仿真）。
-  控制器仍保留兼容分支：模型里没有 `reference_window` 变量时退回读内嵌库，所以旧模型不会因为这次改动而失效。
+  构建器 `build_closedloop` 也已把这段接线改为**对所有模型无条件生效**，所以任何重建都会得到同样结构。
+  控制器仍保留兼容分支：模型里没有 `reference_window` 变量时退回读内嵌库。
   `NearSpace_CMG_AttitudeValidation.slx`（无工况后缀）既没有内嵌模板也没有参考库、根本无法运行，已删除。
+  **证据时序注意**：现有的 60/90 秒日志与 `p0_matrix_summary.csv` 是"升级前（走旧读库通路）"那次运行的结果，
+  它们仍是有用的基线数字，但**不是**新通路的复跑；新通路的等价性目前由飞行模型（2 秒逐位一致、60 秒峰值一致）
+  与升级后 S00 的 0.4 秒冒烟 + `check_actuation` 支撑。若要新通路的全组证据，跑一次 `run_native_p0_matrix.py`。
 
 bank.time 是从0开始的仿真相对时间，原场景可能从90 s开始；Python已将绝对时间查询转换为 bank 内容。不要再在 MATLAB 中重复加90 s。
 名义预测环境并非由实际位置速度每周期重新生成。

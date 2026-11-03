@@ -65,8 +65,7 @@ if flight
 end
 mw=get_param(m,'ModelWorkspace');dist=[bank.time(:) squeeze(bank.tau_d(:,1,:))'];assignin(mw,'disturbance_schedule',dist);
 add_block('simulink/Sources/From Workspace',[m '/Disturbance'],'VariableName','disturbance_schedule','Interpolate','off','OutputAfterFinalValue','Holding final value','Position',[290 180 430 220]);add_line(m,'Disturbance/1','Native_Plant/2');
-if flight
- % The reference the controller consumes lives in the model workspace (it has to:
+% The reference the controller consumes lives in the model workspace (it has to:
  % the MPC needs the FUTURE sequence, which is not a causal signal).  This
  % subsystem exposes that same schedule as ordinary signals so the diagram shows
  % where the attitude/rate/torque reference comes from, and so it can be logged
@@ -114,7 +113,6 @@ if flight
  add_line(m,'Euler_to_deg/1','Attitude_compare/1');add_line(m,'Reference_Manager/2','Attitude_compare/2');
  add_block('built-in/Scope',[m '/Attitude_vs_Reference'],'Position',[1290 330 1360 380]);
  add_line(m,'Attitude_compare/1','Attitude_vs_Reference/1');
-end
 for pair={'State_feedback/1','Online_RTI_HPIPM/1'}
  src=pair{1};if startsWith(src,'State'),name='states';else,name='commands';end
  add_block('built-in/ToWorkspace',[m '/' name],'VariableName',name,'SaveFormat','Timeseries','MaxDataPoints','inf');add_line(m,src,[name '/1'],'autorouting','on');

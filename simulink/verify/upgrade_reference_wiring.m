@@ -68,6 +68,16 @@ for k=1:numel(list)
    'SaveFormat','Timeseries','MaxDataPoints','inf','Position',[1310 320 1450 360]);
   add_line(name,rmph.Outport(2),get_param([name '/reference_log'],'PortHandles').Inport(1),'autorouting','on');
  end
+ % same display branch the builder creates: measured Euler (deg) against the reference
+ if isempty(find_system(name,'SearchDepth',1,'Name','Euler_to_deg'))
+  add_block('built-in/Gain',[name '/Euler_to_deg'],'Gain',num2str(180/pi,17),'Position',[1150 300 1190 340]);
+  add_line(name,'Native_Plant/3','Euler_to_deg/1','autorouting','on');
+  add_block('built-in/Mux',[name '/Attitude_compare'],'Inputs','2','Position',[1230 300 1235 400]);
+  add_line(name,'Euler_to_deg/1','Attitude_compare/1','autorouting','on');
+  add_line(name,rmph.Outport(2),get_param([name '/Attitude_compare'],'PortHandles').Inport(2),'autorouting','on');
+  add_block('built-in/Scope',[name '/Attitude_vs_Reference'],'Position',[1290 330 1360 380]);
+  add_line(name,'Attitude_compare/1','Attitude_vs_Reference/1','autorouting','on');
+ end
  save_system(name);close_system(name,0);
  fprintf('%-56s wired (%d in-ports)\n',list(k).name,numel(ph.Inport));
  wired=wired+1;
