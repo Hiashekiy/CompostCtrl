@@ -48,12 +48,14 @@ S-Function 块参数和预测 MEX 文件名，改名需要重建全部模型并�
 ## 模型定义
 
 - `models/NearSpace_CMG_FlightControl*.slx`：公开升阻力替代模型、MSIS2 查表、重力、真实舵机、CMG 驱动、在线 MATLAB RTI/HPIPM 的工程闭环。
-- `models/NearSpace_CMG_AttitudeValidation.slx` 与 `cases/NearSpace_CMG_AttitudeValidation*_S0*.slx`：原有 P0 总气动力矩命令接口；不接平动力，用于姿态实验。P0 CMG 直接跟随框架速率命令；P1 保留驱动环节。
+- `cases/NearSpace_CMG_AttitudeValidation*_S0*.slx`：原有 P0 总气动力矩命令接口；不接平动力，用于姿态实验。P0 CMG 直接跟随框架速率命令；P1 保留驱动环节。
+  （早先那份不带工况后缀的 `models/NearSpace_CMG_AttitudeValidation.slx` 没有内嵌模板与参考库、无法运行，已删除。）
 - 无 CMG A 组使用独立的 7 状态/3 控制预测模型与不含 CMG 的原生真值结构；B 组使用 11 状态/7 控制预测。
 - Case 模型在 ModelWorkspace 内嵌控制模板与未来参考，防止切换模型后复用别的工况。求解器代码/MEX 仍通过 init_paths 加路径。
-- 工程飞行模型另有一个 `Reference_Manager` 子系统：把内嵌参考库以普通信号（姿态参考/角速度参考/名义力矩）引出，
-  接到日志和 `Attitude_vs_Reference` 示波器，方便看图核对参考；控制器仍读内嵌库（未来序列不是因果信号），
-  两处数据都由构建器从同一个 bank 派生。详见手册 §6.4。
+- 工程飞行模型另有一个 `Reference_Manager` 子系统：把内嵌参考库按控制时刻压平成"参考窗口"信号，
+  **接到控制器 `Online_RTI_HPIPM` 的第 2 个输入端口**（端到端可见的参考通路）；同一子系统还引出姿态/角速度/
+  名义力矩三路信号，接到日志与 `Attitude_vs_Reference` 示波器。控制器不再读模型工作区，库只在构建与首拍自检时使用。
+  详见手册 §6.4 与 §7.1。
 
 所有物理部分使用可检查的工具箱/基础模块。两个自定义 Level-2 MATLAB S-Function 仅负责 MPC 算法及舵面控制分配。
 生成的 C/MEX 预测模型仅用于控制器预测与导数，不承担真值刚体或执行器动力学。

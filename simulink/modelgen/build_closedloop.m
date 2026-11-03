@@ -74,12 +74,27 @@ if flight
  ref_att=[bank.time(:) euldeg(squeeze(bank.q_ref(:,1,:))')];   % euldeg already returns degrees
  ref_rate=[bank.time(:) squeeze(bank.omega_ref(:,1,:))'];
  ref_tau=[bank.time(:) squeeze(bank.tau_nom(:,1,:))'];
+ % Flattened per-instant window: this is what the controller consumes through its
+ % second input port, so the reference is carried by a real signal line.
+ nk=numel(bank.time);nN=size(bank.tau_min,2)-1;win=[];
+ for k=1:nk
+  qk=squeeze(bank.q_ref(:,:,k));wk=squeeze(bank.omega_ref(:,:,k));tk=squeeze(bank.tau_d(:,:,k));
+  lo=bank.tau_min(:,1:nN,k);hi=bank.tau_max(:,1:nN,k);nm=bank.tau_nom(:,1:nN,k);
+  v=[qk(:);wk(:);tk(:);lo(:);hi(:);nm(:);bank.gap(:,1,k)];
+  if isempty(win),win=zeros(nk,numel(v));end
+  win(k,:)=v.';
+ end
+ % Shift the data instants slightly earlier: with Interpolate=off the block can still
+ % hold the previous row exactly on the 0.2 s boundary (floating-point comparison),
+ % which makes the controller lag one control period.
+ assignin(mw,'reference_window',[bank.time(:)-1e-6 win]);
  assignin(mw,'reference_attitude_deg',ref_att);
  assignin(mw,'reference_body_rate',ref_rate);
  assignin(mw,'reference_torque_nom',ref_tau);
  rm=[m '/Reference_Manager'];
- add_block('built-in/SubSystem',rm,'Position',[1300 40 1600 250]);
- srcs={'attitude_deg','reference_attitude_deg'; ...
+ add_block('built-in/SubSystem',rm,'Position',[1290 30 1620 300]);
+ srcs={'window','reference_window'; ...
+       'attitude_deg','reference_attitude_deg'; ...
        'body_rate','reference_body_rate'; ...
        'torque_nom','reference_torque_nom'};
  for k=1:size(srcs,1)
@@ -89,13 +104,14 @@ if flight
    'Position',[230 30+70*(k-1) 260 55+70*(k-1)]);
   add_line(rm,[srcs{k,1} '/1'],sprintf('ref%d/1',k));
  end
+ add_line(m,'Reference_Manager/1','Online_RTI_HPIPM/2');   % reference window -> controller
  add_block('built-in/ToWorkspace',[m '/reference_log'],'VariableName','reference_log_att_deg', ...
   'SaveFormat','Timeseries','MaxDataPoints','inf','Position',[1310 270 1450 310]);
- add_line(m,'Reference_Manager/1','reference_log/1');
+ add_line(m,'Reference_Manager/2','reference_log/1');
  add_block('built-in/Gain',[m '/Euler_to_deg'],'Gain',num2str(180/pi,17),'Position',[1150 300 1190 340]);
  add_line(m,'Native_Plant/3','Euler_to_deg/1');
  add_block('built-in/Mux',[m '/Attitude_compare'],'Inputs','2','Position',[1230 300 1235 400]);
- add_line(m,'Euler_to_deg/1','Attitude_compare/1');add_line(m,'Reference_Manager/1','Attitude_compare/2');
+ add_line(m,'Euler_to_deg/1','Attitude_compare/1');add_line(m,'Reference_Manager/2','Attitude_compare/2');
  add_block('built-in/Scope',[m '/Attitude_vs_Reference'],'Position',[1290 330 1360 380]);
  add_line(m,'Attitude_compare/1','Attitude_vs_Reference/1');
 end

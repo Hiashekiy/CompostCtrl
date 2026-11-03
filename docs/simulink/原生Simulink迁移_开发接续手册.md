@@ -297,18 +297,29 @@ bank = getVariable(mw,'native_reference_bank');
 - 工程飞行模型另有 `reference_attitude_deg`、`reference_body_rate`、`reference_torque_nom`：由同一个 bank 派生的
   参考姿态/角速度/名义力矩时序，只供图上的 `Reference_Manager` 使用（见 6.4）。
 
-### 6.4 参考数据在图上如何呈现（工程飞行模型）
+### 6.4 参考数据如何进入闭环（Reference_Manager → 控制器端口 2）
 
-控制器必须读**未来序列**（不是因果信号），所以参考只能以内嵌库的形式给 S-Function；为了让这条数据链在图上看得到，
-工程飞行模型（`flight=true`）额外有一个 `Reference_Manager` 子系统，内含三个 From Workspace 分别加载
-`reference_attitude_deg`（姿态参考，单位由四元数换算成度）、`reference_body_rate`、`reference_torque_nom`，并引出到：
+参考是**未来序列**（不是因果信号），所以它以"每个控制时刻一整段预测窗口"的形式传给控制器：
+`modelgen/build_closedloop` 把内嵌参考库按控制时刻压平成一行（`reference_window`，宽度
+`10*(N+1)+9*N+3`，顺序为 `q_ref(4×(N+1))`、`omega_ref(3×(N+1))`、`tau_d(3×(N+1))`、
+`tau_min/max/nom(3×N)`、`gap(3)`），由 `Reference_Manager` 里的 From Workspace 加载后
+**直接接到 `Online_RTI_HPIPM` 的第 2 个输入端口**，控制器用它做预测与代价，不再自行读模型工作区。
 
-- `reference_log_att_deg`（To Workspace）：参考姿态日志，可与实测姿态逐点比较；
-- `Attitude_compare` + `Attitude_vs_Reference`（Scope）：实测欧拉角（经 `Euler_to_deg` 换算）与参考姿态叠加显示。
+`Reference_Manager` 同时引出三路便于观察的信号（姿态参考、角速度参考、名义力矩），接到
+`reference_log_att_deg`（日志）与 `Attitude_compare`+`Attitude_vs_Reference`（Scope，实测欧拉角经
+`Euler_to_deg` 与参考叠加）。这些与窗口数据同源，只用于显示。
 
-两者的数据都由 `modelgen/build_closedloop` 从**同一个 bank** 派生，不存在两个独立数据源。
-**注意**：这里的可见信号只用于显示与记录，控制器仍读内嵌库；改参考必须改场景配置后重新导出并重建模型，
-直接改 `Reference_Manager` 里 From Workspace 指向的变量不会改变控制行为。P0 工况模型（`cases/`）暂未加这套显示块。
+要点与坑：
+
+- 数据时刻整体前移 `1e-6 s`（`bank.time-1e-6`）。`From Workspace` 用 `Interpolate=off`，在 0.2 s
+  边界上会因浮点比较**多保持一拍旧值**，控制器因此落后一个控制周期（A 组误差从 1.8e-4° 劣化到 1.2e-2°）。
+- 控制器内部对窗口做**首拍自检**：宽度不符或与模板不一致会直接报 `native:window`。
+- 解析函数必须**返回结构体**（MATLAB 结构体按值传递），否则解析结果被丢弃，控制器会静默沿用模板里冻结的初始参考。
+- 改参考仍要改场景配置后重新导出并重建模型；`Reference_Manager` 里变量的值在每次构建时重写。
+- **当前已升级的模型**：两个工程飞行模型与十六组 P0 工况模型（`models/`、`cases/`）都已升级为 2 端口走信号通路，
+  由 `verify/upgrade_reference_wiring` 就地升级（读各模型自带的参考库，不重新导出、不重跑仿真）。
+  控制器仍保留兼容分支：模型里没有 `reference_window` 变量时退回读内嵌库，所以旧模型不会因为这次改动而失效。
+  `NearSpace_CMG_AttitudeValidation.slx`（无工况后缀）既没有内嵌模板也没有参考库、根本无法运行，已删除。
 
 bank.time 是从0开始的仿真相对时间，原场景可能从90 s开始；Python已将绝对时间查询转换为 bank 内容。不要再在 MATLAB 中重复加90 s。
 名义预测环境并非由实际位置速度每周期重新生成。
@@ -317,10 +328,17 @@ bank.time 是从0开始的仿真相对时间，原场景可能从90 s开始；Py
 
 ### 7.1 在线端口
 
-| 分支 | S-Function输入 | 内部优化状态 | 输出 |
-|---|---|---|---|
-| A | `[Euler(3);omega(3)]`，6维 | `[q(4);omega(3)]`，7维 | 总气动力矩3 |
-| B | `[Euler(3);omega(3);gamma(4)]`，10维 | `[q(4);omega(3);gamma(4)]`，11维 | `[tau_a(3);nu_cmd(4)]`，7维 |
+控制器块（`native_mpc_sfun`）在**已升级的模型**里有**两个输入端口**：端口 1 是测量状态，端口 2 是本控制时刻的
+参考窗口（由 `Reference_Manager` 送入，见 6.4）。未升级的旧模型（模型工作区里没有 `reference_window`）只有
+1 个端口，控制器读内嵌参考库——两种形态按模型自带的数据自动选择，不需要改脚本。
+
+| 分支 | 端口1（状态） | 端口2（参考窗口） | 内部优化状态 | 输出 |
+|---|---|---|---|---|
+| A | `[Euler(3);omega(3)]`，6维 | `10*(N+1)+9*N+3` = 431 宽（N=22） | `[q(4);omega(3)]`，7维 | 总气动力矩3 |
+| B | `[Euler(3);omega(3);gamma(4)]`，10维 | 同上 | `[q(4);omega(3);gamma(4)]`，11维 | `[tau_a(3);nu_cmd(4)]`，7维 |
+
+端口 2 的展平顺序：`q_ref(4×(N+1))`、`omega_ref(3×(N+1))`、`tau_d(3×(N+1))`、
+`tau_min/tau_max/tau_nom(3×N)`、`gap(3)`。控制器不再读模型工作区的参考库（库只用于构建与首拍自检）。
 
 这里是优化状态维数，不是整个六自由度物理状态维数。位置、速度由真值6DOF积分，没有加入当前 MPC 目标。
 S-Function 用持久 Map 按块句柄保存热启动与上一命令；Start 重置、Outputs 按控制时刻计算、Terminate 写统计并清理。

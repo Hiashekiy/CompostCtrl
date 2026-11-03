@@ -13,7 +13,7 @@ cases=sorted((matrix/'cases').glob('*_with_cmg.yaml'))+[matrix/'sequential/S07_s
 env=os.environ.copy();env['MATLAB_HOME']=r'D:\Program Files\MATLAB\R2024a'
 env['PYTHONIOENCODING']='utf-8'
 progress=ROOT/'simulink/results/native_closedloop/p0_matrix_progress.json'
-results=json.loads(progress.read_text(encoding='utf-8')) if progress.exists() else []
+results=json.loads(progress.read_text(encoding='utf-8-sig')) if progress.exists() else []
 
 
 def run_with_retry(args, attempts=4, delay=10.0):
@@ -55,7 +55,7 @@ for path in cases:
         run_with_retry(args)
         run_with_retry([sys.executable,str(ROOT/'simulink/py/export_online_plan_bank.py'),'--config',str(case)])
         bank=loadmat(ROOT/'simulink/data/online_plan_bank.mat');duration=float(bank['time'].ravel()[-1])
-        expression=f"maxNumCompThreads(1); addpath('simulink'); build_closedloop({duration},false,{'true' if enabled else 'false'},'{name}')"
+        expression=f"maxNumCompThreads(1); addpath('simulink'); init_paths; build_closedloop({duration},false,{'true' if enabled else 'false'},'{name}')"
         print('RUN',name,'B' if enabled else 'A','duration',duration,flush=True)
         completed=subprocess.run([str(ROOT/'simulink/mlab.cmd'),expression],cwd=ROOT,env=env,check=True,
             stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,encoding='utf-8',errors='replace')
