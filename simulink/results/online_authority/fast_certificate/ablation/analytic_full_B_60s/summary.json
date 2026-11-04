@@ -1,0 +1,46 @@
+{
+  "certificate_mode": "analytic_full",
+  "arm": "B",
+  "duration_s": 60,
+  "git_sha": "33f36f783847602c42795c8873f1caf555899808",
+  "cycles": 301,
+  "fallbacks": 0,
+  "all_certified": true,
+  "cycle_ms_mean": 54.369849501661136,
+  "cycle_ms_p50": 47.6218,
+  "cycle_ms_p95": 86.3835,
+  "cycle_ms_p99": 202.8734,
+  "cycle_ms_max": 272.4471,
+  "over_200ms": 4,
+  "over_200ms_steady": 4,
+  "qp_per_cycle_mean": 2.1827242524916945,
+  "certificate_type_counts": {
+    "names": [
+      "analytic_box"
+    ],
+    "counts": 6622
+  },
+  "phase_ms_mean": {
+    "names": [
+      "air",
+      "aero",
+      "reachability",
+      "box",
+      "servo_certificate",
+      "allocation",
+      "attitude",
+      "translation"
+    ],
+    "values": [
+      0.48743820598006649,
+      0.20493122923588031,
+      0.567300332225914,
+      1.2325598006644523,
+      0.868195348837209,
+      0.13060830564784071,
+      0.61287009966777362,
+      7.8213993355481817
+    ]
+  },
+  "wall_s": 20.2608656
+}

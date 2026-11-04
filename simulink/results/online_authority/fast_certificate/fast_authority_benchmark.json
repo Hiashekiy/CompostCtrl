@@ -1,0 +1,19 @@
+{
+  "iterations": 400,
+  "box_ms_per_call": {
+    "legacy": 0.0691965,
+    "fast": 0.036700250000000031
+  },
+  "certificate_ms_per_call": {
+    "legacy": 0.37657174999999987,
+    "fast": 0.035561250000000016
+  },
+  "box_rel_error": 0,
+  "rollout_ms_22stages": {
+    "legacy": 21.975035,
+    "analytic_box": 20.665135,
+    "analytic_full": 12.99538,
+    "shadow": 22.45034
+  },
+  "rollout_speedup_analytic_full": 1.6909882589043181
+}

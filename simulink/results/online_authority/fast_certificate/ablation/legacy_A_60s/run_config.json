@@ -1,0 +1,11 @@
+{
+  "certificate_mode": "legacy",
+  "arm": "A",
+  "duration_s": 60,
+  "sqp_iterations": 4,
+  "control_period_s": 0.2,
+  "git_sha": "33f36f783847602c42795c8873f1caf555899808",
+  "branch": "experiment/fast-torque-authority",
+  "model": "NearSpace_CMG_FlightControl_SurfaceOnly_FC_LE_A_60",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\fast_certificate\\ablation\\legacy_A_60s"
+}

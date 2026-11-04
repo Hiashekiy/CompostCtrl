@@ -1,4 +1,4 @@
-function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period)
+function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period,certificate_mode)
 if nargin<1,duration=2;end
 if nargin<2,flight=false;end
 if nargin<3,enabled=true;end
@@ -7,6 +7,9 @@ if nargin<5,if flight,authority_mode='online_predicted';else,authority_mode='leg
 if nargin<6,run_simulation=true;end
 if nargin<7,sqp_iterations=4;end
 if nargin<8,control_period=.2;end
+if nargin<9,certificate_mode='legacy';end
+assert(ismember(certificate_mode,{'legacy','analytic_box','analytic_full','shadow'}), ...
+ 'authority_certificate_mode must be legacy, analytic_box, analytic_full or shadow');
 assert(isscalar(control_period) && ismember(control_period,[.1 .2]),'control_period must be 0.1 or 0.2 s');
 assert(ismember(sqp_iterations,[4 5]),'max_sqp_iterations must be 4 or 5');
 root=repo_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
@@ -40,6 +43,7 @@ template=load(fullfile(root,'simulink','tests','05_python_matlab_qp_equivalence'
 if enabled && numel(bank.x0)==7,bank.x0=[bank.x0(:);template.X_nom(8:11,1)];end
 template.authority_mode=authority_mode;
 template.max_sqp_iterations=sqp_iterations;
+template.authority_certificate_mode=certificate_mode;
 if online
  old_dts=template.dts;template.dt_ctrl=control_period;template.dts(1)=control_period;
  bank=online_resample_reference_bank(bank,old_dts,template.dts,control_period);

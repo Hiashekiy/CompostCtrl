@@ -1,0 +1,19 @@
+{
+  "box_cases": 1500,
+  "box_max_abs_error_Nm": 0,
+  "box_max_scale_error": 0,
+  "box_max_vertex_error_rad": 1.1102230246251565E-16,
+  "box_certificate_types": {
+    "analytic_box": 1500
+  },
+  "servo": [],
+  "servo_cases": 400,
+  "servo_false_negatives": 0,
+  "servo_false_positives": 0,
+  "servo_max_margin_used": 0.039769183575546985,
+  "real": [],
+  "real_stages_checked": 1144,
+  "real_box_max_error_Nm": 0,
+  "real_min_endpoint_margin_rad": 0,
+  "note": "Analytic box reproduces the legacy bounds and vertex targets; the monotone endpoint certificate never certifies an unreachable vertex target and never widens any interval."
+}
