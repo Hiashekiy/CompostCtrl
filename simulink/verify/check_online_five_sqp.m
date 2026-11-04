@@ -1,9 +1,10 @@
-function check_online_five_sqp
+function check_online_five_sqp(results_subdir)
 % Repeatable checks for the five-round full-step SQP (no alpha line search).
 root=repo_root;init_paths;
 bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
 env=load(fullfile(root,'simulink','data','native_environment.mat'));
-out=fullfile(root,'simulink','results','online_authority','five_sqp');if ~exist(out,'dir'),mkdir(out);end
+if nargin<1,results_subdir='five_sqp';end
+out=fullfile(root,'simulink','results','online_authority',results_subdir);if ~exist(out,'dir'),mkdir(out);end
 for enabled=[false true]
  if enabled,file='production_online_qp.mat';arm='B';x=bank.x0(:);
  else,file='production_online_A_qp.mat';arm='A';x=bank.x0(1:7);end
@@ -13,10 +14,13 @@ for enabled=[false true]
  s.authority_mode='online_predicted';s.authority_max_step=.1;
  s.flight_state=[[0;0;-env.h0];online_quaternion_rotation(x(1:4))'*env.V_ned0(:);zeros(6,1)];
  s.tau_min=nan(3,N);s.tau_max=nan(3,N);
- % -- default five rounds, cold start --------------------------------------
+ [~,~,default_info]=native_rti_step(s,x,[]);
+ assert(default_info.max_sqp_iterations==4,'Default round budget is not 4');
+ s.max_sqp_iterations=5;
+ % -- explicit five rounds, cold start --------------------------------------
  [command,state,info]=native_rti_step(s,x,[]);
  assert(~info.fallback,'five_sqp %s fell back on the first cycle: %s',arm,reason(info));
- assert(info.max_sqp_iterations==5,'Default round budget is not 5');
+ assert(info.max_sqp_iterations==5,'Explicit round budget is not 5');
  assert(info.iterations<=5 && info.qp_solved<=5 && numel(info.status_by_qp)==info.iterations, ...
   'Round budget or per-round QP status log is broken');
  assert(info.accepted_steps<=info.qp_solved,'More accepted steps than solved QPs');

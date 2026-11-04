@@ -35,7 +35,15 @@ if online
  block.InputPort(3).Dimensions=12;block.InputPort(3).DirectFeedthrough=true;
  block.OutputPort(2).Dimensions=8;
 end
-block.SampleTimes=[.2 0];
+period=.2;
+try
+ mw=get_param(bdroot(block.BlockHandle),'ModelWorkspace');
+ if hasVariable(mw,'native_controller_template')
+  t=getVariable(mw,'native_controller_template');period=t.dt_ctrl;
+ end
+catch
+end
+block.SampleTimes=[period 0];
 block.SimStateCompliance='HasNoSimState';
 block.RegBlockMethod('Start',@(b)runtime('start',b));
 block.RegBlockMethod('Outputs',@(b)runtime('output',b));
@@ -53,7 +61,7 @@ if strcmp(action,'start')
  c.state=[];c.time=-inf;c.command=zeros(double(c.s.nu),1);c.fallbacks=0;
  c.results_dir='';if hasVariable(mw,'native_results_dir'),c.results_dir=getVariable(mw,'native_results_dir');end
  c.online=isfield(c.s,'authority_mode') && startsWith(c.s.authority_mode,'online_');
- c.sqp_iterations=5;if isfield(c.s,'max_sqp_iterations'),c.sqp_iterations=double(c.s.max_sqp_iterations);end
+ c.sqp_iterations=4;if isfield(c.s,'max_sqp_iterations'),c.sqp_iterations=double(c.s.max_sqp_iterations);end
  assert(~c.online || ismember(c.sqp_iterations,[4 5]),'online:sqp','max_sqp_iterations must be 4 or 5');
  assert(~c.online || c.wired,'online:reference','Online mode requires the wired reference window');
  c.capture=c.online || hasVariable(mw,'native_capture_diagnostics');

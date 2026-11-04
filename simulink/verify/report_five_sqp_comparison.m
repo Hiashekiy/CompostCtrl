@@ -37,7 +37,10 @@ for f=1:numel(folders)
   else
    e=load(fullfile(folder,evidence(end).name));infos=e.diagnostics;
    assert(numel(e.control_times)==numel(infos));
-   assert(all(abs(diff(e.control_times)-.2)<1e-8),'MPC was not scheduled at 200 ms');
+   period=median(diff(e.control_times));row.control_period_s=period;
+   assert(all(abs(diff(e.control_times)-period)<1e-8),'Irregular MPC schedule');
+   nodes=[0;cumsum(template.dts(:))];
+   if isfield(infos{1},'prediction_dts'),nodes=[0;cumsum(infos{1}.prediction_dts(:))];end
    row.fallbacks=sum(cellfun(@(i)i.fallback,infos));
    row.control_updates=numel(infos);
    row.mean_control_s=mean(cellfun(@(i)i.elapsed_s,infos));

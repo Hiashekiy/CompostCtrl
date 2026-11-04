@@ -16,6 +16,7 @@ info=struct('fallback',false,'fallback_reason','','status',0,'objective',inf, ..
  'repaired_candidates',0,'status_by_qp',[],'qp_solver_time_s',[],'qp_total_time_s',[], ...
  'rollout_time_s',[],'qp_delta_norm',[],'early_stop_reason','','max_sqp_iterations',max_sqp, ...
  'objective_tol',0,'authority',[]);
+info.control_period_s=s.dt_ctrl;info.prediction_dts=s.dts;
 info.iteration_authority={};
 try
  [X,U,a,ok]=try_rollout(U,true);
@@ -120,8 +121,8 @@ info.cycle_time_s=toc(started);info.elapsed_s=info.cycle_time_s;
  end
 end
 function value=online_max_sqp_iterations(s)
-% Default five rounds; four is the documented configuration alternative.
-value=5;if isfield(s,'max_sqp_iterations'),value=double(s.max_sqp_iterations);end
+% Default four rounds; explicit five-round experiments remain supported.
+value=4;if isfield(s,'max_sqp_iterations'),value=double(s.max_sqp_iterations);end
 assert(isscalar(value) && isfinite(value) && ismember(value,[4 5]),'online:sqp', ...
  'max_sqp_iterations must be 4 or 5 (got %g)',value);
 end

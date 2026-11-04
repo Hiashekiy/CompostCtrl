@@ -1,14 +1,17 @@
-function build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations)
+function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period)
 if nargin<1,duration=2;end
 if nargin<2,flight=false;end
 if nargin<3,enabled=true;end
 if nargin<4,case_name='';end
 if nargin<5,if flight,authority_mode='online_predicted';else,authority_mode='legacy_frozen';end;end
 if nargin<6,run_simulation=true;end
-if nargin<7,sqp_iterations=5;end
+if nargin<7,sqp_iterations=4;end
+if nargin<8,control_period=.2;end
+assert(isscalar(control_period) && ismember(control_period,[.1 .2]),'control_period must be 0.1 or 0.2 s');
 assert(ismember(sqp_iterations,[4 5]),'max_sqp_iterations must be 4 or 5');
 root=repo_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
 bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
+physical_disturbance=[bank.time(:) squeeze(bank.tau_d(:,1,:))'];
 if enabled,plant='Plant_6DOF_CMG';else,plant='Plant_6DOF_SurfaceOnly';end
 load_system(plant);
 if flight,m='NearSpace_CMG_FlightControl';else,m='NearSpace_CMG_AttitudeValidation';end
@@ -36,7 +39,12 @@ template=load(fullfile(root,'simulink','tests','05_python_matlab_qp_equivalence'
 % The B template already carries the baseline CMG configuration in X_nom.
 if enabled && numel(bank.x0)==7,bank.x0=[bank.x0(:);template.X_nom(8:11,1)];end
 template.authority_mode=authority_mode;
-template.max_sqp_iterations=sqp_iterations;   % 5 by default, 4 as the documented alternative
+template.max_sqp_iterations=sqp_iterations;
+if online
+ old_dts=template.dts;template.dt_ctrl=control_period;template.dts(1)=control_period;
+ bank=online_resample_reference_bank(bank,old_dts,template.dts,control_period);
+end
+assignin(mw,'native_control_period',template.dt_ctrl);
 if online
  template.authority_max_step=.1;
  template.tau_min=nan(3,double(template.N));template.tau_max=nan(3,double(template.N));
@@ -91,7 +99,7 @@ if flight
   if ~isfile(fullfile(root,'simulink','models','Online_Surface_Authority.slx')),build_online_authority;end
   load_system('Online_Surface_Authority');
   add_block('built-in/Mux',[m '/Flight_And_Servo_Feedback'],'Inputs','4','Position',[840 700 845 850]);
-  add_block('built-in/UnitDelay',[m '/Previous_Allocation_Command'],'SampleTime','.2','InitialCondition','zeros(3,1)','Position',[490 760 650 800]);
+  add_block('built-in/UnitDelay',[m '/Previous_Allocation_Command'],'SampleTime',num2str(template.dt_ctrl,17),'InitialCondition','zeros(3,1)','Position',[490 760 650 800]);
   add_line(m,'Surface_control_allocation/1','Previous_Allocation_Command/1');
   add_line(m,'Native_Plant/2','Flight_And_Servo_Feedback/1');
   add_line(m,'Native_Plant/5','Flight_And_Servo_Feedback/2');
@@ -115,7 +123,7 @@ if flight
   end
  end
 end
-mw=get_param(m,'ModelWorkspace');dist=[bank.time(:) squeeze(bank.tau_d(:,1,:))'];assignin(mw,'disturbance_schedule',dist);
+mw=get_param(m,'ModelWorkspace');assignin(mw,'disturbance_schedule',physical_disturbance);
 add_block('simulink/Sources/From Workspace',[m '/Disturbance'],'VariableName','disturbance_schedule','Interpolate','off','OutputAfterFinalValue','Holding final value','Position',[290 180 430 220]);add_line(m,'Disturbance/1','Native_Plant/2');
 % The reference the controller consumes lives in the model workspace (it has to:
  % the MPC needs the FUTURE sequence, which is not a causal signal).  This
@@ -138,7 +146,7 @@ add_block('simulink/Sources/From Workspace',[m '/Disturbance'],'VariableName','d
   win(k,:)=v.';
  end
  % Shift the data instants slightly earlier: with Interpolate=off the block can still
- % hold the previous row exactly on the 0.2 s boundary (floating-point comparison),
+ % hold the previous row exactly on a control-period boundary (floating-point comparison),
  % which makes the controller lag one control period.
  assignin(mw,'reference_window',[bank.time(:)-1e-6 win]);
  assignin(mw,'reference_attitude_deg',ref_att);
@@ -197,8 +205,8 @@ if online
  for j=1:2,assert(get_param(ph.Outport(j),'Line')>0,'Online output lost during save/reopen');end
  close_system(m,0);
 end
-if run_simulation,fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g sqp_iterations=%d\n',duration,sqp_iterations);
-else,fprintf('NATIVE_CLOSEDLOOP_BUILT configured_duration=%g sqp_iterations=%d (not simulated)\n',duration,sqp_iterations);end
+if run_simulation,fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g control_period=%g sqp_iterations=%d\n',duration,template.dt_ctrl,sqp_iterations);
+else,fprintf('NATIVE_CLOSEDLOOP_BUILT configured_duration=%g control_period=%g sqp_iterations=%d (not simulated)\n',duration,template.dt_ctrl,sqp_iterations);end
 end
 function save_with_retry(file,result)
 % On Windows a just-closed MATLAB process can still hold the target file, which
