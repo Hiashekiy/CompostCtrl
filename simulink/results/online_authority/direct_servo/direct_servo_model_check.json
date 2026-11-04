@@ -1,0 +1,244 @@
+{
+  "servo_clock_s": 0.001,
+  "tau_s": 0.05,
+  "delta_max": [
+    0.43633231299858238,
+    0.3490658503988659,
+    0.3490658503988659
+  ],
+  "delta_dot_max": [
+    1.0471975511965976,
+    1.0471975511965976,
+    1.0471975511965976
+  ],
+  "structure": {
+    "block": "Surface_Actuator",
+    "file": "D:\\项目\\飞轮\\simulink\\models\\Surface_Actuator.slx",
+    "command_limit_lower": [
+      -0.436332312998582,
+      -0.349065850398866,
+      -0.349065850398866
+    ],
+    "command_limit_upper": [
+      0.436332312998582,
+      0.349065850398866,
+      0.349065850398866
+    ],
+    "derivative_limit_lower": [
+      -1.0471975511966,
+      -1.0471975511966,
+      -1.0471975511966
+    ],
+    "derivative_limit_upper": [
+      1.0471975511966,
+      1.0471975511966,
+      1.0471975511966
+    ],
+    "state_limit_lower": [
+      -0.436332312998582,
+      -0.349065850398866,
+      -0.349065850398866
+    ],
+    "state_limit_upper": [
+      0.436332312998582,
+      0.349065850398866,
+      0.349065850398866
+    ],
+    "inverse_time_constant": 20,
+    "euler_increment": 0.001,
+    "actuator_sample_time": 0.001,
+    "solver": "FixedStepDiscrete",
+    "fixed_step": 0.001
+  },
+  "scenarios": [
+    {
+      "name": "hold_at_target",
+      "duration_s": 0.2,
+      "delta_max_error_rad": 0,
+      "rate_max_error_radps": 0,
+      "endpoint_error_rad": 0,
+      "reachability_endpoint_error_rad": 0
+    },
+    {
+      "name": "small_step",
+      "duration_s": 0.2,
+      "delta_max_error_rad": 8.6736173798840355E-19,
+      "rate_max_error_radps": 2.7755575615628914E-17,
+      "endpoint_error_rad": 0,
+      "reachability_endpoint_error_rad": 5.2041704279304213E-18
+    },
+    {
+      "name": "rate_saturated",
+      "duration_s": 0.2,
+      "delta_max_error_rad": 2.3592239273284576E-16,
+      "rate_max_error_radps": 4.7739590058881731E-15,
+      "endpoint_error_rad": 1.3877787807814457E-17,
+      "reachability_endpoint_error_rad": 4.163336342344337E-17
+    },
+    {
+      "name": "reverse_motion",
+      "duration_s": 0.2,
+      "delta_max_error_rad": 3.8163916471489756E-16,
+      "rate_max_error_radps": 7.5495165674510645E-15,
+      "endpoint_error_rad": 1.2490009027033011E-16,
+      "reachability_endpoint_error_rad": 1.0408340855860843E-17
+    },
+    {
+      "name": "command_saturated",
+      "duration_s": 0.2,
+      "delta_max_error_rad": 2.4980018054066022E-16,
+      "rate_max_error_radps": 2.4424906541753444E-15,
+      "endpoint_error_rad": 2.4980018054066022E-16,
+      "reachability_endpoint_error_rad": 5.8286708792820718E-16
+    },
+    {
+      "name": "near_positive_limit",
+      "duration_s": 1,
+      "delta_max_error_rad": 4.9960036108132044E-16,
+      "rate_max_error_radps": 9.9920072216264089E-15,
+      "endpoint_error_rad": 0,
+      "reachability_endpoint_error_rad": 1.1102230246251565E-16
+    },
+    {
+      "name": "long_hold_2s",
+      "duration_s": 2,
+      "delta_max_error_rad": 3.4694469519536142E-17,
+      "rate_max_error_radps": 2.4424906541753444E-15,
+      "endpoint_error_rad": 0,
+      "reachability_endpoint_error_rad": 3.4694469519536142E-16
+    },
+    {
+      "name": "half_second_hold",
+      "duration_s": 0.5,
+      "delta_max_error_rad": 6.9388939039072284E-18,
+      "rate_max_error_radps": 1.1102230246251565E-16,
+      "endpoint_error_rad": 0,
+      "reachability_endpoint_error_rad": 6.9388939039072284E-18
+    }
+  ],
+  "aero": [
+    {
+      "qbar": 1000,
+      "V": 800,
+      "alpha": 0.02,
+      "beta": 0,
+      "truth_total": [
+        -6.5520000000000005,
+        26.879999999999995,
+        -33.852000000000004
+      ],
+      "model_total": [
+        -6.5520000000000005,
+        26.880000000000024,
+        -33.852000000000004
+      ],
+      "truth_error": 2.8421709430404007E-14,
+      "natural_error": 2.8421709430404007E-14,
+      "surface_error": 0,
+      "analytic_error": 0,
+      "B_error": 0,
+      "natural_rate_gain": 0
+    },
+    {
+      "qbar": 8000,
+      "V": 1200,
+      "alpha": 0.08,
+      "beta": 0.01,
+      "truth_total": [
+        69.414799999999985,
+        -574.15680000000066,
+        471.26133600000003
+      ],
+      "model_total": [
+        69.4148,
+        -574.15679999999975,
+        471.26133600000003
+      ],
+      "truth_error": 9.0949470177292824E-13,
+      "natural_error": 9.0949470177292824E-13,
+      "surface_error": 0,
+      "analytic_error": 0,
+      "B_error": 0,
+      "natural_rate_gain": 1.4210854715202004E-14
+    },
+    {
+      "qbar": 30000,
+      "V": 1500,
+      "alpha": -0.05,
+      "beta": -0.02,
+      "truth_total": [
+        -323.90903999999409,
+        -3933.619200000061,
+        -2522.6903520000051
+      ],
+      "model_total": [
+        -323.90903999999989,
+        -3933.619200000001,
+        -2522.6903520000005
+      ],
+      "truth_error": 6.0026650317013264E-11,
+      "natural_error": 6.0026650317013264E-11,
+      "surface_error": 1.1368683772161603E-13,
+      "analytic_error": 0,
+      "B_error": 0,
+      "natural_rate_gain": 0
+    },
+    {
+      "qbar": 60000,
+      "V": 1100,
+      "alpha": 0.12,
+      "beta": 0,
+      "truth_total": [
+        -3935.8459636363646,
+        2278.4465454545571,
+        -325.50931636363646
+      ],
+      "model_total": [
+        -3935.8459636363646,
+        2278.44654545455,
+        -325.50931636363646
+      ],
+      "truth_error": 7.2759576141834259E-12,
+      "natural_error": 7.2759576141834259E-12,
+      "surface_error": 0,
+      "analytic_error": 0,
+      "B_error": 0,
+      "natural_rate_gain": 0
+    },
+    {
+      "qbar": 15000,
+      "V": 600,
+      "alpha": -0.12,
+      "beta": 0.03,
+      "truth_total": [
+        917.28000000000054,
+        44.352000000008957,
+        1031.94
+      ],
+      "model_total": [
+        917.2800000000002,
+        44.351999999998952,
+        1031.94
+      ],
+      "truth_error": 1.0004441719502211E-11,
+      "natural_error": 9.0949470177292824E-12,
+      "surface_error": 9.0949470177292824E-13,
+      "analytic_error": 0,
+      "B_error": 0,
+      "natural_rate_gain": 9.0949470177292824E-13
+    }
+  ],
+  "aero_truth_block_available": true,
+  "replay": {
+    "folder": "L2_60s_20261104_212322",
+    "control_periods": 300,
+    "delta_rms_rad": 2.8977002510682553E-17,
+    "delta_max_rad": 3.6082248300317588E-16,
+    "torque_rms_Nm": 0.030190406375604852,
+    "torque_max_Nm": 0.23588740323956436,
+    "stage_constant_torque_rms_Nm": 0.36003803730351236,
+    "stage_constant_torque_max_Nm": 5.2792158826547411,
+    "stage_step_delta_max_rad": 1.6653345369377348E-16
+  },
+  "note": "S1 only: servo predictor, aerodynamic effectiveness and moment history are validated against the Simulink truth. No direct-servo MPC is integrated yet."
+}
