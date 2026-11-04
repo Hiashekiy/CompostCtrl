@@ -26,10 +26,13 @@ for f=1:numel(folders)
   if strcmp(arm{1},'B'),evidence=evidence(~contains({evidence.name},'SurfaceOnly'));end
   if isempty(evidence),continue;end
   d=load(fullfile(folder,evidence(end).name));infos=d.diagnostics;
+  assert(numel(d.control_times)==numel(infos));
+  assert(all(abs(diff(d.control_times)-.2)<1e-8),'MPC was not scheduled at 200 ms');
   certified=cellfun(@(i)isfield(i,'authority') && ~isempty(i.authority) && isfield(i.authority,'servo_vertex_residual'),infos);
   legacy=startsWith(folders(f).name,'L0_');
   if ~legacy && ~any(certified),continue;end % preliminary runs predate the final certificate schema
   row.fallbacks=sum(cellfun(@(i)i.fallback,infos));
+  row.control_updates=numel(infos);
   row.worst_control_s=max(cellfun(@(i)i.elapsed_s,infos));
   row.mean_control_s=mean(cellfun(@(i)i.elapsed_s,infos));
   row.rti_iterations=sum(cellfun(@(i)optional(i,'iterations'),infos));

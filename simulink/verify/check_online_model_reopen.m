@@ -18,6 +18,19 @@ for enabled=[false true]
  assignin(mw,'native_results_dir',folder);
  si=Simulink.SimulationInput(m);si=si.setModelParameter('StopTime','2');r=sim(si);
  assert(all(isfinite(r.states.Data),'all') && all(isfinite(r.commands.Data),'all'));
+ % The final port fix only restores a diagnostic line. Prove the saved/reopened
+ % model produces the same control and states as the completed final 2 s run.
+ reference_folders=dir(fullfile(root,'simulink','results','online_authority','L2_2s_*'));
+ for j=numel(reference_folders):-1:1
+  reference_file=fullfile(reference_folders(j).folder,reference_folders(j).name,[arm '_surrogate_flight_2s.mat']);
+  if ~isfile(reference_file),continue;end
+  reference=load(reference_file);
+  command_difference=max(abs(r.commands.Data-reference.r.commands.Data),[],'all');
+  state_difference=max(abs(r.states.Data-reference.r.states.Data),[],'all');
+  save(fullfile(folder,[arm '_port_fix_equivalence.mat']),'command_difference','state_difference','reference_file');
+  assert(command_difference<1e-8 && state_difference<1e-8,'Diagnostic port repair changed the control trajectory');
+  break;
+ end
  if enabled
   data=squeeze(r.states.Data);if size(data,1)~=numel(r.states.Time),data=data';end
   assert(all(max(abs(data(:,7:10)),[],1)>1e-3),'CMG gimbals failed to move after reopening');

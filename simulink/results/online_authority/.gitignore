@@ -1,0 +1,7 @@
+# Keep all exploratory runs on disk; version the selected final evidence explicitly.
+L0_*/
+L1_*/
+L2_*/
+baseline_*/
+debug/
+frozen_models/

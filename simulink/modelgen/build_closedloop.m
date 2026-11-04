@@ -1,9 +1,10 @@
-function build_closedloop(duration,flight,enabled,case_name,authority_mode)
+function build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation)
 if nargin<1,duration=2;end
 if nargin<2,flight=false;end
 if nargin<3,enabled=true;end
 if nargin<4,case_name='';end
 if nargin<5,if flight,authority_mode='online_predicted';else,authority_mode='legacy_frozen';end;end
+if nargin<6,run_simulation=true;end
 root=repo_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
 bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
 if enabled,plant='Plant_6DOF_CMG';else,plant='Plant_6DOF_SurfaceOnly';end
@@ -173,17 +174,28 @@ for i=1:numel(logs)
   set_param(logs{i},'VariableName',sprintf('native_subsystem_log_%04d',i));
  end
 end
+if run_simulation
 r=sim(m);assert(all(isfinite(r.states.Data),'all') && all(isfinite(r.commands.Data),'all'));
 if flight,tag='surrogate_flight';else,tag='attitude';end
 if enabled,arm='B';else,arm='A';end
 if isempty(case_name),suffix='';else,suffix=['_' case_name];end
 save_with_retry(fullfile(out,sprintf('%s_%s_%gs%s.mat',arm,tag,duration,suffix)),r);
+end
 save_system(m,fullfile(modeldir,[m '.slx']));
 Simulink.BlockDiagram.arrangeSystem(m);
 set_param(m,'InitFcn','init_paths;');
 save_system(m,fullfile(modeldir,[m '.slx']));
 try,print(['-s' m],'-dpng',fullfile(out,'model.png'));catch,warning('model screenshot skipped');end
-close_system(m,0);fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g\n',duration);
+close_system(m,0);
+if online
+ load_system(fullfile(modeldir,[m '.slx']));ph=get_param([m '/Online_RTI_HPIPM'],'PortHandles');
+ assert(numel(ph.Inport)==3 && numel(ph.Outport)==2,'Online controller ports were not persisted');
+ for j=1:3,assert(get_param(ph.Inport(j),'Line')>0,'Online input lost during save/reopen');end
+ for j=1:2,assert(get_param(ph.Outport(j),'Line')>0,'Online output lost during save/reopen');end
+ close_system(m,0);
+end
+if run_simulation,fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g\n',duration);
+else,fprintf('NATIVE_CLOSEDLOOP_BUILT configured_duration=%g (not simulated)\n',duration);end
 end
 function save_with_retry(file,result)
 % On Windows a just-closed MATLAB process can still hold the target file, which

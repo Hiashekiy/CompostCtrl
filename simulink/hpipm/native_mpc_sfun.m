@@ -9,11 +9,8 @@ function native_mpc_sfun(block)
 % Models built before Reference_Manager existed have no `reference_window`
 % variable; they keep the legacy single input port and read the embedded bank.
 % Rebuilding a model with modelgen/build_closedloop switches it to the wired path.
-block.NumDialogPrms=0;block.NumOutputPorts=1;
-block.SetPreCompPortInfoToDefaults;
+block.NumDialogPrms=0;
 isA=contains(get_param(bdroot(block.BlockHandle),'Name'),'SurfaceOnly');
-if isA,block.InputPort(1).Dimensions=6;block.OutputPort(1).Dimensions=3;
-else,block.InputPort(1).Dimensions=10;block.OutputPort(1).Dimensions=7;end
 wired=false;W=0;online=false;
 try
  mw=get_param(bdroot(block.BlockHandle),'ModelWorkspace');
@@ -26,11 +23,17 @@ try
 catch
 end
 block.NumInputPorts=1+double(wired)+double(online);
+% Declare final counts ONCE. Temporarily shrinking to one output deletes the
+% saved line on diagnostic port 2 when Simulink reinitializes this S-function.
+block.NumOutputPorts=1+double(online);
+block.SetPreCompPortInfoToDefaults;
+if isA,block.InputPort(1).Dimensions=6;block.OutputPort(1).Dimensions=3;
+else,block.InputPort(1).Dimensions=10;block.OutputPort(1).Dimensions=7;end
 block.InputPort(1).DirectFeedthrough=true;
 if wired,block.InputPort(2).Dimensions=W;block.InputPort(2).DirectFeedthrough=true;end
 if online
  block.InputPort(3).Dimensions=12;block.InputPort(3).DirectFeedthrough=true;
- block.NumOutputPorts=2;block.OutputPort(1).Dimensions=3+4*double(~isA);block.OutputPort(2).Dimensions=8;
+ block.OutputPort(2).Dimensions=8;
 end
 block.SampleTimes=[.2 0];
 block.SimStateCompliance='HasNoSimState';
@@ -50,6 +53,7 @@ if strcmp(action,'start')
  c.state=[];c.time=-inf;c.command=zeros(double(c.s.nu),1);c.fallbacks=0;
  c.results_dir='';if hasVariable(mw,'native_results_dir'),c.results_dir=getVariable(mw,'native_results_dir');end
  c.online=isfield(c.s,'authority_mode') && startsWith(c.s.authority_mode,'online_');
+ assert(~c.online || c.wired,'online:reference','Online mode requires the wired reference window');
  c.capture=c.online || hasVariable(mw,'native_capture_diagnostics');
  c.diagnostics={};c.control_times=[];
  c.authority_preview=zeros(8,1);
