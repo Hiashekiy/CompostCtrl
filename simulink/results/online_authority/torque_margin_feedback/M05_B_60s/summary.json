@@ -1,0 +1,81 @@
+{
+  "group": "M05",
+  "arm": "B",
+  "duration_s": 60,
+  "suffix": "",
+  "shrink_ratio": 0.05,
+  "inner_mode": "legacy",
+  "certificate_mode": "analytic_full",
+  "sqp_iterations": 4,
+  "control_period_s": 0.2,
+  "git_sha": "27f180d515ef07173fce61f7a01945b60962dd1d",
+  "branch": "experiment/torque-margin-feedback-ablation",
+  "model": "NearSpace_CMG_FlightControl_TMF_M05_B_60",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\M05_B_60s",
+  "cycles": 301,
+  "fallbacks": 0,
+  "all_certified": true,
+  "cycle_ms_mean": 55.152653488372081,
+  "cycle_ms_p50": 49.9795,
+  "cycle_ms_p95": 98.8314,
+  "cycle_ms_p99": 137.8374,
+  "cycle_ms_max": 150.07989999999998,
+  "over_200ms": 0,
+  "over_200ms_steady": 0,
+  "qp_per_cycle_mean": 2.0564784053156147,
+  "sqp_iterations_mean": 2.0564784053156147,
+  "accepted_steps_mean": 1.0797342192691031,
+  "rejected_steps_total": 294,
+  "accepted_steps_zero_cycles": 109,
+  "early_stop": {
+    "names": [
+      "objective_increase",
+      "max_iterations"
+    ],
+    "counts": [
+      294,
+      7
+    ]
+  },
+  "certificate_type_counts": {
+    "names": [
+      "analytic_box"
+    ],
+    "counts": 6622
+  },
+  "shrink_stages": 6622,
+  "shrink_restored_stages": 4048,
+  "shrink_max_abs_Nm": 1.0447158830163339,
+  "box_margin_min": 0,
+  "box_margin_mean": 0.29371533557411905,
+  "phase_ms_mean": {
+    "names": [
+      "air",
+      "aero",
+      "reachability",
+      "box",
+      "servo_certificate",
+      "allocation",
+      "attitude",
+      "translation"
+    ],
+    "values": [
+      0.53615016611295707,
+      0.22114750830564789,
+      0.60811162790697748,
+      1.2997720930232557,
+      0.91679501661129692,
+      0.13849568106312291,
+      0.65909833887043157,
+      8.2815455149501727
+    ]
+  },
+  "wall_s": 25.9010459,
+  "inner": [],
+  "torque_alignment": {
+    "samples": 60001,
+    "dt_median": 0.00099999999999944578,
+    "time_identical": true,
+    "command_changes": 300
+  }
+}

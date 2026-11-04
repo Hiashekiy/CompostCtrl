@@ -1,0 +1,21 @@
+{
+  "group": "M05",
+  "arm": "A",
+  "duration_s": 60,
+  "suffix": "",
+  "shrink_ratio": 0.05,
+  "inner_mode": "legacy",
+  "inner_period_s": 0.2,
+  "certificate_mode": "analytic_full",
+  "sqp_iterations": 4,
+  "control_period_s": 0.2,
+  "physics_step_s": 0.001,
+  "disturbance": "physical reference bank only (no constant external torque)",
+  "git_sha": "27f180d515ef07173fce61f7a01945b60962dd1d",
+  "branch": "experiment/torque-margin-feedback-ablation",
+  "model": "NearSpace_CMG_FlightControl_SurfaceOnly_TMF_M05_A_60",
+  "case_file": "D:\\项目\\飞轮\\simulink\\cases\\NearSpace_CMG_FlightControl_SurfaceOnly_TMF_M05_A_60.slx",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\M05_A_60s",
+  "started": "2026-11-05 03:29:47",
+  "wall_s": 32.8988283
+}

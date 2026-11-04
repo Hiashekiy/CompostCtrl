@@ -1,0 +1,81 @@
+{
+  "group": "B0",
+  "arm": "B",
+  "duration_s": 60,
+  "suffix": "",
+  "shrink_ratio": 0,
+  "inner_mode": "legacy",
+  "certificate_mode": "analytic_full",
+  "sqp_iterations": 4,
+  "control_period_s": 0.2,
+  "git_sha": "27f180d515ef07173fce61f7a01945b60962dd1d",
+  "branch": "experiment/torque-margin-feedback-ablation",
+  "model": "NearSpace_CMG_FlightControl_TMF_B0_B_60",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\B0_B_60s",
+  "cycles": 301,
+  "fallbacks": 0,
+  "all_certified": true,
+  "cycle_ms_mean": 55.231318936877067,
+  "cycle_ms_p50": 50.356199999999994,
+  "cycle_ms_p95": 93.38730000000001,
+  "cycle_ms_p99": 137.3192,
+  "cycle_ms_max": 175.4971,
+  "over_200ms": 0,
+  "over_200ms_steady": 0,
+  "qp_per_cycle_mean": 2.1827242524916945,
+  "sqp_iterations_mean": 2.1827242524916945,
+  "accepted_steps_mean": 1.2225913621262459,
+  "rejected_steps_total": 289,
+  "accepted_steps_zero_cycles": 94,
+  "early_stop": {
+    "names": [
+      "objective_increase",
+      "max_iterations"
+    ],
+    "counts": [
+      289,
+      12
+    ]
+  },
+  "certificate_type_counts": {
+    "names": [
+      "analytic_box"
+    ],
+    "counts": 6622
+  },
+  "shrink_stages": 6622,
+  "shrink_restored_stages": 3955,
+  "shrink_max_abs_Nm": 0,
+  "box_margin_min": 0,
+  "box_margin_mean": 0.27959709308984465,
+  "phase_ms_mean": {
+    "names": [
+      "air",
+      "aero",
+      "reachability",
+      "box",
+      "servo_certificate",
+      "allocation",
+      "attitude",
+      "translation"
+    ],
+    "values": [
+      0.50355249169435212,
+      0.20935514950166115,
+      0.60000465116279045,
+      1.2488591362126238,
+      0.88526312292358866,
+      0.13700498338870429,
+      0.6480395348837209,
+      8.0506564784053154
+    ]
+  },
+  "wall_s": 22.2291793,
+  "inner": [],
+  "torque_alignment": {
+    "samples": 60001,
+    "dt_median": 0.00099999999999944578,
+    "time_identical": true,
+    "command_changes": 300
+  }
+}

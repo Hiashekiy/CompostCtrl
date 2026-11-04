@@ -1,0 +1,80 @@
+{
+  "mode": "full",
+  "geometry": {
+    "delta_max_rad": [
+      0.43633231299858238,
+      0.3490658503988659,
+      0.3490658503988659
+    ],
+    "delta_dot_max_radps": [
+      1.0471975511965976,
+      1.0471975511965976,
+      1.0471975511965976
+    ],
+    "tau_s": 0.05,
+    "inner_dt": 0.02,
+    "servo_dt": 0.001
+  },
+  "shrink": {
+    "cases": 2500,
+    "violations": 0,
+    "max_halfwidth_error_Nm": 7.1054273576010019E-15,
+    "max_centre_error_Nm": 7.1054273576010019E-15
+  },
+  "servo_endpoint": {
+    "scenarios": 600,
+    "max_abs_error_rad": 2.7755575615628914E-16,
+    "slope_cases": 558,
+    "max_slope_error": 5.5511151231257827E-10
+  },
+  "inner": {
+    "scenarios": 400,
+    "fallbacks": 0,
+    "improved_ticks": 395,
+    "max_iterations_used": 4,
+    "max_bound_violation": 0,
+    "mean_cost_static": 2.2292581312867656E+8,
+    "mean_cost_final": 2.2292237208572105E+8,
+    "slew_saturated_ticks": 190,
+    "lag_example": {
+      "command": [
+        0.020943951023931952,
+        0.020943951023931952,
+        0.020943951023931952
+      ],
+      "static_command": [
+        0.020943951023931952,
+        0.006981317007977321,
+        0.0069813170079773192
+      ],
+      "iterations": 4,
+      "cost_initial": 76.633041784175475,
+      "cost_final": 76.453667767072631,
+      "predicted_torque_error_Nm": 8.74377826017292,
+      "static_torque_error_Nm": 8.7540298537402439
+    }
+  },
+  "baseline": {
+    "checked": true,
+    "max_abs_command_difference": 0,
+    "max_abs_state_difference": 0,
+    "inner_ticks": 101,
+    "expected_inner_ticks": 101,
+    "mpc_cycles": 11,
+    "expected_mpc_cycles": 11,
+    "inner_fallbacks": 0,
+    "per_arm": [
+      {
+        "arm": "A",
+        "max_command_difference": 0,
+        "max_state_difference": 0
+      },
+      {
+        "arm": "B",
+        "max_command_difference": 0,
+        "max_state_difference": 0
+      }
+    ]
+  },
+  "note": "U1/U2/U3 are independent of the closed loop; U4 rebuilds the 0 %/legacy arm and compares it with the stored analytic_full baseline, then counts the 20 ms arm triggers."
+}

@@ -1,0 +1,83 @@
+{
+  "group": "M05",
+  "arm": "A",
+  "duration_s": 60,
+  "suffix": "",
+  "shrink_ratio": 0.05,
+  "inner_mode": "legacy",
+  "certificate_mode": "analytic_full",
+  "sqp_iterations": 4,
+  "control_period_s": 0.2,
+  "git_sha": "27f180d515ef07173fce61f7a01945b60962dd1d",
+  "branch": "experiment/torque-margin-feedback-ablation",
+  "model": "NearSpace_CMG_FlightControl_SurfaceOnly_TMF_M05_A_60",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\M05_A_60s",
+  "cycles": 301,
+  "fallbacks": 0,
+  "all_certified": true,
+  "cycle_ms_mean": 55.047435880398666,
+  "cycle_ms_p50": 52.0366,
+  "cycle_ms_p95": 92.7663,
+  "cycle_ms_p99": 146.4501,
+  "cycle_ms_max": 505.5665,
+  "over_200ms": 1,
+  "over_200ms_steady": 0,
+  "qp_per_cycle_mean": 2.2159468438538208,
+  "sqp_iterations_mean": 2.2159468438538208,
+  "accepted_steps_mean": 1.6013289036544851,
+  "rejected_steps_total": 185,
+  "accepted_steps_zero_cycles": 86,
+  "early_stop": {
+    "names": [
+      "objective_increase",
+      "max_iterations",
+      "objective_stagnation"
+    ],
+    "counts": [
+      185,
+      17,
+      99
+    ]
+  },
+  "certificate_type_counts": {
+    "names": [
+      "analytic_box"
+    ],
+    "counts": 6622
+  },
+  "shrink_stages": 6622,
+  "shrink_restored_stages": 4526,
+  "shrink_max_abs_Nm": 1.0447158830163339,
+  "box_margin_min": 0,
+  "box_margin_mean": 0.25105286973212676,
+  "phase_ms_mean": {
+    "names": [
+      "air",
+      "aero",
+      "reachability",
+      "box",
+      "servo_certificate",
+      "allocation",
+      "attitude",
+      "translation"
+    ],
+    "values": [
+      0.4981382059800662,
+      0.20710066445182737,
+      0.57788737541528257,
+      1.2210272425249182,
+      0.86442691029900365,
+      0.13484119601328895,
+      0.62007308970099639,
+      7.9776860465116277
+    ]
+  },
+  "wall_s": 32.8988283,
+  "inner": [],
+  "torque_alignment": {
+    "samples": 60001,
+    "dt_median": 0.00099999999999944578,
+    "time_identical": true,
+    "command_changes": 300
+  }
+}

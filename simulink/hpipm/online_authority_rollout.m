@@ -9,12 +9,20 @@ function [X,U,authority,feasible]=online_authority_rollout(s,x,U,flight,restore)
 %   analytic_full : analytic box + monotone-interval servo certificate (no bisection)
 %   shadow        : the control path keeps legacy, the analytic results are computed and
 %                   compared for verification only (never fed to the controller)
+%
+% s.authority_torque_shrink_ratio (0 by default) shrinks the CERTIFIED torque box
+% uniformly about its own centre before it is handed to the QP, to the outside
+% test and to the restore clipping.  The certificate itself always proves the RAW
+% box; the shrunk box is a subset of it.  See online_shrink_certified_torque_box.
 persistent v
 if isempty(v),p=vehicle_params;v=p.vehicle;end
 assert(numel(flight)==12 && all(isfinite(flight)),'online:feedback','Missing measured flight/servo feedback');
 mode='legacy';if isfield(s,'authority_certificate_mode'),mode=s.authority_certificate_mode;end
 assert(ismember(mode,{'legacy','analytic_box','analytic_full','shadow'}),'online:certificate', ...
  'unknown authority_certificate_mode %s',mode);
+shrink=0;if isfield(s,'authority_torque_shrink_ratio'),shrink=double(s.authority_torque_shrink_ratio);end
+assert(isscalar(shrink) && isfinite(shrink) && shrink>=0 && shrink<1,'online:shrink', ...
+ 'authority_torque_shrink_ratio must satisfy 0 <= alpha < 1 (got %g)',shrink);
 timing=true;if isfield(s,'authority_phase_timing'),timing=logical(s.authority_phase_timing);end
 N=double(s.N);X=zeros(double(s.nx),N+1);X(:,1)=x;
 if double(s.nx)==11,F=@native_F_B;else,F=@native_F_A;end
@@ -30,6 +38,8 @@ authority.certificate_mode=mode;
 authority.certificate_type=cell(1,N);authority.certified=true(1,N);
 authority.endpoint_margin=nan(1,N);authority.box_margin=nan(1,N);
 authority.commands_evaluated=false(1,N);authority.analytic_fallback_count=0;
+authority.tau_min_raw=zeros(3,N);authority.tau_max_raw=zeros(3,N);
+authority.shrink_ratio=shrink;authority.shrink_abs_Nm=zeros(3,N);authority.restored=false(1,N);
 authority.phase_time_s=struct('air',0,'aero',0,'reachability',0,'box',0, ...
  'servo_certificate',0,'allocation',0,'attitude',0,'translation',0,'total',0);
 rollout_started=tic;
@@ -86,8 +96,11 @@ for k=1:N
   end
  end
  authority.phase_time_s.servo_certificate=authority.phase_time_s.servo_certificate+toc(t_phase);
- outside=any(U(1:3,k)<box.tau_min-1e-8 | U(1:3,k)>box.tau_max+1e-8);
- if restore,U(1:3,k)=min(max(U(1:3,k),box.tau_min),box.tau_max);
+ % Shrunk box: the QP bounds, this stage's outside test and the restore clipping all
+% use it; box.tau_min/max stay the certified raw bounds (log only).
+[mpc_min,mpc_max]=online_shrink_certified_torque_box(box.tau_min,box.tau_max,shrink);
+outside=any(U(1:3,k)<mpc_min-1e-8 | U(1:3,k)>mpc_max+1e-8);
+ if restore,U(1:3,k)=min(max(U(1:3,k),mpc_min),mpc_max);
  elseif outside,feasible=false;return;end
  if double(s.nx)==11
   lo=max(-s.gdot,nu_previous-s.gddot*s.dts(k));hi=min(s.gdot,nu_previous+s.gddot*s.dts(k));
@@ -114,7 +127,10 @@ for k=1:N
  prediction=online_translation_prediction(z,[0;s.dts(k)],X(1:4,k:k+1),s.authority_max_step);
  z=prediction.state(:,end);
  authority.phase_time_s.translation=authority.phase_time_s.translation+toc(t_phase);
- authority.tau_min(:,k)=box.tau_min;authority.tau_max(:,k)=box.tau_max;
+ authority.tau_min_raw(:,k)=box.tau_min;authority.tau_max_raw(:,k)=box.tau_max;
+authority.tau_min(:,k)=mpc_min;authority.tau_max(:,k)=mpc_max;
+authority.shrink_abs_Nm(:,k)=max(abs([box.tau_min-mpc_min;box.tau_max-mpc_max]));
+authority.restored(k)=logical(restore) && outside;
  authority.air(:,k)=detail;authority.natural(:,k)=natural;
  authority.vertex_residual(:,k)=box.vertex_residual(:);authority.scale(k)=box.scale;
  authority.axis_scale(:,k)=box.axis_scale;

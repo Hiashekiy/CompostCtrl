@@ -1,0 +1,83 @@
+{
+  "group": "B0",
+  "arm": "A",
+  "duration_s": 60,
+  "suffix": "",
+  "shrink_ratio": 0,
+  "inner_mode": "legacy",
+  "certificate_mode": "analytic_full",
+  "sqp_iterations": 4,
+  "control_period_s": 0.2,
+  "git_sha": "27f180d515ef07173fce61f7a01945b60962dd1d",
+  "branch": "experiment/torque-margin-feedback-ablation",
+  "model": "NearSpace_CMG_FlightControl_SurfaceOnly_TMF_B0_A_60",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\B0_A_60s",
+  "cycles": 301,
+  "fallbacks": 0,
+  "all_certified": true,
+  "cycle_ms_mean": 47.079870431893696,
+  "cycle_ms_p50": 43.5988,
+  "cycle_ms_p95": 80.454399999999993,
+  "cycle_ms_p99": 125.42339999999999,
+  "cycle_ms_max": 163.8962,
+  "over_200ms": 0,
+  "over_200ms_steady": 0,
+  "qp_per_cycle_mean": 1.8637873754152825,
+  "sqp_iterations_mean": 1.8637873754152825,
+  "accepted_steps_mean": 1.176079734219269,
+  "rejected_steps_total": 207,
+  "accepted_steps_zero_cycles": 89,
+  "early_stop": {
+    "names": [
+      "objective_increase",
+      "max_iterations",
+      "objective_stagnation"
+    ],
+    "counts": [
+      207,
+      5,
+      89
+    ]
+  },
+  "certificate_type_counts": {
+    "names": [
+      "analytic_box"
+    ],
+    "counts": 6622
+  },
+  "shrink_stages": 6622,
+  "shrink_restored_stages": 4284,
+  "shrink_max_abs_Nm": 0,
+  "box_margin_min": 0,
+  "box_margin_mean": 0.22049872920834407,
+  "phase_ms_mean": {
+    "names": [
+      "air",
+      "aero",
+      "reachability",
+      "box",
+      "servo_certificate",
+      "allocation",
+      "attitude",
+      "translation"
+    ],
+    "values": [
+      0.48316013289036541,
+      0.2044219269102989,
+      0.58147342192690987,
+      1.1842212624584727,
+      0.85935747508305649,
+      0.12583255813953487,
+      0.60837774086378749,
+      7.8087916943521609
+    ]
+  },
+  "wall_s": 19.6377016,
+  "inner": [],
+  "torque_alignment": {
+    "samples": 60001,
+    "dt_median": 0.00099999999999944578,
+    "time_identical": true,
+    "command_changes": 300
+  }
+}

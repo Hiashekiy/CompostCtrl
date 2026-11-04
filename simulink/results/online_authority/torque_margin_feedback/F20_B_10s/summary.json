@@ -1,0 +1,95 @@
+{
+  "group": "F20",
+  "arm": "B",
+  "duration_s": 10,
+  "suffix": "",
+  "shrink_ratio": 0,
+  "inner_mode": "feedback_predictive",
+  "certificate_mode": "analytic_full",
+  "sqp_iterations": 4,
+  "control_period_s": 0.2,
+  "git_sha": "27f180d515ef07173fce61f7a01945b60962dd1d",
+  "branch": "experiment/torque-margin-feedback-ablation",
+  "model": "NearSpace_CMG_FlightControl_TMF_F20_B_10",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\F20_B_10s",
+  "cycles": 51,
+  "fallbacks": 0,
+  "all_certified": true,
+  "cycle_ms_mean": 68.547764705882358,
+  "cycle_ms_p50": 65.951,
+  "cycle_ms_p95": 134.8016,
+  "cycle_ms_p99": 148.5664,
+  "cycle_ms_max": 148.5664,
+  "over_200ms": 0,
+  "over_200ms_steady": 0,
+  "qp_per_cycle_mean": 1.8627450980392157,
+  "sqp_iterations_mean": 1.8627450980392157,
+  "accepted_steps_mean": 0.88235294117647056,
+  "rejected_steps_total": 50,
+  "accepted_steps_zero_cycles": 25,
+  "early_stop": {
+    "names": [
+      "objective_increase",
+      "max_iterations"
+    ],
+    "counts": [
+      50,
+      1
+    ]
+  },
+  "certificate_type_counts": {
+    "names": [
+      "analytic_box"
+    ],
+    "counts": 1122
+  },
+  "shrink_stages": 1122,
+  "shrink_restored_stages": 442,
+  "shrink_max_abs_Nm": 0,
+  "box_margin_min": 0,
+  "box_margin_mean": 0.55636940213933239,
+  "phase_ms_mean": {
+    "names": [
+      "air",
+      "aero",
+      "reachability",
+      "box",
+      "servo_certificate",
+      "allocation",
+      "attitude",
+      "translation"
+    ],
+    "values": [
+      0.6872215686274511,
+      0.27429607843137255,
+      0.76133529411764689,
+      1.6064960784313729,
+      1.103596078431373,
+      0.16664313725490199,
+      0.79987450980392127,
+      9.895982352941175
+    ]
+  },
+  "wall_s": 7.3551055,
+  "inner": {
+    "ticks": 501,
+    "fallbacks": 0,
+    "slew_saturated_ticks": 177,
+    "max_iterations_used": 4,
+    "compute_ms_mean": 0.59606047904191617,
+    "compute_ms_p95": 1.1636000000000002,
+    "compute_ms_max": 4.8767999999999994,
+    "over_20ms": 0,
+    "cost_initial_mean": 0.41684511704750055,
+    "cost_final_mean": 0.38892979398932409,
+    "predicted_torque_error_rms_Nm": 0.62364038654476517,
+    "command_slew_change_total_rad": 8.8032655894079355,
+    "inner_period_s": 0.02
+  },
+  "torque_alignment": {
+    "samples": 10001,
+    "dt_median": 0.0010000000000000009,
+    "time_identical": true,
+    "command_changes": 50
+  }
+}

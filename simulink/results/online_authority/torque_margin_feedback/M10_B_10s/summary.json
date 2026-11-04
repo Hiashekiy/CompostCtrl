@@ -1,0 +1,81 @@
+{
+  "group": "M10",
+  "arm": "B",
+  "duration_s": 10,
+  "suffix": "",
+  "shrink_ratio": 0.1,
+  "inner_mode": "legacy",
+  "certificate_mode": "analytic_full",
+  "sqp_iterations": 4,
+  "control_period_s": 0.2,
+  "git_sha": "27f180d515ef07173fce61f7a01945b60962dd1d",
+  "branch": "experiment/torque-margin-feedback-ablation",
+  "model": "NearSpace_CMG_FlightControl_TMF_M10_B_10",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\M10_B_10s",
+  "cycles": 51,
+  "fallbacks": 0,
+  "all_certified": true,
+  "cycle_ms_mean": 68.332445098039216,
+  "cycle_ms_p50": 56.867000000000004,
+  "cycle_ms_p95": 126.53349999999999,
+  "cycle_ms_p99": 217.3801,
+  "cycle_ms_max": 217.3801,
+  "over_200ms": 1,
+  "over_200ms_steady": 0,
+  "qp_per_cycle_mean": 1.588235294117647,
+  "sqp_iterations_mean": 1.588235294117647,
+  "accepted_steps_mean": 0.60784313725490191,
+  "rejected_steps_total": 50,
+  "accepted_steps_zero_cycles": 32,
+  "early_stop": {
+    "names": [
+      "objective_increase",
+      "max_iterations"
+    ],
+    "counts": [
+      50,
+      1
+    ]
+  },
+  "certificate_type_counts": {
+    "names": [
+      "analytic_box"
+    ],
+    "counts": 1122
+  },
+  "shrink_stages": 1122,
+  "shrink_restored_stages": 459,
+  "shrink_max_abs_Nm": 2.0894317660326642,
+  "box_margin_min": 0,
+  "box_margin_mean": 0.56509613911254153,
+  "phase_ms_mean": {
+    "names": [
+      "air",
+      "aero",
+      "reachability",
+      "box",
+      "servo_certificate",
+      "allocation",
+      "attitude",
+      "translation"
+    ],
+    "values": [
+      0.8117509803921571,
+      0.33934509803921559,
+      0.879035294117647,
+      1.8737156862745095,
+      1.2621117647058824,
+      0.19779411764705884,
+      0.90139019607843152,
+      11.325374509803922
+    ]
+  },
+  "wall_s": 7.6496221,
+  "inner": [],
+  "torque_alignment": {
+    "samples": 10001,
+    "dt_median": 0.0010000000000000009,
+    "time_identical": true,
+    "command_changes": 50
+  }
+}

@@ -1,4 +1,9 @@
-function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period,certificate_mode)
+function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period,certificate_mode,torque_shrink_ratio,torque_inner_mode)
+% Torque-margin / torque-feedback ablation switches (production defaults: 0, 'legacy').
+%   torque_shrink_ratio : uniform relative shrink of the certified MPC torque box
+%   torque_inner_mode   : 'legacy'              -> 0.2 s open-loop surface allocation
+%                         'feedback_predictive' -> 0.02 s torque feedback with a one-step
+%                                                  servo prediction (needs the online arm)
 if nargin<1,duration=2;end
 if nargin<2,flight=false;end
 if nargin<3,enabled=true;end
@@ -8,6 +13,13 @@ if nargin<6,run_simulation=true;end
 if nargin<7,sqp_iterations=4;end
 if nargin<8,control_period=.2;end
 if nargin<9,certificate_mode='legacy';end
+if nargin<10,torque_shrink_ratio=0;end
+if nargin<11,torque_inner_mode='legacy';end
+assert(isscalar(torque_shrink_ratio) && isfinite(torque_shrink_ratio) && ...
+ torque_shrink_ratio>=0 && torque_shrink_ratio<1,'torque_shrink_ratio must satisfy 0 <= alpha < 1');
+assert(ismember(torque_inner_mode,{'legacy','feedback_predictive'}), ...
+ 'torque_inner_mode must be legacy or feedback_predictive');
+feedback=strcmp(torque_inner_mode,'feedback_predictive');
 assert(ismember(certificate_mode,{'legacy','analytic_box','analytic_full','shadow'}), ...
  'authority_certificate_mode must be legacy, analytic_box, analytic_full or shadow');
 assert(isscalar(control_period) && ismember(control_period,[.1 .2]),'control_period must be 0.1 or 0.2 s');
@@ -20,7 +32,12 @@ load_system(plant);
 if flight,m='NearSpace_CMG_FlightControl';else,m='NearSpace_CMG_AttitudeValidation';end
 if ~enabled,m=[m '_SurfaceOnly'];end
 if ~isempty(case_name),m=[m '_' case_name];end
-if bdIsLoaded(m),close_system(m,0);end
+if bdIsLoaded(m)
+ % Experiment case models are reproducible artefacts: drop a stale dirty flag so a
+ % retry inside the same MATLAB session cannot be blocked by the close guard.
+ if ~isempty(case_name),set_param(m,'Dirty','off');end
+ close_system(m,0);
+end
 if isempty(case_name),modeldir=fullfile(root,'simulink','models');else,modeldir=fullfile(root,'simulink','cases');end
 assert(ismember(authority_mode,{'online_predicted','online_current','legacy_frozen'}),'Unknown authority mode');
 online=flight && startsWith(authority_mode,'online_');
@@ -44,11 +61,18 @@ if enabled && numel(bank.x0)==7,bank.x0=[bank.x0(:);template.X_nom(8:11,1)];end
 template.authority_mode=authority_mode;
 template.max_sqp_iterations=sqp_iterations;
 template.authority_certificate_mode=certificate_mode;
+template.authority_torque_shrink_ratio=torque_shrink_ratio;
 if online
  old_dts=template.dts;template.dt_ctrl=control_period;template.dts(1)=control_period;
  bank=online_resample_reference_bank(bank,old_dts,template.dts,control_period);
 end
 assignin(mw,'native_control_period',template.dt_ctrl);
+assignin(mw,'native_torque_shrink_ratio',torque_shrink_ratio);
+assignin(mw,'native_inner_mode',torque_inner_mode);
+inner_period=.2;if feedback,inner_period=.02;end
+assignin(mw,'native_inner_period',inner_period);
+previous_period=.2;if feedback,previous_period=inner_period;end
+assert(~feedback || online,'torque feedback requires the online (flight) controller arm');
 if online
  template.authority_max_step=.1;
  template.tau_min=nan(3,double(template.N));template.tau_max=nan(3,double(template.N));
@@ -89,13 +113,31 @@ if flight
  Simulink.BlockDiagram.copyContentsToSubsystem('Aerodynamic_Surface',[m '/Aerodynamic_Surface']);
  add_block('built-in/Mux',[m '/Actual_flight_condition'],'Inputs','2','Position',[860 480 865 610]);
  add_line(m,'Environment_And_Forces/2','Actual_flight_condition/1');add_line(m,'Native_Plant/6','Actual_flight_condition/2');add_line(m,'Actual_flight_condition/1','Aerodynamic_Surface/2');
- % MPC total torque -> bounded surface allocation -> servo -> actual total torque.
+ % MPC total torque -> inner surface loop -> servo -> actual total torque.
  lh=get_param([m '/Control_split'],'LineHandles');dest=get_param(lh.Outport(1),'DstPortHandle');delete_line(lh.Outport(1));
- add_block('simulink/User-Defined Functions/Level-2 MATLAB S-Function',[m '/Surface_control_allocation'],'FunctionName','native_surface_allocation_sfun','Position',[280 480 430 560]);
- add_block('built-in/Mux',[m '/Allocation_inputs'],'Inputs','3','Position',[160 470 165 610]);
- add_line(m,'Control_split/1','Allocation_inputs/1');add_line(m,'Aerodynamic_Surface/3','Allocation_inputs/2');
- add_block('built-in/Demux',[m '/Air_data_split'],'Outputs','4','Position',[1330 500 1335 620]);add_line(m,'Environment_And_Forces/2','Air_data_split/1');add_line(m,'Air_data_split/1','Allocation_inputs/3');
- add_line(m,'Allocation_inputs/1','Surface_control_allocation/1');add_line(m,'Surface_control_allocation/1','Aerodynamic_Surface/1');
+ add_block('built-in/Demux',[m '/Air_data_split'],'Outputs','4','Position',[1330 500 1335 620]);add_line(m,'Environment_And_Forces/2','Air_data_split/1');
+ if feedback
+  % 20 ms torque feedback: measured deflection + measured flight condition + one-step
+  % servo prediction.  It reads the real Aerodynamic_Surface delta_actual output.
+  add_block('simulink/User-Defined Functions/Level-2 MATLAB S-Function',[m '/Torque_feedback_allocation'], ...
+   'FunctionName','native_torque_feedback_allocation_sfun','Position',[280 470 470 640]);
+  add_line(m,'Control_split/1','Torque_feedback_allocation/1');
+  add_line(m,'Aerodynamic_Surface/1','Torque_feedback_allocation/2');
+  add_line(m,'Environment_And_Forces/2','Torque_feedback_allocation/3');
+  add_line(m,'Native_Plant/6','Torque_feedback_allocation/4');
+  add_line(m,'Torque_feedback_allocation/1','Aerodynamic_Surface/1');
+  command_source='Torque_feedback_allocation/1';
+ else
+  add_block('simulink/User-Defined Functions/Level-2 MATLAB S-Function',[m '/Surface_control_allocation'],'FunctionName','native_surface_allocation_sfun','Position',[280 480 430 560]);
+  add_block('built-in/Mux',[m '/Allocation_inputs'],'Inputs','3','Position',[160 470 165 610]);
+  add_line(m,'Control_split/1','Allocation_inputs/1');add_line(m,'Aerodynamic_Surface/3','Allocation_inputs/2');
+  add_line(m,'Air_data_split/1','Allocation_inputs/3');
+  add_line(m,'Allocation_inputs/1','Surface_control_allocation/1');
+  add_line(m,'Surface_control_allocation/1','Aerodynamic_Surface/1');
+  command_source='Surface_control_allocation/1';
+ end
+ add_block('built-in/ToWorkspace',[m '/delta_cmd'],'VariableName','delta_cmd','SaveFormat','Timeseries','MaxDataPoints','inf');
+ add_line(m,command_source,'delta_cmd/1');
  add_line(m,'Aerodynamic_Surface/5','Native_Plant/1');
  add_block('built-in/ToWorkspace',[m '/flight_conditions'],'VariableName','flight_conditions','SaveFormat','Timeseries','MaxDataPoints','inf');
  add_line(m,'Environment_And_Forces/2','flight_conditions/1');
@@ -103,8 +145,10 @@ if flight
   if ~isfile(fullfile(root,'simulink','models','Online_Surface_Authority.slx')),build_online_authority;end
   load_system('Online_Surface_Authority');
   add_block('built-in/Mux',[m '/Flight_And_Servo_Feedback'],'Inputs','4','Position',[840 700 845 850]);
-  add_block('built-in/UnitDelay',[m '/Previous_Allocation_Command'],'SampleTime',num2str(template.dt_ctrl,17),'InitialCondition','zeros(3,1)','Position',[490 760 650 800]);
-  add_line(m,'Surface_control_allocation/1','Previous_Allocation_Command/1');
+  add_block('built-in/UnitDelay',[m '/Previous_Allocation_Command'],'SampleTime',num2str(previous_period,17),'InitialCondition','zeros(3,1)','Position',[490 760 650 800]);
+  % The upper predictor must see the command that is actually being applied now, so in
+  % the feedback arm this delay runs at the 0.02 s inner rate instead of 0.2 s.
+  add_line(m,command_source,'Previous_Allocation_Command/1');
   add_line(m,'Native_Plant/2','Flight_And_Servo_Feedback/1');
   add_line(m,'Native_Plant/5','Flight_And_Servo_Feedback/2');
   add_line(m,'Aerodynamic_Surface/1','Flight_And_Servo_Feedback/3');

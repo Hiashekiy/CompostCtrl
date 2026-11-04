@@ -1,0 +1,83 @@
+{
+  "group": "M10",
+  "arm": "A",
+  "duration_s": 60,
+  "suffix": "",
+  "shrink_ratio": 0.1,
+  "inner_mode": "legacy",
+  "certificate_mode": "analytic_full",
+  "sqp_iterations": 4,
+  "control_period_s": 0.2,
+  "git_sha": "27f180d515ef07173fce61f7a01945b60962dd1d",
+  "branch": "experiment/torque-margin-feedback-ablation",
+  "model": "NearSpace_CMG_FlightControl_SurfaceOnly_TMF_M10_A_60",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\M10_A_60s",
+  "cycles": 301,
+  "fallbacks": 0,
+  "all_certified": true,
+  "cycle_ms_mean": 62.452459800664457,
+  "cycle_ms_p50": 59.2857,
+  "cycle_ms_p95": 120.3278,
+  "cycle_ms_p99": 180.03830000000002,
+  "cycle_ms_max": 207.7319,
+  "over_200ms": 2,
+  "over_200ms_steady": 2,
+  "qp_per_cycle_mean": 2.4219269102990033,
+  "sqp_iterations_mean": 2.4219269102990033,
+  "accepted_steps_mean": 1.7740863787375416,
+  "rejected_steps_total": 195,
+  "accepted_steps_zero_cycles": 60,
+  "early_stop": {
+    "names": [
+      "objective_increase",
+      "max_iterations",
+      "objective_stagnation"
+    ],
+    "counts": [
+      195,
+      8,
+      98
+    ]
+  },
+  "certificate_type_counts": {
+    "names": [
+      "analytic_box"
+    ],
+    "counts": 6622
+  },
+  "shrink_stages": 6622,
+  "shrink_restored_stages": 4063,
+  "shrink_max_abs_Nm": 2.0894317660326642,
+  "box_margin_min": 0,
+  "box_margin_mean": 0.23094030130096047,
+  "phase_ms_mean": {
+    "names": [
+      "air",
+      "aero",
+      "reachability",
+      "box",
+      "servo_certificate",
+      "allocation",
+      "attitude",
+      "translation"
+    ],
+    "values": [
+      0.56675083056478459,
+      0.23698803986710953,
+      0.65071362126245824,
+      1.3693933554817281,
+      0.95438604651162839,
+      0.14278272425249186,
+      0.69081860465116318,
+      8.8162780730897
+    ]
+  },
+  "wall_s": 24.4401739,
+  "inner": [],
+  "torque_alignment": {
+    "samples": 60001,
+    "dt_median": 0.00099999999999944578,
+    "time_identical": true,
+    "command_changes": 300
+  }
+}
