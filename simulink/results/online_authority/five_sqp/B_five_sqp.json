@@ -1,0 +1,29 @@
+{
+  "arm": "B",
+  "rounds": 5,
+  "qp_solved": 2,
+  "iterations": 2,
+  "accepted_steps": 1,
+  "rejected_steps": 1,
+  "restoration_calls": 2,
+  "full_step_checks": 2,
+  "certificate_count": 5,
+  "early_stop": "objective_increase",
+  "qp_total_s": 0.019749899999999997,
+  "qp_solver_s": 0.00071499999999999992,
+  "rollout_s": 0.1153837,
+  "cycle_s": 0.1416906,
+  "warm_start_misaligned_stages": 15,
+  "rounds4_qp_solved": 2,
+  "rounds4_accepted": 1,
+  "rounds4_command_delta": 0,
+  "rounds_reached_without_injection": 1,
+  "rounds_reached_cold_perturbed": 4,
+  "accepted_steps_by_injected_round": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}

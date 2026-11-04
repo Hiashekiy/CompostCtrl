@@ -1,10 +1,12 @@
-function build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation)
+function build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations)
 if nargin<1,duration=2;end
 if nargin<2,flight=false;end
 if nargin<3,enabled=true;end
 if nargin<4,case_name='';end
 if nargin<5,if flight,authority_mode='online_predicted';else,authority_mode='legacy_frozen';end;end
 if nargin<6,run_simulation=true;end
+if nargin<7,sqp_iterations=5;end
+assert(ismember(sqp_iterations,[4 5]),'max_sqp_iterations must be 4 or 5');
 root=repo_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
 bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
 if enabled,plant='Plant_6DOF_CMG';else,plant='Plant_6DOF_SurfaceOnly';end
@@ -34,6 +36,7 @@ template=load(fullfile(root,'simulink','tests','05_python_matlab_qp_equivalence'
 % The B template already carries the baseline CMG configuration in X_nom.
 if enabled && numel(bank.x0)==7,bank.x0=[bank.x0(:);template.X_nom(8:11,1)];end
 template.authority_mode=authority_mode;
+template.max_sqp_iterations=sqp_iterations;   % 5 by default, 4 as the documented alternative
 if online
  template.authority_max_step=.1;
  template.tau_min=nan(3,double(template.N));template.tau_max=nan(3,double(template.N));
@@ -194,8 +197,8 @@ if online
  for j=1:2,assert(get_param(ph.Outport(j),'Line')>0,'Online output lost during save/reopen');end
  close_system(m,0);
 end
-if run_simulation,fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g\n',duration);
-else,fprintf('NATIVE_CLOSEDLOOP_BUILT configured_duration=%g (not simulated)\n',duration);end
+if run_simulation,fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g sqp_iterations=%d\n',duration,sqp_iterations);
+else,fprintf('NATIVE_CLOSEDLOOP_BUILT configured_duration=%g sqp_iterations=%d (not simulated)\n',duration,sqp_iterations);end
 end
 function save_with_retry(file,result)
 % On Windows a just-closed MATLAB process can still hold the target file, which

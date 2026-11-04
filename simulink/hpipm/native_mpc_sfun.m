@@ -53,6 +53,8 @@ if strcmp(action,'start')
  c.state=[];c.time=-inf;c.command=zeros(double(c.s.nu),1);c.fallbacks=0;
  c.results_dir='';if hasVariable(mw,'native_results_dir'),c.results_dir=getVariable(mw,'native_results_dir');end
  c.online=isfield(c.s,'authority_mode') && startsWith(c.s.authority_mode,'online_');
+ c.sqp_iterations=5;if isfield(c.s,'max_sqp_iterations'),c.sqp_iterations=double(c.s.max_sqp_iterations);end
+ assert(~c.online || ismember(c.sqp_iterations,[4 5]),'online:sqp','max_sqp_iterations must be 4 or 5');
  assert(~c.online || c.wired,'online:reference','Online mode requires the wired reference window');
  c.capture=c.online || hasVariable(mw,'native_capture_diagnostics');
  c.diagnostics={};c.control_times=[];
@@ -106,7 +108,9 @@ if b.CurrentTime>c.time+1e-9
    a=info.authority;c.authority_preview=[a.tau_min(:,1);a.tau_max(:,1);a.scale(1);max(a.vertex_residual(:,1))];
   else,c.authority_preview=[c.command(1:3);c.command(1:3);0;0];end
   if mod(round(b.CurrentTime/c.s.dt_ctrl),25)==0
-   fprintf('ONLINE_AUTHORITY t=%g compute=%gs QP=%d rejected=%d fallback=%d\n',b.CurrentTime,info.elapsed_s,info.iterations,info.rejected,info.fallback);
+   fprintf(['ONLINE_AUTHORITY t=%g compute=%gs SQP<=%d QP=%d accepted=%d rejected=%d ' ...
+    'stop=%s fallback=%d\n'],b.CurrentTime,info.elapsed_s,c.sqp_iterations,info.iterations, ...
+    diagnostics_field(info,'accepted_steps'),info.rejected,diagnostics_field(info,'early_stop_reason'),info.fallback);
   end
  end
  if info.fallback && c.fallbacks<3,fprintf('MPC_FALLBACK t=%g %s\n',b.CurrentTime,info.failure);end
@@ -137,4 +141,9 @@ n1=double(s.N)+1;nN=double(s.N);expect=10*n1+9*nN+3;
 if numel(w)~=expect
  error('native:window','reference window has %d values, expected %d (N=%d); check Reference_Manager',numel(w),expect,double(s.N));
 end
+end
+function value=diagnostics_field(info,name)
+% Solver diagnostics added by the five-round SQP are optional for older callers.
+value=0;if strcmp(name,'early_stop_reason'),value='';end
+if isfield(info,name),value=info.(name);end
 end

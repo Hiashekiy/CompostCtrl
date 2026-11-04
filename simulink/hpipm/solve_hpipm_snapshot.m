@@ -2,6 +2,7 @@ function result=solve_hpipm_snapshot(s)
 % Solve an explicitly supplied OCP-QP through the official HPIPM wrappers.
 % This adapter is for fixed-data validation, not the online LTV assembler.
 hpipm_startup;
+setup_timer=tic;
 N=double(s.N); nx=double(s.nx); nu=double(s.nu); nt=size(s.tr_J,1);
 dim=hpipm_ocp_qp_dim(N); dim.set('nx',nx,0,N); dim.set('nu',nu,0,N-1);
 dim.set('nbx',nx,0); dim.set('nbxe',nx,0); dim.set('nbu',nu,0,N-1);
@@ -13,6 +14,8 @@ for f={'tol_stat','tol_eq','tol_ineq','tol_comp'}, arg.set(f{1},1e-6); end
 solver=hpipm_ocp_qp_solver(dim,arg);
 % Explicit destruction order protects native pointer lifetimes.
 guard=onCleanup(@()cleanup_objects(solver,sol,qp,arg,dim));
+setup_time_s=toc(setup_timer);
+fill_timer=tic;
 for k=0:N-1
  qp.set('A',s.A(:,:,k+1),k); qp.set('B',s.B(:,:,k+1),k); qp.set('b',s.b(:,k+1),k);
  qp.set('R',s.R(:,:,k+1),k); qp.set('r',s.r(:,k+1),k);
@@ -27,6 +30,8 @@ for k=0:N
  end
 end
 % Round-trip the actual native structures to verify dimension/order conventions.
+fill_time_s=toc(fill_timer);
+readback_timer=tic;
 matrix_error=0;
 if ~isfield(s,'validate_readback') || s.validate_readback
 for k=0:N
@@ -44,6 +49,10 @@ end
 end
 solver.solve(qp,sol);
 result.status=solver.get('status'); result.time_s=solver.get('time_ext');
+readback_time_s=toc(readback_timer);
+% Wall-clock decomposition: object lifetimes and read-back are separable costs.
+result.setup_time_s=setup_time_s; result.fill_time_s=fill_time_s;
+result.readback_time_s=readback_time_s;
 result.residuals=cellfun(@(f)solver.get(f),{'max_res_stat','max_res_eq','max_res_ineq','max_res_comp'});
 result.X=zeros(nx,N+1); result.U=zeros(nu,N);
 for k=0:N, result.X(:,k+1)=sol.get('x',k); end
