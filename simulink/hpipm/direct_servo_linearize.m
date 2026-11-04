@@ -13,16 +13,30 @@ function [A,B]=direct_servo_linearize(s,X,U,a,tau_d)
 persistent v
 if isempty(v),p=vehicle_params;v=p.vehicle;end
 N=double(s.N);nx=double(s.nx_direct);nu=double(s.nu_direct);natt=nx-3;
+legacy=isfield(s,'model_mode')&&strcmp(s.model_mode,'legacy');
 A=zeros(nx,nx,N);B=zeros(nx,nu,N);
 for k=1:N
  dt=s.dts(k);
+ if legacy
+  % bcd96fd behaviour: the servo COMMAND is passed where the torque-level MEX expects a
+  % moment. Kept only to reproduce the reviewed experiment, never as the fixed model.
+  working=U(:,k);
+ else
+  % Working point in the units the attitude MEX actually linearises about: the aerodynamic
+  % moment produced by the nominal servo angle, plus the nominal CMG rate command.
+  if natt==11
+   working=[a.torque(:,k);U(4:7,k)];
+  else
+   working=a.torque(:,k);
+  end
+ end
  if natt==11
-  A0=native_A_B(X(1:11,k),U(:,k),tau_d(:,k),dt);
-  B0=native_B_B(X(1:11,k),U(:,k),tau_d(:,k),dt);
+  A0=native_A_B(X(1:11,k),working,tau_d(:,k),dt);
+  B0=native_B_B(X(1:11,k),working,tau_d(:,k),dt);
   B0_tau=B0(:,1:3);B0_nu=B0(:,4:7);
  else
-  A0=native_A_A(X(1:7,k),U(:,k),tau_d(:,k),dt);
-  B0=native_B_A(X(1:7,k),U(:,k),tau_d(:,k),dt);
+  A0=native_A_A(X(1:7,k),working,tau_d(:,k),dt);
+  B0=native_B_A(X(1:7,k),working,tau_d(:,k),dt);
   B0_tau=B0(:,1:3);B0_nu=zeros(7,0);
  end
  gain=1-exp(-dt/v.tau_s);g=diag(min(max(gain,0),1)*ones(3,1));

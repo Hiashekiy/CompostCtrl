@@ -1,0 +1,37 @@
+{
+  "acceptance_mode": "hard_stop",
+  "model_mode": "fixed",
+  "arm": "B",
+  "duration_s": 60,
+  "cycles": 301,
+  "git_sha": "bcd96fdc21590cb0453c4d167ab762212c3ab297",
+  "matlab_version": "24.1.0.2537033 (R2024a)",
+  "wall_s": 95.3887181,
+  "fallbacks": 0,
+  "accepted_steps_mean": 1.9468438538205981,
+  "accepted_steps_max": 4,
+  "cycles_with_zero_accept": 118,
+  "first_command_changed_cycles": 219,
+  "first_command_max_rad": 0.43633231299857406,
+  "first_command_mean_rad": 0.27430983589809688,
+  "qp_per_cycle_mean": 2.5913621262458473,
+  "qp_per_cycle_max": 4,
+  "cycle_ms_mean": 289.0941408637874,
+  "cycle_ms_p95": 642.60759999999993,
+  "cycle_ms_max": 760.3059,
+  "over_200ms": 142,
+  "J_start": 76.192604620689437,
+  "J_end": 1479.8569205887393,
+  "stop_reasons": {
+    "names": [
+      "max_iterations",
+      "objective_increase"
+    ],
+    "counts": [
+      107,
+      194
+    ]
+  },
+  "objective_increase": 194,
+  "trust_radius_rad": 0.052359877559829883
+}

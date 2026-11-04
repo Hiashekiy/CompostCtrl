@@ -51,8 +51,8 @@ for enabled=[false true]
   if dt==.2,row.stage_error_dt_0p2=norm(fast-slow,inf);else,row.stage_error_dt_2=norm(fast-slow,inf);end
  end
  % 3. Jacobian versus finite differences of the same map
- [~,Bd]=online_aero_moment(v,air,x(5:7),s.flight_state(7:9));
- a=struct('B_delta',repmat(Bd,[1 1 N]));
+ [~,Bd,total]=online_aero_moment(v,air,x(5:7),s.flight_state(7:9));
+ a=struct('B_delta',repmat(Bd,[1 1 N]),'torque',repmat(total,[1 N]));
  U=zeros(s.nu_direct,N);U(1:3,:)=repmat(delta_cmd,1,N);
  if s.nu_direct==7,U(4:7,:)=repmat(nu_cmd,1,N);end
  X=repmat(x,1,N+1);X(s.nx_direct-2:s.nx_direct,:)=repmat(s.flight_state(7:9),1,N+1);
@@ -77,6 +77,23 @@ for enabled=[false true]
   end
  end
  row.jacobian_worst_relative_error=worst;
+ assert(worst<2e-1,'S1: analytic Jacobian deviates from finite differences by %.3f',worst);
+ % 3b. the QP linear term must be the gradient of the SAME objective's control cost
+ s.direct_previous_command=s.flight_state(10:12);
+ work=assemble_direct_servo_qp(s,X,U,a);
+ gradient=work.r(:);K=6;errs=zeros(1,K);rng_state=rng(7,'twister');
+ for trial=1:K
+  d=randn(size(gradient));d=d/max(abs(d));
+  eps=1e-4;
+  plus=control_cost(s,X,U+reshape(eps*d,size(U)),s.direct_previous_command);
+  minus=control_cost(s,X,U-reshape(eps*d,size(U)),s.direct_previous_command);
+  numeric=(plus-minus)/(2*eps);analytic=gradient'*d;
+  errs(trial)=abs(numeric-analytic)/max(abs(numeric),1e-9);
+ end
+ rng(rng_state);
+ row.control_gradient_rel_error=max(errs);
+ assert(row.control_gradient_rel_error<1e-6,'S1: QP control gradient is not the objective gradient (%.2e)', ...
+  row.control_gradient_rel_error);
  % 4. propagation, verification and one MPC call
  x0=[x(1:s.nx_direct-3);s.flight_state(7:9)];
  [~,Up,ap,ok,reason]=direct_servo_propagate(s,x0,zeros(s.nu_direct,N),s.flight_state,true);
@@ -110,4 +127,9 @@ fprintf('DIRECT_SERVO_MPC_UNIT_PASS\n');
 end
 function value=reason_of(info)
 value='';if isfield(info,'failure'),value=info.failure;end
+end
+function value=control_cost(s,X,U,previous_command)
+% Only the control-cost terms of the shared objective, as an explicit function of U.
+[~,terms]=direct_servo_objective(s,X,U,previous_command,zeros(4,1));
+value=terms.cmd+terms.dcmd+terms.nu+terms.dnu;
 end

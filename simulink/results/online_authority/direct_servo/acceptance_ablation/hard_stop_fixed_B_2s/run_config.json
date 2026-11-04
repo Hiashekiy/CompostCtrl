@@ -1,0 +1,13 @@
+{
+  "acceptance_mode": "hard_stop",
+  "model_mode": "fixed",
+  "arm": "B",
+  "duration_s": 2,
+  "sqp_iterations": 4,
+  "control_period_s": 0.2,
+  "trust_radius_rad": 0.052359877559829883,
+  "git_sha": "bcd96fdc21590cb0453c4d167ab762212c3ab297",
+  "branch": "experiment/direct-servo-sqp-acceptance-diagnosis",
+  "model": "NearSpace_CMG_FlightControl_DA_HS_F_B_2",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\direct_servo\\acceptance_ablation\\hard_stop_fixed_B_2s"
+}
