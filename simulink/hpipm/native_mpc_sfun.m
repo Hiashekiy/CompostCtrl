@@ -14,18 +14,24 @@ block.SetPreCompPortInfoToDefaults;
 isA=contains(get_param(bdroot(block.BlockHandle),'Name'),'SurfaceOnly');
 if isA,block.InputPort(1).Dimensions=6;block.OutputPort(1).Dimensions=3;
 else,block.InputPort(1).Dimensions=10;block.OutputPort(1).Dimensions=7;end
-wired=false;W=0;
+wired=false;W=0;online=false;
 try
  mw=get_param(bdroot(block.BlockHandle),'ModelWorkspace');
- if hasVariable(mw,'reference_window')
+ if hasVariable(mw,'native_controller_template')
   t=getVariable(mw,'native_controller_template');
-  W=10*(double(t.N)+1)+9*double(t.N)+3;wired=true;
+  online=isfield(t,'authority_mode') && startsWith(t.authority_mode,'online_');
+  wired=hasVariable(mw,'reference_window') || online;
+  W=10*(double(t.N)+1)+9*double(t.N)+3;
  end
 catch
 end
-block.NumInputPorts=1+double(wired);
+block.NumInputPorts=1+double(wired)+double(online);
 block.InputPort(1).DirectFeedthrough=true;
 if wired,block.InputPort(2).Dimensions=W;block.InputPort(2).DirectFeedthrough=true;end
+if online
+ block.InputPort(3).Dimensions=12;block.InputPort(3).DirectFeedthrough=true;
+ block.NumOutputPorts=2;block.OutputPort(1).Dimensions=3+4*double(~isA);block.OutputPort(2).Dimensions=8;
+end
 block.SampleTimes=[.2 0];
 block.SimStateCompliance='HasNoSimState';
 block.RegBlockMethod('Start',@(b)runtime('start',b));
@@ -41,16 +47,27 @@ if strcmp(action,'start')
  c.wired=hasVariable(mw,'reference_window');
  c.s=getVariable(mw,'native_controller_template');
  if c.wired,c.bank=[];else,c.bank=getVariable(mw,'native_reference_bank');end
- c.state=[];c.time=-inf;c.command=zeros(double(c.s.nu),1);c.fallbacks=0;contexts(key)=c;return;
+ c.state=[];c.time=-inf;c.command=zeros(double(c.s.nu),1);c.fallbacks=0;
+ c.results_dir='';if hasVariable(mw,'native_results_dir'),c.results_dir=getVariable(mw,'native_results_dir');end
+ c.online=isfield(c.s,'authority_mode') && startsWith(c.s.authority_mode,'online_');
+ c.capture=c.online || hasVariable(mw,'native_capture_diagnostics');
+ c.diagnostics={};c.control_times=[];
+ c.authority_preview=zeros(8,1);
+ contexts(key)=c;return;
 end
 if strcmp(action,'terminate')
  if isKey(contexts,key)
   c=contexts(key);fprintf('ONLINE_MPC fallbacks=%d\n',c.fallbacks);
   root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
-  folder=fullfile(root,'simulink','results','native_closedloop');if ~exist(folder,'dir'),mkdir(folder);end
+  folder=c.results_dir;if isempty(folder),folder=fullfile(root,'simulink','results','native_closedloop');end
+  if ~exist(folder,'dir'),mkdir(folder);end
   % Statistics only: a locked/read-only results file must not abort the run.
   stats=jsonencode(struct('fallbacks',c.fallbacks,'last_control_time',c.time));
   try
+   if c.capture
+    diagnostics=c.diagnostics;control_times=c.control_times;
+    save(fullfile(folder,[get_param(bdroot(b.BlockHandle),'Name') '_authority.mat']),'diagnostics','control_times');
+   end
    fid=fopen(fullfile(folder,[get_param(bdroot(b.BlockHandle),'Name') '_runtime.json']),'w');
    if fid>0,fprintf(fid,'%s',stats);fclose(fid);else,error('native:locked','cannot open runtime file');end
    fid=fopen(fullfile(folder,sprintf('%s_runtime_%gs.json',get_param(bdroot(b.BlockHandle),'Name'),c.time)),'w');
@@ -76,11 +93,23 @@ if b.CurrentTime>c.time+1e-9
  input=b.InputPort(1).Data;roll=input(1);pitch=input(2);yaw=input(3);
  cr=cos(roll/2);sr=sin(roll/2);cp=cos(pitch/2);sp=sin(pitch/2);cy=cos(yaw/2);sy=sin(yaw/2);
  q=[cr*cp*cy+sr*sp*sy;sr*cp*cy-cr*sp*sy;cr*sp*cy+sr*cp*sy;cr*cp*sy-sr*sp*cy];
- [c.command,c.state,info]=native_rti_step(c.s,[q;input(4:end)],c.state);
+ if c.online,c.s.flight_state=b.InputPort(3).Data(:);end
+ call_started=tic;[c.command,c.state,info]=native_rti_step(c.s,[q;input(4:end)],c.state);
+ if ~isfield(info,'elapsed_s'),info.elapsed_s=toc(call_started);end
+ if c.capture,c.diagnostics{end+1}=info;c.control_times(end+1)=b.CurrentTime;end
+ if c.online
+  if ~isempty(info.authority)
+   a=info.authority;c.authority_preview=[a.tau_min(:,1);a.tau_max(:,1);a.scale(1);max(a.vertex_residual(:,1))];
+  else,c.authority_preview=[c.command(1:3);c.command(1:3);0;0];end
+  if mod(round(b.CurrentTime/c.s.dt_ctrl),25)==0
+   fprintf('ONLINE_AUTHORITY t=%g compute=%gs QP=%d rejected=%d fallback=%d\n',b.CurrentTime,info.elapsed_s,info.iterations,info.rejected,info.fallback);
+  end
+ end
  if info.fallback && c.fallbacks<3,fprintf('MPC_FALLBACK t=%g %s\n',b.CurrentTime,info.failure);end
  c.fallbacks=c.fallbacks+double(info.fallback);c.time=b.CurrentTime;contexts(key)=c;
 end
 b.OutputPort(1).Data=c.command;
+if c.online,b.OutputPort(2).Data=c.authority_preview;end
 end
 function s=parse_window(b,s)
 % Unpack the flattened reference window delivered on input port 2.
@@ -90,8 +119,9 @@ n1=double(s.N)+1;nN=double(s.N);p=0;
 s.q_ref=reshape(w(p+1:p+4*n1),4,n1);p=p+4*n1;
 s.omega_ref=reshape(w(p+1:p+3*n1),3,n1);p=p+3*n1;
 s.tau_d=reshape(w(p+1:p+3*n1),3,n1);p=p+3*n1;
-s.tau_min=reshape(w(p+1:p+3*nN),3,nN);p=p+3*nN;
-s.tau_max=reshape(w(p+1:p+3*nN),3,nN);p=p+3*nN;
+online=isfield(s,'authority_mode') && startsWith(s.authority_mode,'online_');
+if ~online,s.tau_min=reshape(w(p+1:p+3*nN),3,nN);end;p=p+3*nN;
+if ~online,s.tau_max=reshape(w(p+1:p+3*nN),3,nN);end;p=p+3*nN;
 s.tau_nom=reshape(w(p+1:p+3*nN),3,nN);p=p+3*nN;
 s.gap=reshape(w(p+1:p+3),3,1);
 if p+3~=numel(w),error('native:window','reference window has %d values, expected %d',numel(w),p+3);end

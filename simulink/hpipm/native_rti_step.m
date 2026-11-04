@@ -3,6 +3,9 @@ function [command,state,info]=native_rti_step(s,x,state,force_failure)
 % s supplies current and future reference/authority; it must be updated every tick.
 if nargin<3 || isempty(state),state=struct('U',[],'last',[],'nu_previous',zeros(4,1));end
 if nargin<4,force_failure=false;end
+if isfield(s,'authority_mode') && startsWith(s.authority_mode,'online_')
+ [command,state,info]=native_online_rti_step(s,x,state,force_failure);return;
+end
 N=double(s.N);dt=s.dts(:);nx=double(s.nx);
 if nx==11,F=@native_F_B;E=@native_E_B;else,F=@native_F_A;E=@native_E_A;end
 if isempty(state.U)
@@ -40,6 +43,7 @@ if nx==11
  state.nu_previous=command(4:7);
 end
 info.status=status;info.objective=obj;
+if exist('iteration','var'),info.iterations=iteration;else,info.iterations=0;end
  function value=clip(value)
   value(1:3,:)=min(max(value(1:3,:),s.tau_min(:,1:N)),s.tau_max(:,1:N));
   if nx==11,value(4:7,:)=min(max(value(4:7,:),-s.gdot),s.gdot);end

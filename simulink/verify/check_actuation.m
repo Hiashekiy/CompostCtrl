@@ -1,4 +1,4 @@
-function check_actuation(model)
+function check_actuation(model,results_dir)
 % Regression guard for the P0 CMG path: the gimbal angles must actually move.
 %
 % Background: the P0 builder replaces the tested gimbal drive with an ideal
@@ -11,9 +11,13 @@ function check_actuation(model)
 % Usage: check_actuation                      % default S00 pitch 30 case
 %        check_actuation('NearSpace_CMG_AttitudeValidation_S02_pitch10')
 if nargin<1,model='NearSpace_CMG_AttitudeValidation_S00_pitch30';end
+if nargin<2,results_dir='';end
 root=repo_root;
 addpath(fullfile(root,'simulink'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
 load_system(fullfile(root,'simulink','cases',[model '.slx']));
+if ~isempty(results_dir)
+ mw=get_param(model,'ModelWorkspace');assignin(mw,'native_results_dir',results_dir);
+end
 saved=get_param(model,'StopTime');
 set_param(model,'StopTime','2');      % in-memory override, the saved model is untouched
 out=sim(model);set_param(model,'StopTime',saved);
@@ -24,6 +28,7 @@ close_system(model,0);
 % The MPC S-Function rewrites the runtime evidence for this model name on every
 % run; keep the full-window file authoritative after this short check.
 outdir=fullfile(root,'simulink','results','native_closedloop');
+if ~isempty(results_dir),outdir=results_dir;end
 short=fullfile(outdir,sprintf('%s_runtime_%gs.json',model,st.Time(end)));
 try
  if exist(short,'file'),delete(short);end

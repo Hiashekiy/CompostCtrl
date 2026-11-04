@@ -1,8 +1,9 @@
-function build_closedloop(duration,flight,enabled,case_name)
+function build_closedloop(duration,flight,enabled,case_name,authority_mode)
 if nargin<1,duration=2;end
 if nargin<2,flight=false;end
 if nargin<3,enabled=true;end
 if nargin<4,case_name='';end
+if nargin<5,if flight,authority_mode='online_predicted';else,authority_mode='legacy_frozen';end;end
 root=repo_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
 bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
 if enabled,plant='Plant_6DOF_CMG';else,plant='Plant_6DOF_SurfaceOnly';end
@@ -12,11 +13,31 @@ if ~enabled,m=[m '_SurfaceOnly'];end
 if ~isempty(case_name),m=[m '_' case_name];end
 if bdIsLoaded(m),close_system(m,0);end
 if isempty(case_name),modeldir=fullfile(root,'simulink','models');else,modeldir=fullfile(root,'simulink','cases');end
+assert(ismember(authority_mode,{'online_predicted','online_current','legacy_frozen'}),'Unknown authority mode');
+online=flight && startsWith(authority_mode,'online_');
+out=fullfile(root,'simulink','results','native_closedloop');
+if online
+ label='L2';if strcmp(authority_mode,'online_current'),label='L1';end
+ out=fullfile(root,'simulink','results','online_authority',sprintf('%s_%gs_%s',label,duration,datestr(now,'yyyymmdd_HHMMSS')));
+ backup=fullfile(root,'simulink','results','online_authority','frozen_models');if ~exist(backup,'dir'),mkdir(backup);end
+ oldfile=fullfile(modeldir,[m '.slx']);
+ if isfile(oldfile) && ~isfile(fullfile(backup,[m '.slx'])),copyfile(oldfile,fullfile(backup,[m '.slx']));end
+end
+if ~exist(out,'dir'),mkdir(out);end
 new_system(m);set_param(m,'SolverType','Fixed-step','Solver','ode4','FixedStep','.001','StopTime',num2str(duration), ...
  'ReturnWorkspaceOutputs','on','SaveFormat','Dataset');
 mw=get_param(m,'ModelWorkspace');
 if enabled,template_file='production_online_qp.mat';else,template_file='production_online_A_qp.mat';end
 template=load(fullfile(root,'simulink','tests','05_python_matlab_qp_equivalence',template_file));
+% Some reference banks export only the common seven attitude states.
+% The B template already carries the baseline CMG configuration in X_nom.
+if enabled && numel(bank.x0)==7,bank.x0=[bank.x0(:);template.X_nom(8:11,1)];end
+template.authority_mode=authority_mode;
+if online
+ template.authority_max_step=.1;
+ template.tau_min=nan(3,double(template.N));template.tau_max=nan(3,double(template.N));
+ assignin(mw,'native_results_dir',out);
+end
 assignin(mw,'native_controller_template',template);
 assignin(mw,'native_reference_bank',bank);
 add_block('built-in/SubSystem',[m '/Native_Plant'],'Position',[500 60 770 330]);
@@ -62,6 +83,33 @@ if flight
  add_line(m,'Aerodynamic_Surface/5','Native_Plant/1');
  add_block('built-in/ToWorkspace',[m '/flight_conditions'],'VariableName','flight_conditions','SaveFormat','Timeseries','MaxDataPoints','inf');
  add_line(m,'Environment_And_Forces/2','flight_conditions/1');
+ if online
+  if ~isfile(fullfile(root,'simulink','models','Online_Surface_Authority.slx')),build_online_authority;end
+  load_system('Online_Surface_Authority');
+  add_block('built-in/Mux',[m '/Flight_And_Servo_Feedback'],'Inputs','4','Position',[840 700 845 850]);
+  add_block('built-in/UnitDelay',[m '/Previous_Allocation_Command'],'SampleTime','.2','InitialCondition','zeros(3,1)','Position',[490 760 650 800]);
+  add_line(m,'Surface_control_allocation/1','Previous_Allocation_Command/1');
+  add_line(m,'Native_Plant/2','Flight_And_Servo_Feedback/1');
+  add_line(m,'Native_Plant/5','Flight_And_Servo_Feedback/2');
+  add_line(m,'Aerodynamic_Surface/1','Flight_And_Servo_Feedback/3');
+  add_line(m,'Previous_Allocation_Command/1','Flight_And_Servo_Feedback/4');
+  add_line(m,'Flight_And_Servo_Feedback/1','Online_RTI_HPIPM/3');
+  add_block('built-in/SubSystem',[m '/Online_Surface_Authority'],'Position',[1040 700 1330 920]);
+  Simulink.BlockDiagram.copyContentsToSubsystem('Online_Surface_Authority',[m '/Online_Surface_Authority']);
+  add_line(m,'Flight_And_Servo_Feedback/1','Online_Surface_Authority/1');
+  add_line(m,'Native_Plant/6','Online_Surface_Authority/2');add_line(m,'Native_Plant/4','Online_Surface_Authority/3');
+  add_line(m,'Online_RTI_HPIPM/2','Online_Surface_Authority/4');
+  for j=1:4
+   add_block('built-in/Terminator',[m sprintf('/Authority_monitor_%d',j)]);
+   add_line(m,sprintf('Online_Surface_Authority/%d',j),sprintf('Authority_monitor_%d/1',j));
+  end
+  sources={'Aerodynamic_Surface/1','Aerodynamic_Surface/2','Aerodynamic_Surface/5','Flight_And_Servo_Feedback/1'};
+  names={'delta_actual','delta_dot','tau_actual','flight_servo_measured'};
+  for j=1:numel(names)
+   add_block('built-in/ToWorkspace',[m '/' names{j}],'VariableName',names{j},'SaveFormat','Timeseries','MaxDataPoints','inf');
+   add_line(m,sources{j},[names{j} '/1']);
+  end
+ end
 end
 mw=get_param(m,'ModelWorkspace');dist=[bank.time(:) squeeze(bank.tau_d(:,1,:))'];assignin(mw,'disturbance_schedule',dist);
 add_block('simulink/Sources/From Workspace',[m '/Disturbance'],'VariableName','disturbance_schedule','Interpolate','off','OutputAfterFinalValue','Holding final value','Position',[290 180 430 220]);add_line(m,'Disturbance/1','Native_Plant/2');
@@ -78,7 +126,9 @@ add_block('simulink/Sources/From Workspace',[m '/Disturbance'],'VariableName','d
  nk=numel(bank.time);nN=size(bank.tau_min,2)-1;win=[];
  for k=1:nk
   qk=squeeze(bank.q_ref(:,:,k));wk=squeeze(bank.omega_ref(:,:,k));tk=squeeze(bank.tau_d(:,:,k));
-  lo=bank.tau_min(:,1:nN,k);hi=bank.tau_max(:,1:nN,k);nm=bank.tau_nom(:,1:nN,k);
+  if online,lo=zeros(3,nN);hi=zeros(3,nN);
+  else,lo=bank.tau_min(:,1:nN,k);hi=bank.tau_max(:,1:nN,k);end
+  nm=bank.tau_nom(:,1:nN,k);
   v=[qk(:);wk(:);tk(:);lo(:);hi(:);nm(:);bank.gap(:,1,k)];
   if isempty(win),win=zeros(nk,numel(v));end
   win(k,:)=v.';
@@ -117,7 +167,6 @@ for pair={'State_feedback/1','Online_RTI_HPIPM/1'}
  src=pair{1};if startsWith(src,'State'),name='states';else,name='commands';end
  add_block('built-in/ToWorkspace',[m '/' name],'VariableName',name,'SaveFormat','Timeseries','MaxDataPoints','inf');add_line(m,src,[name '/1'],'autorouting','on');
 end
-out=fullfile(root,'simulink','results','native_closedloop');if ~exist(out,'dir'),mkdir(out);end
 logs=find_system(m,'LookUnderMasks','all','BlockType','ToWorkspace');
 for i=1:numel(logs)
  if ~strcmp(get_param(logs{i},'Parent'),m)
@@ -132,7 +181,7 @@ save_with_retry(fullfile(out,sprintf('%s_%s_%gs%s.mat',arm,tag,duration,suffix))
 save_system(m,fullfile(modeldir,[m '.slx']));
 Simulink.BlockDiagram.arrangeSystem(m);
 set_param(m,'InitFcn','init_paths;');
-save_system(m);
+save_system(m,fullfile(modeldir,[m '.slx']));
 try,print(['-s' m],'-dpng',fullfile(out,'model.png'));catch,warning('model screenshot skipped');end
 close_system(m,0);fprintf('NATIVE_CLOSEDLOOP_PASS duration=%g\n',duration);
 end
