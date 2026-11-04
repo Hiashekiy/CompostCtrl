@@ -1,0 +1,9 @@
+{
+  "python_authority_tests": 2,
+  "python_ab_regression_tests": 18,
+  "python_failures": 0,
+  "matlab_pitch_regression": "passed",
+  "matlab_static_crosscheck": "passed",
+  "matlab_single_mpc_ab": "passed",
+  "note": "Executed with unittest and the existing direct test harness; pytest is not installed."
+}

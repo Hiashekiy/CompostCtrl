@@ -62,7 +62,7 @@ end
 assert(max(module_errors,[],'all')<1e-8,'Visible authority module mismatch');
 % Rank-deficient coupled mapping must not admit unreachable roll/yaw corners.
 box=online_certified_torque_box(zeros(3,1),[1 0 0;0 1 0;1 0 0],-ones(3,1),ones(3,1),zeros(3,1));
-assert(max(box.tau_max)<1e-8);
+assert(max(box.tau_max([1 3]))<1e-8 && abs(box.tau_max(2)-1)<1e-10);
 save(fullfile(out,'static_validation.mat'),'samples','errors','servo_error','certificates','module_errors');
 writematrix(errors,fullfile(out,'moment_errors.csv'));
 fprintf('ONLINE_AUTHORITY_STAGE_A_PASS samples=120 moment_error=%g servo_error=%g\n',max(errors,[],'all'),max(servo_error));

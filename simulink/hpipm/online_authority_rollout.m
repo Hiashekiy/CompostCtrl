@@ -14,6 +14,7 @@ authority=struct('tau_min',zeros(3,N),'tau_max',zeros(3,N),'air',zeros(6,N), ...
 authority.servo_vertex_residual=zeros(1,N);authority.vertex_commands=zeros(3,8,N);
 authority.mode=s.authority_mode;authority.max_step_s=s.authority_max_step;
 authority.nominal_tau=zeros(3,N);authority.allocator_command=zeros(3,N);
+authority.axis_scale=zeros(3,N);
 authority.delta(:,1)=delta;authority.position(:,1)=z(1:3);feasible=true;
 nu_previous=zeros(4,1);if isfield(s,'nu_previous'),nu_previous=s.nu_previous;end
 for k=1:N
@@ -56,6 +57,7 @@ for k=1:N
  authority.tau_min(:,k)=box.tau_min;authority.tau_max(:,k)=box.tau_max;
  authority.air(:,k)=detail;authority.natural(:,k)=natural;
  authority.vertex_residual(:,k)=box.vertex_residual(:);authority.scale(k)=box.scale;
+ authority.axis_scale(:,k)=box.axis_scale;
  authority.servo_vertex_residual(k)=certificate.max_residual_rad;
  authority.vertex_commands(:,:,k)=certificate.command;
  authority.nominal_tau(:,k)=U(1:3,k);authority.allocator_command(:,k)=command;

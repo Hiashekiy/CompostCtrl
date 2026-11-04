@@ -10,24 +10,44 @@ center=min(max(center,lower),upper);radius=min(center-lower,upper-center);
 half=abs(B)*radius;tau_center=natural+B*center;
 signs=2*(dec2bin(0:7,3)-'0')-1;
 inverse=[];if rcond(B)>1e-10,inverse=B\eye(3);end
-lo=0;hi=1;
+% Connected output rows share actuators; independent pitch must retain its
+% complete interval even when the roll/yaw group requires a smaller inner box.
+support=B~=0;connected=(double(support)*double(support)')>0;
+connected=connected | logical(eye(3));
+for j=1:3,connected=connected | (double(connected(:,j))*double(connected(j,:))>0);end
+remaining=true(3,1);groups={};
+while any(remaining)
+ first=find(remaining,1);rows=find(connected(first,:));groups{end+1}=rows;remaining(rows)=false; %#ok<AGROW>
+end
+scales=zeros(3,1);
 if ~isempty(inverse)
  demand=abs(inverse)*half;
- active=demand>0;
- if any(active),lo=min([1;radius(active)./demand(active)])*(1-1e-12);else,lo=1;end
-elseif feasible(1),lo=1;else
- for j=1:40
-  mid=(lo+hi)/2;
-  if feasible(mid),lo=mid;else,hi=mid;end
+ for g=1:numel(groups)
+  rows=groups{g};actuators=any(support(rows,:),1)' & demand>0;
+  if numel(rows)==1 && nnz(support(rows,:))==1,scales(rows)=1;continue;end
+  value=1;if any(actuators),value=min([1;radius(actuators)./demand(actuators)]);end
+  if value<1,value=value*(1-1e-12);end
+  scales(rows)=value;
+ end
+else
+ for g=1:numel(groups)
+  rows=groups{g};trial=scales;trial(rows)=1;
+  if feasible(trial),scales=trial;continue;end
+  lo=0;hi=1;
+  for j=1:40
+   mid=(lo+hi)/2;trial=scales;trial(rows)=mid;
+   if feasible(trial),lo=mid;else,hi=mid;end
+  end
+  scales(rows)=lo;
  end
 end
-[ok,residual,vertices]=feasible(lo);assert(ok);
-box=struct('tau_min',tau_center-lo*half,'tau_max',tau_center+lo*half, ...
- 'center_delta',center,'scale',lo,'vertex_residual',residual,'vertex_delta',vertices);
+[ok,residual,vertices]=feasible(scales);assert(ok);
+box=struct('tau_min',tau_center-scales.*half,'tau_max',tau_center+scales.*half, ...
+ 'center_delta',center,'scale',min(scales),'axis_scale',scales,'vertex_residual',residual,'vertex_delta',vertices);
  function [ok,residual,vertices]=feasible(scale)
   residual=zeros(1,8);vertices=zeros(3,8);
   for k=1:8
-   target=B*center+scale*half.*signs(k,:)';
+   target=B*center+scale.*half.*signs(k,:)';
    if ~isempty(inverse)
     trial=inverse*target;vertices(:,k)=min(max(trial,lower),upper);err=B*vertices(:,k)-target;
    else

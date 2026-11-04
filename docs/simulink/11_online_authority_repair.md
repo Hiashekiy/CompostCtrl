@@ -1,5 +1,7 @@
 # Simulink 在线气动力矩约束修复
 
+后续的独立俯仰轴缩放修复及更新结果见 [12_pitch_axis_scale_repair.md](12_pitch_axis_scale_repair.md)。本文的实验表和“未修改 Python”说明对应提交 `468c398` 时的历史状态。
+
 分支：`experiment/simulink-online-torque-authority`。基线：`eb5567684457feb1ad5ee44714912348678e95b1`。
 
 **状态：在线力矩约束缺陷已接入修复，正式 A/B 默认启用完整未来预测。18 组 L0/L1/L2 × A/B × 2/10/60 s 实际运行完成，回退均为 0；保存重开及 CMG 回归通过。尚未满足 200 ms 硬实时预算。**

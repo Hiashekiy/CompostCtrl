@@ -268,6 +268,25 @@ def test_6_b_group_keeps_cmg_torque_map_and_momentum():
     assert np.allclose(np.asarray(ocp._H_of(gamma)).ravel(), H)
 
 
+def test_cold_start_rollout_uses_bounded_torques():
+    from nearspace.torque_gap_model import rk4_step_tg
+    scn = scn_b()
+    ocp = TorqueGapOCP(scn)
+    x = scn.initial_state()
+    plan = scn.plan(scn.t_start, x)
+    z = ocp._warm_start(plan, x, np.zeros(4), np.zeros(3), None)
+    X = z[:ocp._nx_tot].reshape(scn.nx, ocp.N + 1, order='F')
+    U = z[ocp._nx_tot:ocp._nx_tot + ocp._nu_tot].reshape(scn.nu, ocp.N, order='F')
+    assert np.all(U[:3].T >= plan['box']['tau_min'][:ocp.N])
+    assert np.all(U[:3].T <= plan['box']['tau_max'][:ocp.N])
+    for k in range(ocp.N):
+        expected = rk4_step_tg(X[:, k], U[:, k], plan['cond']['tau_d'][k],
+                               float(scn.dts[k]), scn.prm, scn.cluster)
+        if not scn.gamma_unbounded:
+            expected[7:11] = np.clip(expected[7:11], *scn.gamma_lim)
+        np.testing.assert_allclose(X[:, k+1], expected, atol=1e-10, rtol=1e-10)
+
+
 def test_7_b_group_moves_the_gimbals():
     scn = scn_b()
     ocp = TorqueGapOCP(scn)

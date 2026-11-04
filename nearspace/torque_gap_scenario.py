@@ -182,10 +182,10 @@ class Scenario:
 
         The box is the per-axis hull of the reachable set; random interior targets
         are only *simultaneously* realisable if the hull is shrunk.  The largest
-        uniform scale that keeps at least `require_frac` of the sampled targets
+        coupled-axis scale that keeps at least `require_frac` of the sampled targets
         realisable is used, and the whole calibration is written to the run meta.
         """
-        from .torque_gap_authority import calibrate_scale
+        from .torque_gap_authority import calibrate_scale, authority_axis_scales
 
         Qs = [float(0.5 * self.traj.rho(t) * self.traj.V(t) ** 2)
               for t in np.linspace(self.t_start, self.t_end, 9)]
@@ -196,6 +196,7 @@ class Scenario:
                                       tol_frac=self.auth.tol_frac)
         self.auth.scale = float(scale)
         self.authority_calibration = dict(scale=float(scale), Q_samples=Qs,
+                                          axis_scales=authority_axis_scales(self.veh, scale).tolist(),
                                           steps=diag,
                                           require_frac=self.auth.require_frac,
                                           n_samples=self.auth.n_samples)

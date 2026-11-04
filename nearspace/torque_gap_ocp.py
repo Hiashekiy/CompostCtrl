@@ -444,6 +444,12 @@ class TorqueGapOCP:
             X[:, 0] = np.asarray(x_init, float)
             tau_guess = np.asarray(plan["mod"]["tau_nom"], float).T   # (3, N+1)
             U[0:3, :] = tau_guess[:, :self.N]
+            # Roll out the torque that will actually be passed to IPOPT after
+            # bound clipping. Otherwise the newly widened pitch interval changes
+            # U while X still belongs to an infeasible feed-forward trajectory.
+            U[0:3, :] = np.clip(U[0:3, :],
+                                np.asarray(plan['box']['tau_min'])[:self.N].T,
+                                np.asarray(plan['box']['tau_max'])[:self.N].T)
             if self.cmg_present:
                 U[3:7, :] = np.asarray(nu_prev, float)[:, None]
             for k in range(self.N):

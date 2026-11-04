@@ -19,14 +19,14 @@ Split into a state-dependent part (natural + rate damping) evaluated at the
 *nominal/reference* flight state and a linear surface part
 
     tau_aero = tau_nat(Q, alpha, beta, omega_ref) + M_delta(Q) delta ,
-    M_delta  = Q S [[b Cl_da, 0, b Cl_dr],
-                    [0, cbar Cm_de, 0],
-                    [b Cn_da, 0, b Cn_dr]] ,   |delta_i| <= delta_max_i
+    M_delta  = Q S [[0, b Cl_da, b Cl_dr],
+                    [cbar Cm_de, 0, 0],
+                    [0, b Cn_da, b Cn_dr]] ,   |delta_i| <= delta_max_i
 
 Because Cl_dr and Cn_da couple the roll and yaw rows, the three axes are NOT
 independently realisable.  The box is therefore built from the exact per-axis
 range of the reachable set {M_delta delta : |delta| <= delta_max} (which is the
-axis-aligned hull of that set), and a conservative uniform scale is calibrated
+axis-aligned hull of that set), and a conservative coupled-axis scale is calibrated
 offline so that random interior samples of the box are realisable by a bounded
 least-squares deflection solve at the required rate.  Both the final scale and
 the sample pass fraction are written to the run metadata.
@@ -107,10 +107,22 @@ def allocate_deflection(tau_residual, Q, veh, delta_prev=None, ddelta_max=None):
     return d, M @ d - np.asarray(tau_residual, float)
 
 
+def authority_axis_scales(veh, scale):
+    """Shrink only axes sharing actuators; independent pitch keeps scale 1.
+
+    The scalar config/calibration API continues to describe the coupled axes.
+    Natural moment is an offset and is never scaled.
+    """
+    support = surface_matrix(1.0, veh) != 0.0
+    shared = support.astype(int) @ support.astype(int).T
+    np.fill_diagonal(shared, 0)
+    return np.where(np.any(shared != 0, axis=1), float(scale), 1.0)
+
+
 def realizable_fraction(Q, veh, scale, n_samples=1000, seed=0, tol_frac=1e-3):
     """Fraction of uniformly sampled box targets reachable by a bounded LSQ solve."""
     rng = np.random.default_rng(seed)
-    half = float(scale) * axis_hull(Q, veh)
+    half = authority_axis_scales(veh, scale) * axis_hull(Q, veh)
     half = np.maximum(half, 1e-12)
     targets = (rng.uniform(-1.0, 1.0, size=(n_samples, 3))) * half[None, :]
     M = surface_matrix(Q, veh)
@@ -127,10 +139,11 @@ def realizable_fraction(Q, veh, scale, n_samples=1000, seed=0, tol_frac=1e-3):
 
 def calibrate_scale(veh, Q_samples, require_frac=0.99, n_samples=1000, seed=0,
                     tol_frac=1e-3, min_scale=0.2, step=0.95):
-    """Largest uniform scale whose box is realisable at `require_frac`.
+    """Largest coupled-axis scale passing the sampled feasibility test.
 
-    Returns (scale, diagnostics list).  The scale is applied to the per-axis half
-    widths of the reachable-set hull, which makes the box strictly inside the set.
+    Returns (scalar scale, diagnostics list), preserving the existing API.
+    Independent axes retain scale 1. Sampling is a statistical check, not an
+    all-vertices certificate; the online MATLAB path supplies that certificate.
     """
     scale = 1.0
     diag = []
@@ -141,7 +154,9 @@ def calibrate_scale(veh, Q_samples, require_frac=0.99, n_samples=1000, seed=0,
                                               seed=seed, tol_frac=tol_frac)
             fracs.append((float(Q), frac, worst))
         fmin = min(f for _, f, _ in fracs)
-        diag.append(dict(scale=float(scale), min_fraction=float(fmin),
+        diag.append(dict(scale=float(scale),
+                         axis_scales=authority_axis_scales(veh, scale).tolist(),
+                         min_fraction=float(fmin),
                          per_Q=[dict(Q=q, fraction=f, worst_rel=w) for q, f, w in fracs]))
         if fmin >= require_frac:
             return float(scale), diag
@@ -156,7 +171,7 @@ def calibrate_scale(veh, Q_samples, require_frac=0.99, n_samples=1000, seed=0,
 class AuthorityConfig:
     mode: str = "timevarying"        # timevarying | fixed
     fixed_h_km: float = 100.0        # used by mode == 'fixed' (case C5)
-    scale: float = 0.9               # conservative scale calibrated offline
+    scale: float = 0.9               # coupled-axis scale; independent axes keep 1
     calibrate: bool = True
     require_frac: float = 0.99
     n_samples: int = 1000
@@ -214,7 +229,7 @@ def build_boxes(times, cond, veh, auth: AuthorityConfig, rho_override=None):
                                  np.asarray(cond["omega_ref"][k], float), np.zeros(9)])
         alpha, beta, _ = flow_angles(xprobe, p)
         nat = natural_moment_v(Q, alpha, beta, cond["omega_ref"][k], V, veh)
-        half = float(auth.scale) * axis_hull(Q, veh)
+        half = authority_axis_scales(veh, auth.scale) * axis_hull(Q, veh)
         tau_nat[k] = nat
         lo[k] = nat - half
         hi[k] = nat + half
