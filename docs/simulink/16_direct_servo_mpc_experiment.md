@@ -153,3 +153,68 @@
 - S0 分项耗时：`.../direct_servo/s0_phase_timing.{csv,json}`
 - S0 原始 60 s 运行：`.../L2_60s_20261104_215019`（A）、`.../L2_60s_20261104_215054`（B）
 - 指标复算：`.../five_sqp/five_sqp_comparison.csv`（含上述两条与 `212212`/`212322` 的并列对照）
+
+## 8. S2/S3：直接舵机指令 MPC 与四组 60 s 对照（已完成）
+
+### 8.1 新增实现
+
+| 文件 | 作用 |
+|---|---|
+| `simulink/hpipm/direct_servo_state_at.m` | 阶段内任意时刻的 1 ms 舵机闭式状态（与真值递推逐位一致） |
+| `simulink/hpipm/direct_servo_stage.m` | 14/10 维单阶段离散映射：20 ms 子步、子步中点舵偏算气动力矩、姿态/CMG 复用 `native_F_*` |
+| `simulink/hpipm/direct_servo_propagate.m` | 非线性预测：逐阶段更新动压/迎角、检查舵机指令速率与 CMG 锥、必要时因果修复 |
+| `simulink/hpipm/direct_servo_linearize.m` | 解析离散雅可比：姿态块用 `native_A_*/native_B_*`，舵机块与 `B_delta` 链式组合成 14/10 维 |
+| `simulink/hpipm/assemble_direct_servo_qp.m` | 新 QP：跟踪代价不变，舵机指令与指令增量按 `delta_max` 归一化正则 |
+| `simulink/hpipm/direct_servo_verify.m` | 新安全门：以“真正执行的量”（舵机指令）与其物理包络替代旧力矩盒证书 |
+| `simulink/hpipm/direct_servo_mpc_step.m` | 4 轮 SQP、每轮 1 次 HPIPM、一次全步、固定信赖域、首控门与安全回退 |
+| `simulink/hpipm/direct_servo_mpc_sfun.m` | 新 S-function：输出直接是 `[delta_cmd; nu_cmd]` |
+| `simulink/modelgen/build_closedloop.m` | 新增第 9 个参数 `controller_mode`；`direct_servo` 时旁路 `Surface_control_allocation`，MPC 直接驱动舵机 |
+| `simulink/verify/check_direct_servo_mpc.m` | S2 单元门：闭式舵机、阶段映射对 1 ms 参考、雅可比对有限差分、单次 MPC 调用 |
+
+关键数值（`check_direct_servo_mpc`）：
+
+| 检查 | A（10 维/3 维） | B（14 维/7 维） |
+|---|---|---|
+| 阶段内闭式舵机对 1 ms 递推 | <1e-14 rad | <1e-14 rad |
+| 单阶段映射对 1 ms 参考（0.2 s / 2 s） | 8.4e-11 / 8.4e-10 | 2.2e-10 / 1.8e-9 |
+| 雅可比对有限差分（最坏相对误差） | 2.6% | 12.9% |
+
+### 8.2 四组 60 s 对照（全部 4 轮 SQP、0.2 s、同一物理模型与参考）
+
+| 组别 | 运行目录 | 姿态 RMS/° | 峰值/° | 回退 | 逐周期均值 | P95 | 最大 | >200 ms 周期 | QP/周期 |
+|---|---|---|---|---|---|---|---|---|---|
+| A-old（力矩+分配器） | `L2_60s_20261104_215019` | 3.825 | 8.324 | 0 | 77.7 ms | 131.9 ms | 284.6 ms | 3（稳态 1） | 1.86 |
+| B-old（力矩+分配器） | `L2_60s_20261104_215054` | 1.110 | 3.616 | 0 | 88.5 ms | 143.7 ms | 239.6 ms | 3（稳态 2） | 2.18 |
+| A-new（直接舵机） | `L2_60s_20261104_232924` | **15.463** | 24.858 | 0 | 52.6 ms | 71.4 ms | 442.2 ms | 1 | 1.00 |
+| B-new（直接舵机） | `L2_60s_20261104_232950` | **2.184** | 5.352 | 0 | 106.2 ms | 175.6 ms | 291.6 ms | 4 | 2.72 |
+
+结论（按方案 4.7 的分类，不粉饰）：
+
+- **A 组：更快但更差**。每周期少用一半 QP、均值 52.6 ms 对 77.7 ms，但姿态 RMS 从 3.825° 恶化到 15.463°。
+- **B 组：更慢且更差**。均值 106.2 ms 对 88.5 ms，姿态 RMS 从 1.110° 恶化到 2.184°。
+- 两组均 0 次安全回退、无 NaN/求解崩溃，首控均通过新的直接舵机安全门。
+
+### 8.3 为什么新架构在本轮没有胜出（可复现的诊断）
+
+1. **A 组几乎不接受任何更新**：301 个周期里 `qp_solved` 均值 1.0、`accepted_steps` 为 0，每个周期都在第 1 轮以 `objective_increase` 结束。原因是全步方向虽然被 QP 认为能把代价降到 0（`qp_objective=-76.17`），但非线性预测的代价几乎不变（A 组 `delta_cost` 对 1/32 步长只有 +1.8e-8），即方向对实际影响可忽略；末端代价占主导，舵机在这种量级下无法体现差别。
+2. **B 组前 15 s 全部拒绝、之后每周期接受 4 步**：`t<15 s` 时每周期 1 次 QP、0 接受；`t>=15 s` 后多数周期用满 4 轮（`stop=max_iterations`）。这是真实的收敛进展，但也说明冷启动（保持实测舵偏指令）离可行下降方向太远。
+3. **QP 过度乐观**：雅可比对有限差分的偏差（B 组 12.9%）在 23.2 s 长时域上累积，QP 预测的改善远大于实际；旧力矩级控制器有同样现象（`objective_increase` 206/300），但它的控制量是力矩，单步幅度小且直接作用于角加速度，所以仍能接受约 1.2 步/周期。
+4. **本轮已用的补丁**：对舵机指令加了**固定信赖域** `trust_rad = 0.25·min(delta_dot_max)·0.2 ≈ 0.052 rad`（因为线性舵机块的指数解只在速率限幅未饱和时成立）。这是确定性信赖域，不是 alpha 候选搜索；它让 B 组的更新被接受，但没有扭转精度结论。
+
+### 8.4 未做的事与风险
+
+- 没有实现“舵机时序与真实更新语义完全一致”的进一步细化（阶段内多次 200 ms 指令更新被参数化为单一常值，属保守近似）。
+- 没有为了提升新组指标而调权重、改真值、放宽限幅；控制正则权重取旧 `r_dtau`，其影响未做敏感性扫描（方案允许单独报告，本轮未做）。
+- A/B-new 的诊断文件名受 S-function 早期版本的文件名缺陷影响（写入 `*_direct_authority.mat` 时前缀异常），数据本身完整；已修正命名，后续运行会写出规范文件名。
+- 按方案要求，新架构若更慢或更差则**保留实验分支、不替换生产控制器**；生产模型仍是 `native_mpc_sfun` + 力矩级 MPC。
+
+### 8.5 复现命令
+
+```powershell
+# 4 轮、0.2 s、力矩级旧控制器
+.\simulink\mlab.cmd "addpath('simulink'); init_paths; build_closedloop(60,true,false,'','online_predicted',true,4,.2); build_closedloop(60,true,true,'','online_predicted',true,4,.2)"
+# 4 轮、0.2 s、直接舵机新控制器（新模型变体，不覆盖生产模型）
+.\simulink\mlab.cmd "addpath('simulink'); init_paths; build_closedloop(60,true,false,'DIR','online_predicted',true,4,.2,'direct_servo'); build_closedloop(60,true,true,'DIR','online_predicted',true,4,.2,'direct_servo')"
+# 指标与耗时
+.\simulink\mlab.cmd "addpath('simulink'); init_paths; report_five_sqp_comparison({'L2_60s_20261104_215019','L2_60s_20261104_215054','L2_60s_20261104_232924','L2_60s_20261104_232950'}); report_direct_servo_s0"
+```

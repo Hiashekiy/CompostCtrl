@@ -1,4 +1,4 @@
-function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period)
+function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period,controller_mode)
 if nargin<1,duration=2;end
 if nargin<2,flight=false;end
 if nargin<3,enabled=true;end
@@ -7,6 +7,10 @@ if nargin<5,if flight,authority_mode='online_predicted';else,authority_mode='leg
 if nargin<6,run_simulation=true;end
 if nargin<7,sqp_iterations=4;end
 if nargin<8,control_period=.2;end
+if nargin<9,controller_mode='torque';end
+assert(ismember(controller_mode,{'torque','direct_servo'}),'controller_mode must be torque or direct_servo');
+direct=strcmp(controller_mode,'direct_servo');
+assert(~direct || flight,'The direct-servo controller exists only in the flight (surrogate aero) models');
 assert(isscalar(control_period) && ismember(control_period,[.1 .2]),'control_period must be 0.1 or 0.2 s');
 assert(ismember(sqp_iterations,[4 5]),'max_sqp_iterations must be 4 or 5');
 root=repo_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
@@ -44,6 +48,15 @@ if online
  old_dts=template.dts;template.dt_ctrl=control_period;template.dts(1)=control_period;
  bank=online_resample_reference_bank(bank,old_dts,template.dts,control_period);
 end
+if direct
+ % The optimised control is the servo command itself: 14/10-dim state, 7/3-dim control.
+ if enabled
+  template.nx_direct=14;template.nu_direct=7;
+ else
+  template.nx_direct=10;template.nu_direct=3;
+ end
+ template.direct_weights=struct('cmd',template.weights.r_dtau,'dcmd',template.weights.r_dtau);
+end
 assignin(mw,'native_control_period',template.dt_ctrl);
 if online
  template.authority_max_step=.1;
@@ -60,7 +73,11 @@ set_param([m '/Native_Plant/Aircraft_6DOF'],'pm_0',mat2str(bank.x0(5:7),17),'eul
 if enabled,set_param([m '/Native_Plant/CMG/Drive/Unwrapped_gamma'],'InitialCondition',mat2str(bank.x0(8:11),17));end
 if enabled && ~flight,configure_ideal_p0_drive([m '/Native_Plant/CMG/Drive'],bank.x0(8:11),template.gdot);end
 if enabled,assert_connected([m '/Native_Plant/CMG']);end
-add_block('simulink/User-Defined Functions/Level-2 MATLAB S-Function',[m '/Online_RTI_HPIPM'],'FunctionName','native_mpc_sfun','Position',[90 60 280 145]);
+if direct
+ add_block('simulink/User-Defined Functions/Level-2 MATLAB S-Function',[m '/Online_RTI_HPIPM'],'FunctionName','direct_servo_mpc_sfun','Position',[90 60 280 145]);
+else
+ add_block('simulink/User-Defined Functions/Level-2 MATLAB S-Function',[m '/Online_RTI_HPIPM'],'FunctionName','native_mpc_sfun','Position',[90 60 280 145]);
+end
 if enabled,outputs='[3 4]';n='3';else,outputs='3';n='2';end
 if enabled
  add_block('built-in/Demux',[m '/Control_split'],'Outputs',outputs,'Position',[340 65 345 145]);
@@ -87,11 +104,16 @@ if flight
  add_line(m,'Environment_And_Forces/2','Actual_flight_condition/1');add_line(m,'Native_Plant/6','Actual_flight_condition/2');add_line(m,'Actual_flight_condition/1','Aerodynamic_Surface/2');
  % MPC total torque -> bounded surface allocation -> servo -> actual total torque.
  lh=get_param([m '/Control_split'],'LineHandles');dest=get_param(lh.Outport(1),'DstPortHandle');delete_line(lh.Outport(1));
- add_block('simulink/User-Defined Functions/Level-2 MATLAB S-Function',[m '/Surface_control_allocation'],'FunctionName','native_surface_allocation_sfun','Position',[280 480 430 560]);
- add_block('built-in/Mux',[m '/Allocation_inputs'],'Inputs','3','Position',[160 470 165 610]);
- add_line(m,'Control_split/1','Allocation_inputs/1');add_line(m,'Aerodynamic_Surface/3','Allocation_inputs/2');
- add_block('built-in/Demux',[m '/Air_data_split'],'Outputs','4','Position',[1330 500 1335 620]);add_line(m,'Environment_And_Forces/2','Air_data_split/1');add_line(m,'Air_data_split/1','Allocation_inputs/3');
- add_line(m,'Allocation_inputs/1','Surface_control_allocation/1');add_line(m,'Surface_control_allocation/1','Aerodynamic_Surface/1');
+ if direct
+  % No lower-level allocator exists in this topology: the MPC command IS the servo command.
+  add_line(m,'Control_split/1','Aerodynamic_Surface/1');
+ else
+  add_block('simulink/User-Defined Functions/Level-2 MATLAB S-Function',[m '/Surface_control_allocation'],'FunctionName','native_surface_allocation_sfun','Position',[280 480 430 560]);
+  add_block('built-in/Mux',[m '/Allocation_inputs'],'Inputs','3','Position',[160 470 165 610]);
+  add_line(m,'Control_split/1','Allocation_inputs/1');add_line(m,'Aerodynamic_Surface/3','Allocation_inputs/2');
+  add_block('built-in/Demux',[m '/Air_data_split'],'Outputs','4','Position',[1330 500 1335 620]);add_line(m,'Environment_And_Forces/2','Air_data_split/1');add_line(m,'Air_data_split/1','Allocation_inputs/3');
+  add_line(m,'Allocation_inputs/1','Surface_control_allocation/1');add_line(m,'Surface_control_allocation/1','Aerodynamic_Surface/1');
+ end
  add_line(m,'Aerodynamic_Surface/5','Native_Plant/1');
  add_block('built-in/ToWorkspace',[m '/flight_conditions'],'VariableName','flight_conditions','SaveFormat','Timeseries','MaxDataPoints','inf');
  add_line(m,'Environment_And_Forces/2','flight_conditions/1');
@@ -100,7 +122,12 @@ if flight
   load_system('Online_Surface_Authority');
   add_block('built-in/Mux',[m '/Flight_And_Servo_Feedback'],'Inputs','4','Position',[840 700 845 850]);
   add_block('built-in/UnitDelay',[m '/Previous_Allocation_Command'],'SampleTime',num2str(template.dt_ctrl,17),'InitialCondition','zeros(3,1)','Position',[490 760 650 800]);
-  add_line(m,'Surface_control_allocation/1','Previous_Allocation_Command/1');
+  if direct
+   % Index 10:12 of the feedback is the previous SERVO command in this topology.
+   add_line(m,'Control_split/1','Previous_Allocation_Command/1');
+  else
+   add_line(m,'Surface_control_allocation/1','Previous_Allocation_Command/1');
+  end
   add_line(m,'Native_Plant/2','Flight_And_Servo_Feedback/1');
   add_line(m,'Native_Plant/5','Flight_And_Servo_Feedback/2');
   add_line(m,'Aerodynamic_Surface/1','Flight_And_Servo_Feedback/3');

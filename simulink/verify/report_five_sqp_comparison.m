@@ -25,8 +25,8 @@ for f=1:numel(folders)
    'deflection_saturation_s',sum((abs(delta)>=v.delta_max(:)'-.00001).*weights,1), ...
    'rate_saturation_s',sum((abs(rate)>=v.delta_dot_max(:)'-.00001).*weights,1));
   m='NearSpace_CMG_FlightControl';if strcmp(arm{1},'A'),m=[m '_SurfaceOnly'];end
-  evidence=dir(fullfile(folder,[m '*_authority.mat']));
-  if strcmp(arm{1},'B'),evidence=evidence(~contains({evidence.name},'SurfaceOnly'));end
+  evidence=dir(fullfile(folder,'*_authority.mat'));
+  if strcmp(arm{1},'A'),evidence=evidence(contains({evidence.name},'SurfaceOnly'));else,evidence=evidence(~contains({evidence.name},'SurfaceOnly'));end
   if isempty(evidence)
    row.fallbacks=NaN;row.control_updates=NaN;row.mean_control_s=NaN;row.worst_control_s=NaN;
    row.rti_iterations=NaN;row.rejected_candidates=NaN;row.repaired_candidates=NaN;

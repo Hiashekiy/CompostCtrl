@@ -11,8 +11,8 @@ for f=1:numel(folders)
  folder=fullfile(base,folders{f});
  for arm={'A','B'}
   m='NearSpace_CMG_FlightControl';if strcmp(arm{1},'A'),m=[m '_SurfaceOnly'];end
-  evidence=dir(fullfile(folder,[m '*_authority.mat']));
-  if strcmp(arm{1},'B'),evidence=evidence(~contains({evidence.name},'SurfaceOnly'));end
+  evidence=dir(fullfile(folder,'*_authority.mat'));
+  if strcmp(arm{1},'A'),evidence=evidence(contains({evidence.name},'SurfaceOnly'));else,evidence=evidence(~contains({evidence.name},'SurfaceOnly'));end
   if isempty(evidence),continue;end
   d=load(fullfile(folder,evidence(end).name));infos=d.diagnostics;
   elapsed=cellfun(@(i)i.elapsed_s,infos);
