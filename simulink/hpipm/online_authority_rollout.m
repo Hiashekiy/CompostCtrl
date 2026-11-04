@@ -15,23 +15,36 @@ authority.servo_vertex_residual=zeros(1,N);authority.vertex_commands=zeros(3,8,N
 authority.mode=s.authority_mode;authority.max_step_s=s.authority_max_step;
 authority.nominal_tau=zeros(3,N);authority.allocator_command=zeros(3,N);
 authority.axis_scale=zeros(3,N);
+% S0 accounting only: identical arithmetic, per-phase wall-clock attribution so the
+% dominant cost of a control period can be identified instead of guessed.
+T=struct('air',0,'aero',0,'reachability',0,'box',0,'certificate',0,'allocation',0, ...
+ 'propagation',0,'translation',0);
+rollout_started=tic;
+authority.phase_time_s=struct('air',NaN,'aero',NaN,'reachability',NaN,'box',NaN, ...
+ 'certificate',NaN,'allocation',NaN,'propagation',NaN,'translation',NaN,'total',NaN);
 authority.delta(:,1)=delta;authority.position(:,1)=z(1:3);feasible=true;
 nu_previous=zeros(4,1);if isfield(s,'nu_previous'),nu_previous=s.nu_previous;end
 for k=1:N
+  phase=tic;
  R=online_quaternion_rotation(X(1:4,k));[air,detail]=online_flight_condition(z(1:3),R'*z(4:6));
  if strcmp(s.authority_mode,'online_current')
   % L1 diagnostic ablation ONLY: freeze measured air data over the horizon.
   [air,detail]=online_flight_condition(s.flight_state(1:3),s.flight_state(4:6));
  end
- [natural,B]=online_aero_moment(v,air,X(5:7,k),delta);
+  T.air=T.air+toc(phase);
+  phase=tic;[natural,B]=online_aero_moment(v,air,X(5:7,k),delta);T.aero=T.aero+toc(phase);
  lower_cmd=max(-v.delta_max(:),previous-v.delta_dot_max(:)*s.dt_ctrl);
  upper_cmd=min(v.delta_max(:),previous+v.delta_dot_max(:)*s.dt_ctrl);
+  phase=tic;
  [lower,upper]=online_surface_reachability(v,delta,s.dts(k),previous,.001,lower_cmd,upper_cmd);
+  T.reachability=T.reachability+toc(phase);
  lower=max(lower,lower_cmd);upper=min(upper,upper_cmd);
  if any(lower>upper),feasible=false;return;end
  center=(lower+upper)/2;
- box=online_certified_torque_box(natural,B,lower,upper,center);
+  phase=tic;box=online_certified_torque_box(natural,B,lower,upper,center);T.box=T.box+toc(phase);
+  phase=tic;
  certificate=online_certify_servo_vertices(v,delta,s.dts(k),box.vertex_delta,lower_cmd,upper_cmd);
+  T.certificate=T.certificate+toc(phase);
  outside=any(U(1:3,k)<box.tau_min-1e-8 | U(1:3,k)>box.tau_max+1e-8);
  if restore,U(1:3,k)=min(max(U(1:3,k),box.tau_min),box.tau_max);
  elseif outside,feasible=false;return;end
@@ -43,17 +56,23 @@ for k=1:N
   nu_previous=U(4:7,k);
  end
  target=U(1:3,k)-natural;
+  phase=tic;
  if rcond(B)>1e-10
   command=B\target;
   if all(command>=lower_cmd-1e-10 & command<=upper_cmd+1e-10)
    command=min(max(command,lower_cmd),upper_cmd);residual=B*command-target;
   else,[command,residual]=bounded_control_allocation(B,target,lower_cmd,upper_cmd);end
  else,[command,residual]=bounded_control_allocation(B,target,lower_cmd,upper_cmd);end
+  T.allocation=T.allocation+toc(phase);
  if norm(residual,inf)>1e-7,feasible=false;return;end
+  phase=tic;
  [~,~,next_delta]=online_surface_reachability(v,delta,s.dts(k),command,.001,lower_cmd,upper_cmd);
- X(:,k+1)=F(X(:,k),U(:,k),s.tau_d(:,k),s.dts(k));
+  X(:,k+1)=F(X(:,k),U(:,k),s.tau_d(:,k),s.dts(k));
+  T.propagation=T.propagation+toc(phase);
+  phase=tic;
  prediction=online_translation_prediction(z,[0;s.dts(k)],X(1:4,k:k+1),s.authority_max_step);
  z=prediction.state(:,end);
+  T.translation=T.translation+toc(phase);
  authority.tau_min(:,k)=box.tau_min;authority.tau_max(:,k)=box.tau_max;
  authority.air(:,k)=detail;authority.natural(:,k)=natural;
  authority.vertex_residual(:,k)=box.vertex_residual(:);authority.scale(k)=box.scale;
@@ -64,4 +83,5 @@ for k=1:N
  authority.allocation_residual(:,k)=residual;authority.tracking_residual(:,k)=natural+B*next_delta-U(1:3,k);
  delta=next_delta;previous=command;authority.delta(:,k+1)=delta;authority.position(:,k+1)=z(1:3);
 end
+T.total=toc(rollout_started);authority.phase_time_s=T;
 end
