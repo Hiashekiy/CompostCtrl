@@ -5,7 +5,7 @@ init_paths;addpath(fileparts(mfilename('fullpath')));out=fullfile(repo_root,'sim
 if strcmp(mode,'report'),result=paper_report(out);paper_final_report(out);return;end
 p=paper_preflight(out);result=p;if strcmp(mode,'preflight'),return;end
 assert(isempty(p.blockers),'paper:preflight','Model preflight blocked');
-t=load('simulink/tests/05_python_matlab_qp_equivalence/production_online_qp.mat');base=fullfile(repo_root,'tmp','banks','S00_pitch30_B_bank.mat');
+t=load('simulink/tests/05_python_matlab_qp_equivalence/production_online_qp.mat');base=fullfile(repo_root,'simulink','data','paper_banks','archive','S00_pitch30_B_bank.mat');
 % Freeze the entire matrix before any run. PID settings are provisional until calibration.
 s=struct('id','','experiment','E1','method','MPC','cmg',true,'profile','step','amplitude',30,'onset',8,'transition',5,'duration',60,'frequency',0,'dts',t.dts,'masked',false);
 s.pid=struct('kp',[200;200;200],'ki',[1;1;1],'kd',[120;120;120],'imax',.2,'damping',.01,'unload',false,'hon',80,'hoff',60,'kh',.1,'qmin',1);
@@ -46,6 +46,7 @@ f=fopen(fullfile(out,'四组论文实验结果.md'),'w','n','UTF-8');c=onCleanup
 metrics=dir(fullfile(out,'E*','*','metrics.json'));entries={};for k=1:numel(metrics),e=jsondecode(fileread(fullfile(metrics(k).folder,metrics(k).name)));keep={'id','experiment','method','profile','cmg','amplitude','transition','frequency','horizon','masked','t_end','rmse_deg','peak_deg','terminal_deg','status','gain_db','phase_deg','steady_rmse_deg'};z=struct;for j=1:numel(keep),if isfield(e,keep{j}),value=e.(keep{j});elseif strcmp(keep{j},'profile'),value='unknown';else,value=NaN;end;if isempty(value) && ~ischar(value),value=NaN;end;z.(keep{j})=value;end;entries{end+1}=z;end
 if ~isempty(entries),T=struct2table([entries{:}],'AsArray',true);writetable(T,fullfile(out,'metrics.csv'));plot_paper_figures(T,out);end
 end
+
 
 
 

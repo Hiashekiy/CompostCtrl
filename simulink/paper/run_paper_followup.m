@@ -1,7 +1,7 @@
 function run_paper_followup(out,group)
 if nargin<2,group='all';end
 % A predeclared common valid-amplitude follow-up; retain every original 30-deg run.
-t=load('simulink/tests/05_python_matlab_qp_equivalence/production_online_qp.mat');base=fullfile(repo_root,'tmp','banks','S00_pitch30_B_bank.mat');
+t=load('simulink/tests/05_python_matlab_qp_equivalence/production_online_qp.mat');base=fullfile(repo_root,'simulink','data','paper_banks','archive','S00_pitch30_B_bank.mat');
 s=struct('id','','experiment','E2_followup','method','MPC','cmg',true,'profile','step','amplitude',10,'onset',8,'transition',5,'duration',60,'frequency',0,'dts',t.dts,'masked',false);s.pid=struct('kp',[200;200;200],'ki',[1;1;1],'kd',[120;120;120],'imax',.2,'damping',.01,'unload',false,'hon',80,'hoff',60,'kh',.1,'qmin',1);
 plan={};for profile={'step','sequence'},for method={'PID_no_unload','PID_reactive_unload','MPC'},v=s;v.profile=profile{1};v.method=method{1};v.pid.unload=contains(v.method,'reactive');plan{end+1}=v;end,end
 for H=[5 8 12 16 sum(t.dts)],v=s;v.experiment='E3_followup';v.dts=make_paper_grid(t.dts,H);plan{end+1}=v;end
@@ -18,6 +18,7 @@ catch err,st=struct('status','INFRA_FAIL','error',getReport(err));end
 paper_json(fullfile(folder,'run_status.json'),st);
 end
 end
+
 
 
 
