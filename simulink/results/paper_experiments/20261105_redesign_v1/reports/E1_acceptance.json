@@ -1,0 +1,11 @@
+{
+  "cases_total": 144,
+  "paired_cases": 72,
+  "matrix_completed": true,
+  "comparability_pass": true,
+  "analysis_reproducible": true,
+  "paper_E1_acceptance_complete": true,
+  "note": "Independent reanalysis must confirm stored metrics; domain points never count as physical inability",
+  "protected_inputs_unchanged": true,
+  "domain_diagnostics_complete": true
+}

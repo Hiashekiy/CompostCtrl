@@ -1,0 +1,10 @@
+{
+  "total_pairs": 72,
+  "comparable_pairs": 72,
+  "A_success_in_comparable": 22,
+  "B_success_in_comparable": 64,
+  "B_only_success": 42,
+  "A_only_success": 0,
+  "both_success": 22,
+  "both_not_success": 8
+}

@@ -1,0 +1,10 @@
+{
+  "case_original": "V2_S05_3",
+  "case_regression": "VR_MPC_ISOLATION",
+  "same_physical_reference": true,
+  "same_time_grid": true,
+  "max_state_difference": 0,
+  "max_command_difference": 0,
+  "passed": true,
+  "scope": "Native MPC source untouched; exact E2 task replay after frozen PID integration. Concurrent wall times are not deterministic."
+}

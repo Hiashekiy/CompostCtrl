@@ -1,0 +1,94 @@
+{
+  "id": "V4_030_150_3",
+  "group": "E4",
+  "pair_id": "V4_030_150",
+  "arm": "B",
+  "pitch_step_deg": 3,
+  "onset_s": 8,
+  "reference_profile": "sine",
+  "reference_q0": [
+    0.99349030066954369,
+    -0.0045946523353322683,
+    0.10523483986500215,
+    0.043376723297693424
+  ],
+  "initial_state": [
+    0.99349030066954369,
+    -0.0045946523353322674,
+    0.10523483986500214,
+    0.043376723297693424,
+    0,
+    -0.0043273206504133811,
+    -6.9388939039072284E-15,
+    0,
+    0,
+    0,
+    0
+  ],
+  "reference_initial_pitch_deg": 12.09294636940445,
+  "absolute_pitch_min_deg": 10.461961879195105,
+  "absolute_pitch_max_deg": 13.151062546739311,
+  "actual_end_s": 34.666000000000004,
+  "status": "VALID_POOR_TRACKING",
+  "settled_criterion_pass": false,
+  "source_git_sha": "f60ef63b3fb5962598dc7243861da90e5a0740ba",
+  "model_sha256": "c8d034034993e36ab0871027eb1d2179b594c26c2f98c8f55614d5de5658cf61",
+  "bank_sha256": "975a76542b2024c02172e59d592c9d6c556568c28f400e4ec1f14a1e2ea96810",
+  "controller_config": {},
+  "wall_time_s": 45.2332274,
+  "gamma0": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "H0": [
+    -7.1054273576010019E-15,
+    -9.1848509936051487E-15,
+    0
+  ],
+  "A0": [
+    [
+      -28.867520810803747,
+      -1.7676258480135209E-15,
+      28.867520810803747,
+      5.3028775440405625E-15
+    ],
+    [
+      -0,
+      -28.867520810803747,
+      -3.5352516960270418E-15,
+      28.867520810803747
+    ],
+    [
+      40.824823848215345,
+      40.824823848215345,
+      40.824823848215345,
+      40.824823848215345
+    ]
+  ],
+  "sigma_min0": 40.824839442726223,
+  "frame_angle_abs_peak_rad": 4.5448948996025926,
+  "frame_speed_abs_peak_radps": 0.99999996908479816,
+  "frame_acceleration_abs_peak_radps2": 3,
+  "cmg_torque_norm_peak_Nm": 158.0033859314222,
+  "cmg_torque_norm_rms_Nm": 92.14493782910823,
+  "physical_bounds_pass": true,
+  "truth_period_pass": true,
+  "upper_period_pass": true,
+  "inner_period_pass": true,
+  "sqp_limit_observed": 4,
+  "inner_fallbacks": 0,
+  "period_audit_policy": "All internal intervals must equal nominal period; only terminal output may be a shorter positive interval",
+  "truth_last_interval_s": 0.0010000000000047748,
+  "surface_angle_saturation_pct": [
+    29.82663628234344,
+    0,
+    3.5913116220036345
+  ],
+  "surface_rate_saturation_pct": [
+    14.321977673291602,
+    9.3633715060432117,
+    4.7364929183373237
+  ]
+}

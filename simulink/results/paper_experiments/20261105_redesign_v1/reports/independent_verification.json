@@ -1,0 +1,9 @@
+{
+  "cases_checked": 249,
+  "reanalysis_pass": true,
+  "E1_pairs": 72,
+  "E1_pairs_equal": true,
+  "E3_references_consistent": true,
+  "E4_triplets": 27,
+  "E4_conditions_and_PID_frozen": true
+}

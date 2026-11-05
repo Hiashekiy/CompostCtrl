@@ -1,0 +1,7 @@
+{
+  "pid_step_sha256": "fb9dc8353c86a70f7e98b8c78adb03546dc617abdc6a9910c6d87c216cdc4278",
+  "bounded_solver_sha256": "294feed0442a9bb55243688946a7ce0277397c136cc36d2950df6ac4f39d3180",
+  "selection_score": 4.419273579066691,
+  "calibration_scenarios": "5deg4s,8deg8s,12deg12s,coupled3roll5pitch8s; duration40s",
+  "objective": "RMSE+.15peak+.001actualTorqueResidual+.01surfaceSat+10trackingFailure; invalid=1e6"
+}

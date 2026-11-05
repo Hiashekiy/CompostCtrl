@@ -1,0 +1,14 @@
+{
+  "completed": true,
+  "physical_response_observed": true,
+  "rms_attitude_cost_deg": 1.2721321355435578E-5,
+  "no_unload_H_final": 118.94453671245844,
+  "unload_H_final": 112.72283556073813,
+  "automatic_pause_observed": true,
+  "full_mechanism_acceptance": false,
+  "note": "Actual compensation and later maneuver benefit assessed from paired true torque traces and E2 M1/M2; H decrease alone never gives full acceptance",
+  "actual_net_difference_rms_Nm": 0.02243039705903125,
+  "actual_net_difference_peak_Nm": 0.13657424768583964,
+  "actual_force_traces_measured": true,
+  "counterfactual_definition": "Closed-loop ON minus OFF, includes feedback response; not an algebraic zero or pure open-loop actuator residual"
+}

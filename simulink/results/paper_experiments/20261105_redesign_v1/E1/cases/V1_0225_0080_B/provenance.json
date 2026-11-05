@@ -1,0 +1,11 @@
+{
+  "case_id": "V1_0225_0080_B",
+  "upstream_baseline_git_sha": "f60ef63b3fb5962598dc7243861da90e5a0740ba",
+  "implementation_manifest": "config/source_manifest.json",
+  "model_path": "D:\\项目\\飞轮\\simulink\\cases\\paper_v3\\NearSpace_CMG_FlightControl_V1_0225_0080_B.slx",
+  "model_sha256": "f91bcf9d3b1b1755f13a29f79c6ab8f1491da227cff0376555baa950bd750e81",
+  "bank_sha256": "bee87a10bb6219af05b91bca4caa037b5214a5c8dfe8132afd2de948961fd5ec",
+  "controller": "MPC",
+  "case_config_sha256": "7628da33c1cf10afe10a443176c1cff66c33e5da5168b9060bb4f5ba56fde0c3",
+  "PID_step_sha256": "fb9dc8353c86a70f7e98b8c78adb03546dc617abdc6a9910c6d87c216cdc4278"
+}

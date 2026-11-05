@@ -1,0 +1,13 @@
+{
+  "rule": "First pair in ascending amplitude then transition for B-only success, both-success, and model-domain status; missing categories explicitly absent",
+  "selected": [
+    {
+      "type": "B_only",
+      "pair_id": "V1_0075_0020"
+    },
+    {
+      "type": "both_success",
+      "pair_id": "V1_0050_0020"
+    }
+  ]
+}

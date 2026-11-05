@@ -1,0 +1,8 @@
+{
+  "role": "Secondary task-relative diagnostic; does not replace prespecified absolute 10deg onset",
+  "long_earliest_preview_s": 11.8,
+  "short_earliest_preview_s": 30,
+  "L_minus_Z_max_before_preview_deg": 0,
+  "L_minus_Z_2deg_sustained_600ms_onset_s": 13.49,
+  "task_advance_from_secondary_diagnostic_s": 21.509999999999998
+}

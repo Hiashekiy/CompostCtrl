@@ -1,0 +1,12 @@
+{
+  "reason": "E2 frozen; E1 independent from E4",
+  "main_matlab_pid": 79520,
+  "timing_scope": "Measured solver wall times under concurrent native MATLAB jobs; no hardware realtime claim",
+  "workers": 4,
+  "started": "2026-11-05T23:48:34.1280753+08:00",
+  "second_mode": "E4",
+  "partition_A5_launcher_pid": 62840,
+  "partition_started": "2026-11-06T00:28:23.9867019+08:00",
+  "partition_A3_launcher_pid": 78572,
+  "partition_A3_order": "Descending frequency/method; exact saved cases and atomic per-case locks"
+}

@@ -1,0 +1,10 @@
+{
+  "completed": true,
+  "physical_response_observed": true,
+  "rms_attitude_cost_deg": 1.2721321355435578E-5,
+  "no_unload_H_final": 118.94453671245844,
+  "unload_H_final": 112.72283556073813,
+  "automatic_pause_observed": true,
+  "full_mechanism_acceptance": false,
+  "note": "Actual compensation and later maneuver benefit assessed from paired true torque traces and E2 M1/M2; H decrease alone never gives full acceptance"
+}

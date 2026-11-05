@@ -1,0 +1,157 @@
+{
+  "id": "V2_M1_3",
+  "group": "E2",
+  "pair_id": "V2_M1",
+  "arm": "B",
+  "pitch_step_deg": 5,
+  "onset_s": 35,
+  "reference_profile": "step",
+  "reference_q0": [
+    0.99349030066954369,
+    -0.0045946523353322683,
+    0.10523483986500215,
+    0.043376723297693424
+  ],
+  "initial_state": [
+    0.99349030066954369,
+    -0.0045946523353322674,
+    0.10523483986500214,
+    0.043376723297693424,
+    0,
+    -0.0043273206504133811,
+    -6.9388939039072284E-15,
+    1.5707963267948966,
+    1.5707963267948966,
+    0,
+    0
+  ],
+  "reference_initial_pitch_deg": 12.09294636940445,
+  "absolute_pitch_min_deg": 11.997214493584885,
+  "absolute_pitch_max_deg": 17.092946181854884,
+  "actual_end_s": 60,
+  "status": "SUCCESS",
+  "settled_criterion_pass": true,
+  "source_git_sha": "f60ef63b3fb5962598dc7243861da90e5a0740ba",
+  "model_sha256": "27e52169e149af174b915e829f120eac641dd0b64b7201d66ac65397b9190eef",
+  "bank_sha256": "68833e9898b0d8a84e3b25aa6db40e93cdf5aa34e8576c601fe44f7dc19b4c7a",
+  "controller_config": {
+    "kp": [
+      587.99999999999989,
+      4164.9999999999991,
+      4409.9999999999991
+    ],
+    "ki": [
+      11.759999999999998,
+      83.299999999999983,
+      88.199999999999989
+    ],
+    "kd": [
+      1411.1999999999998,
+      9996,
+      10584
+    ],
+    "imax": 0.3,
+    "lambda_delta": 1E-8,
+    "lambda_nu": 1E-7,
+    "lambda_change": 1E-7,
+    "Wa": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "Wc": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "unload": false,
+    "hon": 80,
+    "hoff": 60,
+    "kh": 0.1,
+    "qmin": 1,
+    "residual_gate": 2,
+    "unload_tau_cap": 2,
+    "unload_slew": 0.2,
+    "unload_compensation_tolerance": 0.25
+  },
+  "wall_time_s": 19.307066,
+  "gamma0": [
+    1.5707963267948966,
+    1.5707963267948966,
+    0,
+    0
+  ],
+  "H0": [
+    21.132479189196243,
+    -78.867520810803754,
+    81.649647696430691
+  ],
+  "A0": [
+    [
+      -1.7676258480135209E-15,
+      50,
+      28.867520810803747,
+      5.3028775440405625E-15
+    ],
+    [
+      -50,
+      -4.8292428458819037E-15,
+      -3.5352516960270418E-15,
+      28.867520810803747
+    ],
+    [
+      2.4997994925735729E-15,
+      2.4997994925735729E-15,
+      40.824823848215345,
+      40.824823848215345
+    ]
+  ],
+  "sigma_min0": 40.824823848215338,
+  "frame_angle_abs_peak_rad": 2.9747589515226363,
+  "frame_speed_abs_peak_radps": 0.99999722185000806,
+  "frame_acceleration_abs_peak_radps2": 3,
+  "cmg_torque_norm_peak_Nm": 116.6883432455283,
+  "cmg_torque_norm_rms_Nm": 24.018144809192684,
+  "physical_bounds_pass": true,
+  "truth_period_pass": true,
+  "upper_period_pass": true,
+  "inner_period_pass": true,
+  "sqp_limit_observed": 4,
+  "inner_fallbacks": 0,
+  "period_audit_policy": "All internal intervals must equal nominal period; only terminal output may be a shorter positive interval",
+  "truth_last_interval_s": 0.00099999999999766942,
+  "surface_angle_saturation_pct": [
+    28.649522507958203,
+    0,
+    0.28666188896851719
+  ],
+  "surface_rate_saturation_pct": [
+    3.8266028899518343,
+    1.92496791720138,
+    1.4783086948550856
+  ]
+}

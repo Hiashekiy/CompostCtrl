@@ -1,0 +1,8 @@
+{
+  "status": "TRACKING_FAIL",
+  "config_hash": "5e08d5c2da0ef882ff456f39db3e37f23a11c5b13f63a3c89f25d66faafdb656",
+  "wall_time_s": 69.5560219,
+  "error": "",
+  "actual_end_s": 60,
+  "independent_reanalysis": true
+}

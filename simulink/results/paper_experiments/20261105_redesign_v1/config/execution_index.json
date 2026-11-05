@@ -1,0 +1,11 @@
+{
+  "final_receipt_exit_code": 0,
+  "source_check_exit_code": 0,
+  "controlled_main_stop": "config/controlled_boundary_stop.json",
+  "full_native_acceptance_marker": "V3_ALL_ACCEPTANCE_PASS",
+  "final_receipt_marker": "V3_FINAL_RECEIPT_PASS",
+  "auxiliary_runs": 89,
+  "launch_warning": "First finalizer PowerShell owner stopped bookkeeping on nonfatal native startup stderr; MATLAB continued and completed all acceptance checks. Wrapper fixed and receipt independently exited zero. Original stderr log retained.",
+  "formal_runs": 249,
+  "raw_outputs": 338
+}

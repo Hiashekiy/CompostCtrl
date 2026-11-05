@@ -1,0 +1,8 @@
+﻿{
+    "E1_raw":  144,
+    "main_pid":  79520,
+    "controlled_matrix_boundary_stop":  true,
+    "E1_statuses":  144,
+    "reason":  "Assigned E2/E3/E1 matrices complete; E4 independently owned by E4 worker. Stop main only during derived report stage to prevent duplicate E4 execution.",
+    "time":  "2026-11-06T01:25:41.7542018+08:00"
+}

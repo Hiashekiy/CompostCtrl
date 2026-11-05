@@ -1,0 +1,207 @@
+{
+  "upstream_baseline_git_sha": "f60ef63b3fb5962598dc7243861da90e5a0740ba",
+  "captured_at": "2026-11-05T17:38:41Z",
+  "role": "Final source and postprocessing revision; baseline Git SHA does not claim new uncommitted v3 files existed in baseline. Per-case bank/model/PID implementation hashes bind actual runs.",
+  "files": [
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\paper_v3.m",
+      "sha256": "c4a855f9df0811fc61abc095d5ec62d99da2379fe3e4df9edd4787b11a0df796"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_acceptance.m",
+      "sha256": "c87624d001693d7fc044efc339ca8790a0fd95d2684e579b8a382b379e2a3ef4"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_actuator_export.m",
+      "sha256": "3dd9297b518f0dc1bd7f4df290694d0011f6ad79e1e09a9197ec0522cbf965a2"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_analyze.m",
+      "sha256": "d1bfd93b061b83760a2d53bdae057b5410649d8df41e78aba019a639e4c225a0"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_build.m",
+      "sha256": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_color.m",
+      "sha256": "78a5b9d249383afccf41b4dfc52cd842bac53b793aec85a18281abc0372cbf6d"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_compact_derived.m",
+      "sha256": "85302398d44bedb9e0bc7b0639035522094a14c57f7cbf9bce8826813fd63583"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_detail_metrics.m",
+      "sha256": "537a728003c2d0f2aeaa851679eca896cd89c6046ca4559b4d67f9184dedef98"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_e1_evidence.m",
+      "sha256": "b2bd54796d94df71ab3e9504d5c70811599c4491ff55b8ce3c3b63c6d44cc239"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_e2_evidence.m",
+      "sha256": "6861779f2befbbd4f29a743af412e0307f6a52415420690f79e3f90a9c8cc3f9"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_e3_evidence.m",
+      "sha256": "90b41c52b24ad07382a56bc8d12db2e1220690acfe72e00bfc7322b628ed0079"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_e4_anomaly.m",
+      "sha256": "79edd0e18779be7b2f89ed224958e0470481bf0fd85cace170714baadbde1b2a"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_e4_partition.m",
+      "sha256": "db414f1dcabad186a0beae1fe7391a1c984a9783b8427905b8060fff7b4aeb34"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_file_lock.m",
+      "sha256": "c152a7c15c28ea88b3b3c6968b8fb9ca8e6e6be7a8861f7173bfd5dfb8328d88"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_fit_periodic.m",
+      "sha256": "6bd7d86db5464ca502fa415878ff4ef37466ef4f53daf5e704101a4b81b5e56f"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_overview.m",
+      "sha256": "af32e1bd33882995441769ad7ea5aed6975db445e86f3bcffbaf5ff9e9b83aff"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_period_matches.m",
+      "sha256": "bc3f9684b92f446d6e264349a9f2b86fb7852923977924ec6a85a1f01d5802dc"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_pid_config.m",
+      "sha256": "656963dbdfea32620986a73155b1ebb8fbc48c5089430b4a698ca3a7305407b8"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_pid_sfun.m",
+      "sha256": "d15bf9f988631f916f70362300f53954d3a036c3664a4739aa1fcda643000afa"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_pid_step.m",
+      "sha256": "fb9dc8353c86a70f7e98b8c78adb03546dc617abdc6a9910c6d87c216cdc4278"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_plan.m",
+      "sha256": "c16498f02949b1c8cbae448786b4b96ae06a649cfdb9abacba599670dfe345e0"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_prepare_protection.m",
+      "sha256": "b5e0c6cfef4edc8f5d409819fae6e3894137bd745688f695c2e12a5875e7c370"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_reference.m",
+      "sha256": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_regression.m",
+      "sha256": "4a741ec2b54db572a1bc6c9812356a2b7b29e31c4c42b9e88235d37385a48aae"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_report.m",
+      "sha256": "f0232e855cadf0c965072bce4ef7aa078d78558c4796c78d9c89867c37e8e532"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_report_e1.m",
+      "sha256": "02e3c26aa924180a6e35e84cf3a25be32214f01445057a52b788f7addd6ce8b2"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_report_e2.m",
+      "sha256": "6b803cda4e28f603b91403ac74d3b7d37de3d3664f337f83d91b14322694be0e"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_report_e3.m",
+      "sha256": "99a458b0f2e0b0a5e42f54624a4c2327ca446883e33441663646786e80d13deb"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_report_e4.m",
+      "sha256": "6cdd5bf85ef735ffc1b7b97a0af52da89b43cf0ee1be43a735462c9a73f8a1f0"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_report_notes.m",
+      "sha256": "eae3f010b680212886b3f59e35da447ac2bed1c259e6c21f683e579bdce5c1d7"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_run_case.m",
+      "sha256": "631c18ab54444ca6a03dbad84ea1c85fd2c84977e6bc5bb2e35adfc24651e54c"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_savefig.m",
+      "sha256": "f229af18a7a99f06bd9d2fe54d7aaf3e3b889d73e68e968f2abe288c00e8df6c"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_smoke.m",
+      "sha256": "60fbb4c42961cb9bfc48c52ce9da86dff9ead2241cc8762b0b6b4d57f91e7328"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_source_manifest.m",
+      "sha256": "dd97c3e1b2f0bcb54ea72c9e7dde266525b0322c2031b84e1b3acb53ba9cff60"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_spec.m",
+      "sha256": "363df9e966d5365ecb8cd93500261e9d8ca07c2d4530ef0724c3b0e8b171b1b9"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_tune.m",
+      "sha256": "277e39601abeccff0c9a3b599be374888fdf8ebcc73e368761093cfb5c6caa52"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_unit.m",
+      "sha256": "644c772e7c7d18806cd138be48102e98ddcc8e77b819cd6915f63446814987f6"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_unload_validation.m",
+      "sha256": "547ffe5ec47be666cb82a2a6c04616a66a8409666b15e1b531247ff2cef7ca68"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_verify.m",
+      "sha256": "593b5bc5339d897dd064b8d6cf5ce9597138583017579bc761d234e6e7d1126a"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_write_csv.m",
+      "sha256": "075b4ae0dbde060bce011819ea524219f2f5503956bdc0b908e5c169ab295143"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\native_mpc_sfun.m",
+      "sha256": "954b6ce6c3ca2271433ecb44424322333e49b254ef89acac22131b04a807e140"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\native_online_rti_step.m",
+      "sha256": "95d36b298a643bfd1e9ffcbab39dc60868d8398e7f9937f99c53d423c5e3e5c3"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\online_torque_feedback_step.m",
+      "sha256": "10c13fd513eef41a0c9a12264d12d40a4b6b595016bcf2f591baecf33e126bdb"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\bounded_control_allocation.m",
+      "sha256": "294feed0442a9bb55243688946a7ce0277397c136cc36d2950df6ac4f39d3180"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\data\\vehicle_params.m",
+      "sha256": "568424167007f809fc8875dc3e4de028fd14c4547542542eecec5c3e2fdce758"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_pid_step.m",
+      "sha256": "fb9dc8353c86a70f7e98b8c78adb03546dc617abdc6a9910c6d87c216cdc4278"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_reference.m",
+      "sha256": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\modelgen\\build_closedloop.m",
+      "sha256": "fff745048fcedcb4722cf49e3c501f70ac86ffa7313124834f966b1af3788df2"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\mex\\ocp_qp_create.mexw64",
+      "sha256": "727f21e88243b097cedde86f3696a9ce0cd7c9ff97395ef62f578706009efba9"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\mex\\ocp_qp_solver_solve.mexw64",
+      "sha256": "61e7600ac0ffef8d248a04edbeeb5eb8d3461294fef06dc029f1b97440759fa1"
+    }
+  ]
+}

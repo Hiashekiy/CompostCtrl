@@ -1,0 +1,6 @@
+{
+  "baseline": "f60ef63b3fb5962598dc7243861da90e5a0740ba",
+  "passed": true,
+  "changed_paths": "",
+  "scope": "Tracked formal models, physical data/parameters, existing MPC/allocator source and physical plant generators; build_closedloop has documented output-directory-only changes"
+}

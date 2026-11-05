@@ -1,0 +1,10 @@
+﻿{
+    "started":  "2026-11-06T01:25:45.1704178+08:00",
+    "mode":  "Fresh MATLAB independent numerical reanalysis, timing/physical audit, plots and acceptance",
+    "waited_matlab_pids":  [
+                               79520,
+                               68964,
+                               62840,
+                               78572
+                           ]
+}

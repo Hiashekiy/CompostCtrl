@@ -1,0 +1,94 @@
+{
+  "id": "V4_030_060_3",
+  "group": "E4",
+  "pair_id": "V4_030_060",
+  "arm": "B",
+  "pitch_step_deg": 3,
+  "onset_s": 8,
+  "reference_profile": "sine",
+  "reference_q0": [
+    0.99349030066954369,
+    -0.0045946523353322683,
+    0.10523483986500215,
+    0.043376723297693424
+  ],
+  "initial_state": [
+    0.99349030066954369,
+    -0.0045946523353322674,
+    0.10523483986500214,
+    0.043376723297693424,
+    0,
+    -0.0043273206504133811,
+    -6.9388939039072284E-15,
+    0,
+    0,
+    0,
+    0
+  ],
+  "reference_initial_pitch_deg": 12.09294636940445,
+  "absolute_pitch_min_deg": 9.0960605465995528,
+  "absolute_pitch_max_deg": 15.088850604391748,
+  "actual_end_s": 74.666,
+  "status": "VALID_COMPLETE",
+  "settled_criterion_pass": false,
+  "source_git_sha": "f60ef63b3fb5962598dc7243861da90e5a0740ba",
+  "model_sha256": "ec202762324caed12778a5e5a31dbbe52e50637085d2be7dcfe00a3659cc6432",
+  "bank_sha256": "36b32ad85ae2e0d90b6770cbb0efbe3b77e6d49336e64f40b60544d777576ac6",
+  "controller_config": {},
+  "wall_time_s": 119.038151,
+  "gamma0": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "H0": [
+    -7.1054273576010019E-15,
+    -9.1848509936051487E-15,
+    0
+  ],
+  "A0": [
+    [
+      -28.867520810803747,
+      -1.7676258480135209E-15,
+      28.867520810803747,
+      5.3028775440405625E-15
+    ],
+    [
+      -0,
+      -28.867520810803747,
+      -3.5352516960270418E-15,
+      28.867520810803747
+    ],
+    [
+      40.824823848215345,
+      40.824823848215345,
+      40.824823848215345,
+      40.824823848215345
+    ]
+  ],
+  "sigma_min0": 40.824839442726223,
+  "frame_angle_abs_peak_rad": 19.164931316986607,
+  "frame_speed_abs_peak_radps": 0.99999536520987853,
+  "frame_acceleration_abs_peak_radps2": 3,
+  "cmg_torque_norm_peak_Nm": 118.13858163770321,
+  "cmg_torque_norm_rms_Nm": 40.733239218343684,
+  "physical_bounds_pass": true,
+  "truth_period_pass": true,
+  "upper_period_pass": true,
+  "inner_period_pass": true,
+  "sqp_limit_observed": 4,
+  "inner_fallbacks": 0,
+  "period_audit_policy": "All internal intervals must equal nominal period; only terminal output may be a shorter positive interval",
+  "truth_last_interval_s": 0.000999999999990564,
+  "surface_angle_saturation_pct": [
+    12.293248690854059,
+    1.6365998366078722,
+    0.32276641622135616
+  ],
+  "surface_rate_saturation_pct": [
+    6.8946120776246538,
+    2.6330239597144653,
+    3.1446288186213458
+  ]
+}

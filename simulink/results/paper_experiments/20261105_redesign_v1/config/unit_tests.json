@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "tests": [
+    "coupled exact reachable target",
+    "bounded 3/4 variable KKT including saturation",
+    "surface first, no needless CMG, torque signs",
+    "near singular bounded command",
+    "nonzero natural torque cancellation",
+    "conditional integration under saturation",
+    "repeatability and quaternion sign equivalence",
+    "reference derivative consistency and aligned horizon",
+    "synthetic UNIT ONLY: known gain, positive lag, harmonics and zero-response phase flag",
+    "sample-clock audit permits only a terminal partial interval"
+  ]
+}
