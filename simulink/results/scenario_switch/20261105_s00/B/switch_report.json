@@ -1,0 +1,104 @@
+{
+  "model_tag": "B",
+  "stamp": "20261105_s00",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\scenario_switch\\20261105_s00\\B",
+  "model_file": "D:\\项目\\飞轮\\simulink\\models\\NearSpace_CMG_FlightControl.slx",
+  "config": {
+    "model": "NearSpace_CMG_FlightControl",
+    "bytes": 2.783357E+6,
+    "cert": "analytic_full",
+    "shrink": 0,
+    "dt_ctrl": 0.2,
+    "sqp": 4,
+    "nx": 11,
+    "N": 22,
+    "inner_mode": "feedback_predictive",
+    "inner_period": 0.02,
+    "previous_command_dt": 0.02,
+    "legacy_block": false,
+    "feedback_block": true,
+    "cmg_present": true,
+    "fixed_step": 0.001,
+    "stop_time": "60",
+    "bank_samples": 301,
+    "bank_t_end_s": 60,
+    "bank_pitch_start_deg": 12.092946369404448,
+    "bank_pitch_peak_deg": 28.616901542224127,
+    "bank_pitch_peak_t_s": 38,
+    "bank_qref_maxdiff": 1.9428902930940239E-16
+  },
+  "expected_reference": {
+    "samples": 301,
+    "t_end_s": 60,
+    "pitch_start_deg": 12.092946369404448,
+    "pitch_peak_deg": 28.616901542224127,
+    "pitch_peak_t_s": 38
+  },
+  "runs": [
+    {
+      "duration_s": 2,
+      "wall_s": 5.6948867,
+      "samples": 2001,
+      "t_end_s": 2,
+      "aborted": false,
+      "error_message": "",
+      "att_window_rms_deg": 0.00017558489803206565,
+      "att_window_peak_deg": 0.00049206109192617112,
+      "att_full_rms_deg": 0.00017558489803206565,
+      "att_full_peak_deg": 0.00049206109192617112,
+      "torque_pitch_err_rms_Nm": 0.30135895106079169,
+      "torque_composite_err_rms_Nm": 0.36055384622098158,
+      "defl_sat_pct": [
+        0,
+        0,
+        0
+      ],
+      "rate_sat_pct": [
+        0,
+        0,
+        1.6991504247876061
+      ],
+      "counts": {
+        "mpc_cycles": 11,
+        "fallbacks": 0,
+        "inner_ticks": 101,
+        "inner_fallbacks": 0,
+        "cycle_ms_mean": 142.79898181818183,
+        "cycle_ms_max": 608.9809
+      }
+    },
+    {
+      "duration_s": 60,
+      "wall_s": 28.6532957,
+      "samples": 60001,
+      "t_end_s": 60,
+      "aborted": false,
+      "error_message": "",
+      "att_window_rms_deg": 0.30918881917157842,
+      "att_window_peak_deg": 0.76792067794581886,
+      "att_full_rms_deg": 0.32411272540513214,
+      "att_full_peak_deg": 0.76792067794581886,
+      "torque_pitch_err_rms_Nm": 0.73823223738666077,
+      "torque_composite_err_rms_Nm": 0.45542170169428631,
+      "defl_sat_pct": [
+        30.146164230596156,
+        0.864985583573607,
+        0.95498408359860676
+      ],
+      "rate_sat_pct": [
+        2.7516208063198948,
+        4.8532524457925694,
+        1.2849785836902718
+      ],
+      "counts": {
+        "mpc_cycles": 301,
+        "fallbacks": 0,
+        "inner_ticks": 3001,
+        "inner_fallbacks": 0,
+        "cycle_ms_mean": 66.532050498338862,
+        "cycle_ms_max": 272.6429
+      }
+    }
+  ],
+  "git_sha": "8d7fa35ef5cfb5ea7d33403da04d4383c0d57532"
+}
