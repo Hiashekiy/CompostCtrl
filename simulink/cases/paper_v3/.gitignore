@@ -1,0 +1,4 @@
+# Generated native case models remain local. Rebuild using simulink/paper/v3/v3_build.m.
+*.slx
+*.slxc
+slprj/

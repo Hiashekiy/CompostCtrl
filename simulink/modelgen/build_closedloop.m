@@ -1,4 +1,4 @@
-function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period,certificate_mode,torque_shrink_ratio,torque_inner_mode,bank_path)
+function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period,certificate_mode,torque_shrink_ratio,torque_inner_mode,bank_path,result_directory,case_directory)
 % Torque-margin / torque-feedback ablation switches (production defaults: 0, 'legacy').
 %   torque_shrink_ratio : uniform relative shrink of the certified MPC torque box
 %   torque_inner_mode   : 'legacy'              -> 0.2 s open-loop surface allocation
@@ -16,6 +16,8 @@ if nargin<9,certificate_mode='legacy';end
 if nargin<10,torque_shrink_ratio=0;end
 if nargin<11,torque_inner_mode='legacy';end
 if nargin<12,bank_path='';end
+if nargin<13,result_directory='';end
+if nargin<14,case_directory='';end
 assert(isscalar(torque_shrink_ratio) && isfinite(torque_shrink_ratio) && ...
  torque_shrink_ratio>=0 && torque_shrink_ratio<1,'torque_shrink_ratio must satisfy 0 <= alpha < 1');
 assert(ismember(torque_inner_mode,{'legacy','feedback_predictive'}), ...
@@ -43,16 +45,18 @@ if bdIsLoaded(m)
  close_system(m,0);
 end
 if isempty(case_name),modeldir=fullfile(root,'simulink','models');else,modeldir=fullfile(root,'simulink','cases');end
+if ~isempty(case_directory),assert(~isempty(case_name));modeldir=case_directory;if ~isfolder(modeldir),mkdir(modeldir);end;end
 assert(ismember(authority_mode,{'online_predicted','online_current','legacy_frozen'}),'Unknown authority mode');
 online=flight && startsWith(authority_mode,'online_');
 out=fullfile(root,'simulink','results','native_closedloop');
-if online
+if online && isempty(result_directory)
  label='L2';if strcmp(authority_mode,'online_current'),label='L1';end
  out=fullfile(root,'simulink','results','online_authority',sprintf('%s_%gs_%s',label,duration,datestr(now,'yyyymmdd_HHMMSS')));
  backup=fullfile(root,'simulink','results','online_authority','frozen_models');if ~exist(backup,'dir'),mkdir(backup);end
  oldfile=fullfile(modeldir,[m '.slx']);
  if isfile(oldfile) && ~isfile(fullfile(backup,[m '.slx'])),copyfile(oldfile,fullfile(backup,[m '.slx']));end
 end
+if ~isempty(result_directory),out=result_directory;end
 if ~exist(out,'dir'),mkdir(out);end
 new_system(m);set_param(m,'SolverType','Fixed-step','Solver','ode4','FixedStep','.001','StopTime',num2str(duration), ...
  'ReturnWorkspaceOutputs','on','SaveFormat','Dataset');
@@ -248,7 +252,7 @@ save_system(m,fullfile(modeldir,[m '.slx']));
 Simulink.BlockDiagram.arrangeSystem(m);
 set_param(m,'InitFcn','init_paths;');
 save_system(m,fullfile(modeldir,[m '.slx']));
-try,print(['-s' m],'-dpng',fullfile(out,'model.png'));catch,warning('model screenshot skipped');end
+if isempty(result_directory),try,print(['-s' m],'-dpng',fullfile(out,'model.png'));catch,warning('model screenshot skipped');end;end
 close_system(m,0);
 if online
  load_system(fullfile(modeldir,[m '.slx']));ph=get_param([m '/Online_RTI_HPIPM'],'PortHandles');

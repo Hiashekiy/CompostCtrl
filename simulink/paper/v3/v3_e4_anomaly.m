@@ -1,0 +1,15 @@
+function v3_e4_anomaly(S,out,hz)
+S.mean_sqp_attempted=nan(height(S),1);S.mean_qp_solved=nan(height(S),1);S.mean_accepted_steps=nan(height(S),1);S.rejected_step_ticks_pct=nan(height(S),1);f=figure('Visible','off','Position',[50 50 1200 2100]);tiledlayout(8,1);for k=1:height(S)
+folder=fullfile(out,'E4','cases',char(string(S.id(k))));D=readtable(fullfile(folder,'timeseries.csv'));D=D(D.time_s>=8+2/hz,:);if height(D)<10,continue;end;t=D.time_s;B=[sin(2*pi*hz*(t-8)),cos(2*pi*hz*(t-8)),ones(size(t)),t-mean(t)];fit=B*(B\D.pitch_deg);idx=unique([1:max(1,ceil(numel(t)/1500)):numel(t),numel(t)]);color=v3_color(S.method(k),S.cmg(k));label=char(string(S.method(k)));if strcmp(label,'MPC'),if S.cmg(k),label='JOINT MPC';else,label='SURFACE MPC';end;end
+nexttile(1);hold on;plot(t(idx),D.pitch_deg(idx),'Color',color,'DisplayName',label);plot(t(idx),fit(idx),':','Color',color,'HandleVisibility','off');if k==1,plot(t(idx),D.ref_pitch_deg(idx),'k--','DisplayName','Reference');end
+nexttile(2);hold on;plot(t(idx),D.pitch_deg(idx)-fit(idx),'Color',color,'DisplayName',label);
+nexttile(3);hold on;plot(t(idx),D.height_m(idx),'Color',color,'DisplayName',label);
+nexttile(4);hold on;plot(t(idx),D.qbar_Pa(idx),'Color',color,'DisplayName',label);
+nexttile(5);hold on;plot(t(idx),D.alpha_deg(idx),'Color',color,'DisplayName',label);
+d=load(fullfile(folder,'sim_output.mat'));r=d.r;da=interp1(r.delta_actual.Time,squeeze(r.delta_actual.Data),t,'previous','extrap');nexttile(6);hold on;plot(t(idx),rad2deg(da(idx,1)),'Color',color,'DisplayName',label);
+nexttile(7);hold on;plot(t(idx),max(abs([D.nu1_radps(idx),D.nu2_radps(idx),D.nu3_radps(idx),D.nu4_radps(idx)]),[],2),'Color',color,'DisplayName',label);
+nexttile(8);hold on;plot(t(idx),D.aero_y_Nm(idx),'Color',color,'DisplayName',[label ' aero']);plot(t(idx),D.cmg_y_Nm(idx),'--','Color',color,'DisplayName',[label ' CMG']);
+files=dir(fullfile(folder,'*_authority.mat'));if ~isempty(files),a=load(fullfile(folder,files(1).name));window=a.control_times>=S.analysis_start_s(k) & a.control_times<=S.analysis_end_s(k);within=a.diagnostics(window);S.mean_sqp_attempted(k)=mean(cellfun(@(z)z.sqp_attempted,within));S.mean_qp_solved(k)=mean(cellfun(@(z)z.qp_solved,within));S.mean_accepted_steps(k)=mean(cellfun(@(z)z.accepted_steps,within));S.rejected_step_ticks_pct(k)=100*mean(cellfun(@(z)z.rejected_steps>0,within));bad=cellfun(@(z)z.fallback,a.diagnostics);times=a.control_times(bad);times=times(times>=t(1)&times<=t(end));if ~isempty(times),nexttile(1);scatter(times,repmat(max(D.pitch_deg),size(times)),15,'rx','DisplayName',[label ' fallback']);end;end
+end
+labels={'Pitch / dotted fit (deg)','Fit residual (deg)','Height (m)','qbar (Pa)','Alpha (deg)','Elevator actual (deg)','max |nu actual| (rad/s)','Actual pitch torque (Nm)'};for j=1:8,nexttile(j);ylabel(labels{j});legend('Location','eastoutside');grid on;end;nexttile(7);yline(1,'k:');nexttile(8);xlabel('Time (s)');v3_savefig(f,out,sprintf('E4_anomaly_%03d',round(hz*1000)));writetable(S,fullfile(out,'tables',sprintf('E4_anomaly_%03d_fit_metrics.csv',round(hz*1000))));
+end

@@ -1,0 +1,4 @@
+# Frozen implementation signatures refer to the exact working-file bytes.
+# Disable newline conversion without disabling normal text diffs.
+*.m text eol=lf
+v3_pid_step.m -text whitespace=cr-at-eol
