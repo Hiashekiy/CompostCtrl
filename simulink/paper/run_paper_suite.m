@@ -3,7 +3,7 @@ if nargin<1,mode='all';end
 if nargin<2,stamp='20261105_paper_v1';end
 init_paths;addpath(fileparts(mfilename('fullpath')));out=fullfile(repo_root,'simulink','results','paper_experiments',stamp);if ~isfolder(out),mkdir(out);end
 if strcmp(mode,'report'),result=paper_report(out);paper_final_report(out);return;end
-p=paper_preflight(out);result=p;if strcmp(mode,'preflight'),return;end
+frozen=fullfile(out,'preflight.json');if isfile(frozen),latest=paper_preflight(fullfile(out,'preflight_checks',datestr(now,'yyyymmdd_HHMMSS')));p=jsondecode(fileread(frozen));for j=1:3,assert(strcmp(p.protected{j}.sha256,latest.protected{j}.sha256),'paper:provenance','Protected input differs from frozen experiment');end;else,p=paper_preflight(out);end;result=p;if strcmp(mode,'preflight'),return;end
 assert(isempty(p.blockers),'paper:preflight','Model preflight blocked');
 t=load('simulink/tests/05_python_matlab_qp_equivalence/production_online_qp.mat');base=fullfile(repo_root,'simulink','data','paper_banks','archive','S00_pitch30_B_bank.mat');
 % Freeze the entire matrix before any run. PID settings are provisional until calibration.
@@ -43,19 +43,6 @@ function result=paper_report(out)
 files=dir(fullfile(out,'E*','*','run_status.json'));rows={};for k=1:numel(files),st=jsondecode(fileread(fullfile(files(k).folder,files(k).name)));rows{end+1}=struct('path',files(k).folder,'status',st.status,'error',st.error);end
 result=rows;paper_json(fullfile(out,'manifest.json'),rows);
 f=fopen(fullfile(out,'四组论文实验结果.md'),'w','n','UTF-8');c=onCleanup(@()fclose(f));fprintf(f,'# 四组实验运行记录\n\n仅记录本次真实运行。PID 标定见 pid_calibration；卸载验收见 unload_acceptance。未通过验收的方法会标记失败，不得用于有效对照。全部论文验收尚未完成，不能预设 CMG 或 MPC 必然更优。\n\n');for k=1:numel(rows),fprintf(f,'- %s: %s\n',rows{k}.path,rows{k}.status);end
-metrics=dir(fullfile(out,'E*','*','metrics.json'));entries={};for k=1:numel(metrics),e=jsondecode(fileread(fullfile(metrics(k).folder,metrics(k).name)));keep={'id','experiment','method','profile','cmg','amplitude','transition','frequency','horizon','masked','t_end','rmse_deg','peak_deg','terminal_deg','status','gain_db','phase_deg','steady_rmse_deg'};z=struct;for j=1:numel(keep),if isfield(e,keep{j}),value=e.(keep{j});elseif strcmp(keep{j},'profile'),value='unknown';else,value=NaN;end;if isempty(value) && ~ischar(value),value=NaN;end;z.(keep{j})=value;end;entries{end+1}=z;end
+metrics=dir(fullfile(out,'E*','*','metrics.json'));entries={};for k=1:numel(metrics),e=jsondecode(fileread(fullfile(metrics(k).folder,metrics(k).name)));keep={'id','experiment','method','profile','cmg','amplitude','transition','frequency','horizon','masked','t_end','rmse_deg','peak_deg','terminal_deg','status','gain_db','phase_deg','steady_rmse_deg','compute_mean_s','compute_p95_s','compute_max_s','over_200ms_pct','fallbacks'};z=struct;for j=1:numel(keep),if isfield(e,keep{j}),value=e.(keep{j});elseif strcmp(keep{j},'profile'),value='unknown';else,value=NaN;end;if isempty(value) && ~ischar(value),value=NaN;end;z.(keep{j})=value;end;entries{end+1}=z;end
 if ~isempty(entries),T=struct2table([entries{:}],'AsArray',true);writetable(T,fullfile(out,'metrics.csv'));plot_paper_figures(T,out);end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-

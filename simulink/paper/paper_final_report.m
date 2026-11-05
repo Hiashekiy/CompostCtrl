@@ -19,16 +19,5 @@ for k=1:4,path=fullfile(out,'figures',sprintf('comparison_%d.png',k));if isfile(
 fprintf(f,'## 复现命令\n\n从仓库根目录经 simulink/mlab.cmd 启动 MATLAB，先 addpath(''simulink''); init_paths; addpath(''simulink/paper''); 再执行 run_paper_suite(''all'',''20261105_paper_v2'')。支持 preflight/smoke/E1/E2/E3/E4/report；report 只从已有日志生成报告，不启动仿真。原始数据不提交版本库。\n\n');
 paper_report_pid(f,out);
 fprintf(f,'## 结论限制\n\n仅在共同有效、完整运行和相同参考下比较。E1 是离散闭环任务成功区域，不是理论可达域。E3 框架提前运动不能单独证明主动卸载或奇异性优化。E4 是含未来参考预瞄的时变飞行段正弦跟踪，不能等同常规因果反馈闭环带宽；本报告不宣称严格 LTI 带宽。低频长时间参考的扰动延长验证误差见 bank.disturbance_validation，使用原有公式和原生空气密度表，没有调用 Python。计算耗时是本机同步仿真测量，不是硬件实时验证。所有验收未覆盖项仍属未完成，不得把批处理退出码视为论文验收通过。\n');
+paper_export_additional_tables(out);
 end
-
-
-
-
-
-
-
-
-
-
-
-

@@ -17,17 +17,7 @@ m.cmg_h_initial=NaN;m.cmg_h_final=NaN;if size(x,2)==10,H=zeros(numel(t),3);for k
 m.air_drift_fraction=[];m.air_min=[];m.air_max=[];try,air=squeeze(r.flight_conditions.Data);m.air_min=min(air,[],1);m.air_max=max(air,[],1);m.air_drift_fraction=(m.air_max-m.air_min)./max(abs(mean(air,1)),1e-9);catch,end
 m.compute_mean_s=NaN;m.compute_p95_s=NaN;m.compute_max_s=NaN;m.over_200ms_pct=NaN;m.fallbacks=0;
 files=dir(fullfile(folder,'*_authority.mat'));if ~isempty(files),d=load(fullfile(folder,files(1).name));elapsed=[];for j=1:numel(d.diagnostics),z=d.diagnostics{j};if isfield(z,'elapsed_s'),elapsed(end+1)=z.elapsed_s;end;if isfield(z,'fallback'),m.fallbacks=m.fallbacks+z.fallback;end;end;if ~isempty(elapsed),m.compute_mean_s=mean(elapsed);m.compute_max_s=max(elapsed);m.compute_p95_s=prctile(elapsed,95);m.over_200ms_pct=100*mean(elapsed>.2);end;end
-if strcmp(m.status,'SUCCESS') && m.fallbacks>max(3,.1*ceil(t(end)/.2)),m.status='CONTROLLER_FAIL';end
+if isempty(msg) && m.fallbacks>max(3,.1*ceil(t(end)/.2)),m.status='CONTROLLER_FAIL';end
 names=[{'time_s'},arrayfun(@(k)sprintf('state_%d',k),1:size(x,2),'UniformOutput',false),{'reference_roll_deg','reference_pitch_deg','reference_yaw_deg','attitude_error_deg'}];writetable(array2table([t,x,ref,err],'VariableNames',names),fullfile(folder,'timeseries.csv'));paper_json(fullfile(folder,'metrics.json'),m);
 f=figure('Visible','off');idx=unique([1:ceil(numel(t)/2000):numel(t),numel(t)]);plot(t(idx),ref(idx,2),'k--',t(idx),rad2deg(x(idx,2)));xlabel('Time (s)');ylabel('Pitch (deg)');legend('Reference','Actual');grid on;exportgraphics(f,fullfile(folder,'tracking.png'));exportgraphics(f,fullfile(folder,'tracking.pdf'),'ContentType','vector');close(f);
 end
-
-
-
-
-
-
-
-
-
-
