@@ -1,0 +1,26 @@
+{
+  "mode": "verify",
+  "stamp": "20261105_120342",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\deploy_f20\\20261105_120342",
+  "production_model": "D:\\项目\\飞轮\\simulink\\models\\NearSpace_CMG_FlightControl.slx",
+  "archive": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\F20_B_60s\\B_closedloop.mat",
+  "git_sha": "a0f2406d9e3fb59b4068d3772212d1cbdee3a4ea",
+  "branch": "experiment/production-f20-integration",
+  "equivalence": {
+    "passed": true,
+    "case_name": "DEP_F20CHK",
+    "tolerance": 1E-9,
+    "max_command_difference": 0,
+    "max_state_difference": 0,
+    "samples": 60001,
+    "counts": {
+      "mpc_cycles": 301,
+      "fallbacks": 0,
+      "inner_ticks": 3001,
+      "inner_fallbacks": 0,
+      "inner_max_ms": 44.996300000000005,
+      "inner_mean_ms": 0.46426784405198274,
+      "inner_over_20ms": 1
+    }
+  }
+}

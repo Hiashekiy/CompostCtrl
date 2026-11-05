@@ -1,0 +1,186 @@
+{
+  "mode": "deploy",
+  "stamp": "20261105_122145",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\deploy_f20\\20261105_122145",
+  "production_model": "D:\\项目\\飞轮\\simulink\\models\\NearSpace_CMG_FlightControl.slx",
+  "archive": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\F20_B_60s\\B_closedloop.mat",
+  "git_sha": "a0f2406d9e3fb59b4068d3772212d1cbdee3a4ea",
+  "branch": "experiment/production-f20-integration",
+  "preflight": {
+    "path": "D:\\项目\\飞轮\\simulink\\models\\NearSpace_CMG_FlightControl.slx",
+    "exists": true,
+    "bytes": 3.93014E+6,
+    "checksum": "7E94EE202494A25C4D2753FD54C24F78",
+    "model": "NearSpace_CMG_FlightControl",
+    "stop_time": "60",
+    "fixed_step": ".001",
+    "solver": "ode4",
+    "solver_type": "Fixed-step",
+    "workspace_variables": [
+      "disturbance_schedule",
+      "native_control_period",
+      "native_controller_template",
+      "native_reference_bank",
+      "native_results_dir",
+      "reference_attitude_deg",
+      "reference_body_rate",
+      "reference_torque_nom",
+      "reference_window"
+    ],
+    "block_count": 30,
+    "template": {
+      "authority_mode": "online_predicted",
+      "authority_certificate_mode": "<absent>",
+      "authority_torque_shrink_ratio": -1,
+      "max_sqp_iterations": 4,
+      "dt_ctrl": 0.2,
+      "nx": 11,
+      "N": 22
+    },
+    "inner_mode": "<absent>",
+    "inner_period": -1,
+    "has_feedback_block": false,
+    "has_legacy_block": true,
+    "previous_command_sample_time": 0.2,
+    "cmg_present": true
+  },
+  "equivalence": {
+    "passed": true,
+    "case_name": "DEP_F20CHK",
+    "tolerance": 1E-9,
+    "max_command_difference": 0,
+    "max_state_difference": 0,
+    "samples": 60001,
+    "counts": {
+      "mpc_cycles": 301,
+      "fallbacks": 0,
+      "inner_ticks": 3001,
+      "inner_fallbacks": 0,
+      "inner_max_ms": 46.6601,
+      "inner_mean_ms": 0.50692892369210274,
+      "inner_over_20ms": 1
+    }
+  },
+  "deployment": {
+    "touched_production": true,
+    "restored": false,
+    "backup_checksum": "7E94EE202494A25C4D2753FD54C24F78",
+    "backup_bytes": 3.93014E+6,
+    "production_bytes": 3.929203E+6,
+    "production_checksum": "829282ECA9078F8A1132D4D9DCEA8243",
+    "structure": {
+      "model": "NearSpace_CMG_FlightControl",
+      "blocks": [
+        "Control_split",
+        "Aerodynamic_Surface",
+        "Environment_And_Forces",
+        "Native_Plant"
+      ],
+      "has_feedback": true,
+      "has_legacy": false,
+      "function_name": "native_torque_feedback_allocation_sfun",
+      "previous_command_sample_time": 0.02,
+      "cmg_present": true,
+      "cmg_command_port": "Native_Plant",
+      "fixed_step": ".001",
+      "servo_sample_time": 0.001,
+      "template": {
+        "authority_mode": "online_predicted",
+        "authority_certificate_mode": "analytic_full",
+        "authority_torque_shrink_ratio": 0,
+        "max_sqp_iterations": 4,
+        "dt_ctrl": 0.2
+      },
+      "inner_mode": "feedback_predictive",
+      "inner_period": 0.02,
+      "control_period": 0.2,
+      "shrink": 0
+    },
+    "smoke_2s": {
+      "duration_s": 2,
+      "wall_s": 2.5317462,
+      "max_command_difference": 0,
+      "max_state_difference": 0,
+      "samples": 2001,
+      "limits_ok": true,
+      "delta_max_abs": [
+        0.038900485057479318,
+        0.037959978984249916,
+        0.29172018819232004
+      ],
+      "rate_max_abs": [
+        0.698525993751144,
+        1.0094542807253495,
+        1.0471975511966
+      ],
+      "counts": {
+        "mpc_cycles": 11,
+        "fallbacks": 0,
+        "inner_ticks": 101,
+        "inner_fallbacks": 0,
+        "inner_max_ms": 6.6226,
+        "inner_mean_ms": 0.66450198019801987,
+        "inner_over_20ms": 0
+      },
+      "torque": {
+        "cmd_rms_Nm": [
+          0.68732069893840131,
+          0.45005300254176744,
+          2.1570004712175259
+        ],
+        "err_rms_Nm": [
+          0.098343995984576119,
+          0.30135895106079169,
+          0.53805991222498162
+        ],
+        "composite_err_rms_Nm": 0.36055384622098158
+      }
+    },
+    "acceptance_60s": {
+      "duration_s": 60,
+      "wall_s": 24.4367288,
+      "max_command_difference": 0,
+      "max_state_difference": 0,
+      "samples": 60001,
+      "limits_ok": true,
+      "delta_max_abs": [
+        0.43633231299856351,
+        0.34906553100218457,
+        0.34906584746074648
+      ],
+      "rate_max_abs": [
+        1.0471975511966,
+        1.0471975511966,
+        1.0471975511966
+      ],
+      "counts": {
+        "mpc_cycles": 301,
+        "fallbacks": 0,
+        "inner_ticks": 3001,
+        "inner_fallbacks": 0,
+        "inner_max_ms": 2.7786999999999997,
+        "inner_mean_ms": 0.49009773408863722,
+        "inner_over_20ms": 0
+      },
+      "torque": {
+        "cmd_rms_Nm": [
+          1.0497425240582856,
+          5.6490368403083222,
+          1.552840075769411
+        ],
+        "err_rms_Nm": [
+          0.21062065247253206,
+          0.73646055747567252,
+          0.18466266862149674
+        ],
+        "composite_err_rms_Nm": 0.4549122674200477
+      },
+      "attitude": {
+        "rms_deg": 0.662672109726981,
+        "peak_deg": 2.2712795082596102,
+        "definition": "quaternion minimum rotation angle against online_plan_bank q_ref"
+      }
+    },
+    "passed": true
+  }
+}

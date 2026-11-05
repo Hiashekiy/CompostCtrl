@@ -1,0 +1,36 @@
+{
+  "cycles": 301,
+  "fallbacks": 0,
+  "qp_per_cycle_mean": 2.0697674418604652,
+  "accepted_steps_mean": 1.0930232558139534,
+  "rejected_steps_total": 294,
+  "iterations_mean": 2.0697674418604652,
+  "iterations_max": 4,
+  "cycle_ms_mean": 58.245280730897,
+  "cycle_ms_p50": 47.7194,
+  "cycle_ms_p95": 124.5474,
+  "cycle_ms_p99": 199.9262,
+  "cycle_ms_max": 279.2165,
+  "over_200ms": 3,
+  "certificate_types": {
+    "names": [
+      "analytic_box"
+    ],
+    "counts": 6622
+  },
+  "inner_ticks": 3001,
+  "inner_fallbacks": 0,
+  "inner_ms_mean": 0.49009773408863722,
+  "inner_ms_p95": 0.9256,
+  "inner_ms_p99": 1.7049,
+  "inner_ms_max": 2.7786999999999997,
+  "inner_over_20ms": 0,
+  "inner_first_tick_ms": 0.7402,
+  "inner_median_ms": 0.4157,
+  "inner_iterations_max": 4,
+  "inner_slew_ticks": 1741,
+  "inner_period_s": 0.02,
+  "cost_initial_mean": 0.54560988183655013,
+  "cost_final_mean": 0.53778107869487746,
+  "predicted_torque_error_rms_Nm": 0.7333334817409155
+}

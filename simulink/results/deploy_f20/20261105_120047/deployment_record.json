@@ -1,0 +1,47 @@
+{
+  "mode": "check",
+  "stamp": "20261105_120047",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\deploy_f20\\20261105_120047",
+  "production_model": "D:\\项目\\飞轮\\simulink\\models\\NearSpace_CMG_FlightControl.slx",
+  "archive": "D:\\项目\\飞轮\\simulink\\results\\online_authority\\torque_margin_feedback\\F20_B_60s\\B_closedloop.mat",
+  "git_sha": "a0f2406d9e3fb59b4068d3772212d1cbdee3a4ea",
+  "branch": "experiment/production-f20-integration",
+  "preflight": {
+    "path": "D:\\项目\\飞轮\\simulink\\models\\NearSpace_CMG_FlightControl.slx",
+    "exists": true,
+    "bytes": 3.93014E+6,
+    "checksum": "7E94EE202494A25C4D2753FD54C24F78",
+    "model": "NearSpace_CMG_FlightControl",
+    "stop_time": "60",
+    "fixed_step": ".001",
+    "solver": "ode4",
+    "solver_type": "Fixed-step",
+    "workspace_variables": [
+      "disturbance_schedule",
+      "native_control_period",
+      "native_controller_template",
+      "native_reference_bank",
+      "native_results_dir",
+      "reference_attitude_deg",
+      "reference_body_rate",
+      "reference_torque_nom",
+      "reference_window"
+    ],
+    "block_count": 30,
+    "template": {
+      "authority_mode": "online_predicted",
+      "authority_certificate_mode": "<absent>",
+      "authority_torque_shrink_ratio": -1,
+      "max_sqp_iterations": 4,
+      "dt_ctrl": 0.2,
+      "nx": 11,
+      "N": 22
+    },
+    "inner_mode": "<absent>",
+    "inner_period": -1,
+    "has_feedback_block": false,
+    "has_legacy_block": true,
+    "previous_command_sample_time": 0.2,
+    "cmg_present": true
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "model": "NearSpace_CMG_FlightControl",
+  "inner_period_s": 0.02,
+  "ticks": 101,
+  "fallbacks": 0,
+  "slew_saturated_ticks": 19,
+  "max_iterations_used": 4,
+  "compute_ms_mean": 0.72041584158415839,
+  "compute_ms_p95": 0.9295,
+  "compute_ms_max": 7.0497,
+  "over_20ms": 0
+}
