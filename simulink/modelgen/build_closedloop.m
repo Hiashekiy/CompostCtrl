@@ -1,4 +1,4 @@
-function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period,certificate_mode,torque_shrink_ratio,torque_inner_mode)
+function out=build_closedloop(duration,flight,enabled,case_name,authority_mode,run_simulation,sqp_iterations,control_period,certificate_mode,torque_shrink_ratio,torque_inner_mode,bank_path)
 % Torque-margin / torque-feedback ablation switches (production defaults: 0, 'legacy').
 %   torque_shrink_ratio : uniform relative shrink of the certified MPC torque box
 %   torque_inner_mode   : 'legacy'              -> 0.2 s open-loop surface allocation
@@ -15,6 +15,7 @@ if nargin<8,control_period=.2;end
 if nargin<9,certificate_mode='legacy';end
 if nargin<10,torque_shrink_ratio=0;end
 if nargin<11,torque_inner_mode='legacy';end
+if nargin<12,bank_path='';end
 assert(isscalar(torque_shrink_ratio) && isfinite(torque_shrink_ratio) && ...
  torque_shrink_ratio>=0 && torque_shrink_ratio<1,'torque_shrink_ratio must satisfy 0 <= alpha < 1');
 assert(ismember(torque_inner_mode,{'legacy','feedback_predictive'}), ...
@@ -25,7 +26,10 @@ assert(ismember(certificate_mode,{'legacy','analytic_box','analytic_full','shado
 assert(isscalar(control_period) && ismember(control_period,[.1 .2]),'control_period must be 0.1 or 0.2 s');
 assert(ismember(sqp_iterations,[4 5]),'max_sqp_iterations must be 4 or 5');
 root=repo_root;addpath(fullfile(root,'simulink','models'));addpath(fullfile(root,'simulink','hpipm'));hpipm_startup;
-bank=load(fullfile(root,'simulink','data','online_plan_bank.mat'));
+explicit_bank=~isempty(bank_path);
+if isempty(bank_path),bank_path=fullfile(root,'simulink','data','online_plan_bank.mat');end
+assert(~explicit_bank || ~isempty(case_name),'paper:case','Explicit banks require a case model');
+bank=load(bank_path);
 physical_disturbance=[bank.time(:) squeeze(bank.tau_d(:,1,:))'];
 if enabled,plant='Plant_6DOF_CMG';else,plant='Plant_6DOF_SurfaceOnly';end
 load_system(plant);
