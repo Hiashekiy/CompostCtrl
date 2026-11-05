@@ -1,0 +1,472 @@
+[
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P001A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P002B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P003A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P004B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P005A",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P006B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P007A",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P008B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P009A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P010B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P011A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P012B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P013A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P014B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P015A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P016B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P017A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P018B",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 56.397 时，在 'NearSpace_CMG_FlightControl_P018B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P019A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P020B",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 18.594 时，在 'NearSpace_CMG_FlightControl_P020B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P021A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P022B",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 20.519 时，在 'NearSpace_CMG_FlightControl_P022B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P023A",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 43.41 时，在 'NearSpace_CMG_FlightControl_SurfaceOnly_P023A/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P024B",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 30.544 时，在 'NearSpace_CMG_FlightControl_P024B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P025A",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 41.129 时，在 'NearSpace_CMG_FlightControl_SurfaceOnly_P025A/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P026B",
+    "status": "CONTROLLER_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P027A",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 41.129 时，在 'NearSpace_CMG_FlightControl_SurfaceOnly_P027A/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P028B",
+    "status": "CONTROLLER_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P029A",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 41.129 时，在 'NearSpace_CMG_FlightControl_SurfaceOnly_P029A/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P030B",
+    "status": "CONTROLLER_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P031A",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 40.782 时，在 'NearSpace_CMG_FlightControl_SurfaceOnly_P031A/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P032B",
+    "status": "CONTROLLER_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P061A",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 41.201 时，在 'NearSpace_CMG_FlightControl_SurfaceOnly_P061A/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1\\P062B",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 19.526 时，在 'NearSpace_CMG_FlightControl_P062B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1_baseline\\BASE1A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1_baseline\\BASE1B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1_baseline\\BASE2A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E1_baseline\\BASE2B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2\\P033B",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 51.209 时，在 'NearSpace_CMG_FlightControl_P033B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2\\P034B",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 51.209 时，在 'NearSpace_CMG_FlightControl_P034B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2\\P035B",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 18.594 时，在 'NearSpace_CMG_FlightControl_P035B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2\\P036B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2\\P037B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2\\P038B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2_followup\\F001B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2_followup\\F002B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2_followup\\F003B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2_followup\\F004B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2_followup\\F005B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E2_followup\\F006B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3\\P039B",
+    "status": "CONTROLLER_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3\\P040B",
+    "status": "CONTROLLER_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3\\P041B",
+    "status": "CONTROLLER_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3\\P042B",
+    "status": "CONTROLLER_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3\\P043B",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 18.594 时，在 'NearSpace_CMG_FlightControl_P043B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3\\P044B",
+    "status": "MODEL_DOMAIN_FAIL",
+    "error": "在 30.134 时，在 'NearSpace_CMG_FlightControl_P044B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3_followup\\F007B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3_followup\\F008B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3_followup\\F009B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3_followup\\F010B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3_followup\\F011B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E3_followup\\F012B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P045A",
+    "status": "INFRA_FAIL",
+    "error": "错误使用 assert\nCannot extend nonconstant disturbance beyond source support\n\n出错 make_paper_reference_bank (第 5 行)\nsource=squeeze(old.tau_d(:,1,:))';assert(max(abs(source-source(1,:)),[],'all')<1e-10 || s.duration<=old.time(end),'paper:disturbance','Cannot extend nonconstant disturbance beyond source support');\n\n出错 run_paper_suite (第 29 行)\n bank=make_paper_reference_bank(base,v,t.dts);path=fullfile(folder,'reference_bank.mat');save(path,'-struct','bank');m=build_paper_case(v,path,folder);"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P046B",
+    "status": "INFRA_FAIL",
+    "error": "错误使用 assert\nCannot extend nonconstant disturbance beyond source support\n\n出错 make_paper_reference_bank (第 5 行)\nsource=squeeze(old.tau_d(:,1,:))';assert(max(abs(source-source(1,:)),[],'all')<1e-10 || s.duration<=old.time(end),'paper:disturbance','Cannot extend nonconstant disturbance beyond source support');\n\n出错 run_paper_suite (第 29 行)\n bank=make_paper_reference_bank(base,v,t.dts);path=fullfile(folder,'reference_bank.mat');save(path,'-struct','bank');m=build_paper_case(v,path,folder);"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P047A",
+    "status": "INFRA_FAIL",
+    "error": "错误使用 assert\nCannot extend nonconstant disturbance beyond source support\n\n出错 make_paper_reference_bank (第 5 行)\nsource=squeeze(old.tau_d(:,1,:))';assert(max(abs(source-source(1,:)),[],'all')<1e-10 || s.duration<=old.time(end),'paper:disturbance','Cannot extend nonconstant disturbance beyond source support');\n\n出错 run_paper_suite (第 29 行)\n bank=make_paper_reference_bank(base,v,t.dts);path=fullfile(folder,'reference_bank.mat');save(path,'-struct','bank');m=build_paper_case(v,path,folder);"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P048B",
+    "status": "INFRA_FAIL",
+    "error": "错误使用 assert\nCannot extend nonconstant disturbance beyond source support\n\n出错 make_paper_reference_bank (第 5 行)\nsource=squeeze(old.tau_d(:,1,:))';assert(max(abs(source-source(1,:)),[],'all')<1e-10 || s.duration<=old.time(end),'paper:disturbance','Cannot extend nonconstant disturbance beyond source support');\n\n出错 run_paper_suite (第 29 行)\n bank=make_paper_reference_bank(base,v,t.dts);path=fullfile(folder,'reference_bank.mat');save(path,'-struct','bank');m=build_paper_case(v,path,folder);"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P049A",
+    "status": "INFRA_FAIL",
+    "error": "错误使用 assert\nCannot extend nonconstant disturbance beyond source support\n\n出错 make_paper_reference_bank (第 5 行)\nsource=squeeze(old.tau_d(:,1,:))';assert(max(abs(source-source(1,:)),[],'all')<1e-10 || s.duration<=old.time(end),'paper:disturbance','Cannot extend nonconstant disturbance beyond source support');\n\n出错 run_paper_suite (第 29 行)\n bank=make_paper_reference_bank(base,v,t.dts);path=fullfile(folder,'reference_bank.mat');save(path,'-struct','bank');m=build_paper_case(v,path,folder);"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P050B",
+    "status": "INFRA_FAIL",
+    "error": "错误使用 assert\nCannot extend nonconstant disturbance beyond source support\n\n出错 make_paper_reference_bank (第 5 行)\nsource=squeeze(old.tau_d(:,1,:))';assert(max(abs(source-source(1,:)),[],'all')<1e-10 || s.duration<=old.time(end),'paper:disturbance','Cannot extend nonconstant disturbance beyond source support');\n\n出错 run_paper_suite (第 29 行)\n bank=make_paper_reference_bank(base,v,t.dts);path=fullfile(folder,'reference_bank.mat');save(path,'-struct','bank');m=build_paper_case(v,path,folder);"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P051A",
+    "status": "INFRA_FAIL",
+    "error": "错误使用 assert\nCannot extend nonconstant disturbance beyond source support\n\n出错 make_paper_reference_bank (第 5 行)\nsource=squeeze(old.tau_d(:,1,:))';assert(max(abs(source-source(1,:)),[],'all')<1e-10 || s.duration<=old.time(end),'paper:disturbance','Cannot extend nonconstant disturbance beyond source support');\n\n出错 run_paper_suite (第 29 行)\n bank=make_paper_reference_bank(base,v,t.dts);path=fullfile(folder,'reference_bank.mat');save(path,'-struct','bank');m=build_paper_case(v,path,folder);"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P052B",
+    "status": "INFRA_FAIL",
+    "error": "错误使用 assert\nCannot extend nonconstant disturbance beyond source support\n\n出错 make_paper_reference_bank (第 5 行)\nsource=squeeze(old.tau_d(:,1,:))';assert(max(abs(source-source(1,:)),[],'all')<1e-10 || s.duration<=old.time(end),'paper:disturbance','Cannot extend nonconstant disturbance beyond source support');\n\n出错 run_paper_suite (第 29 行)\n bank=make_paper_reference_bank(base,v,t.dts);path=fullfile(folder,'reference_bank.mat');save(path,'-struct','bank');m=build_paper_case(v,path,folder);"
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P053A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P054B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P055A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P056B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P057A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P058B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P059A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4\\P060B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F013A",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F014B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F015A",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F016B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F017A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F018B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F019A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F020B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F021A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F022B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F023A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F024B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F025A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F026B",
+    "status": "SUCCESS",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F027A",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  },
+  {
+    "path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_paper_v2\\E4_followup\\F028B",
+    "status": "TRACKING_FAIL",
+    "error": ""
+  }
+]

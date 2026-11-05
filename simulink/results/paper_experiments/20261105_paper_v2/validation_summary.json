@@ -1,0 +1,8 @@
+{
+  "case_statuses": 94,
+  "raw_sim_outputs": 99,
+  "analysis_errors": 0,
+  "core_tests_passed": true,
+  "finalization_exit_code": "0",
+  "paper_acceptance_complete": false
+}

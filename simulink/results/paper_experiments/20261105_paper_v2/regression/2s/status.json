@@ -1,0 +1,7 @@
+{
+  "error": "",
+  "duration": 2,
+  "window_rmse_deg": 0.00017558459927780788,
+  "historical_60s_window_rmse_deg": 0.3092,
+  "within_005deg": false
+}

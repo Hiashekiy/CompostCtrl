@@ -1,0 +1,9 @@
+cmg,amplitude_deg,shortest_successful_reference_duration_s,interpretation
+0,10,10,minimum_success_tested_grid
+0,20,NaN,no_success_in_grid
+0,30,NaN,no_success_in_grid
+0,40,NaN,no_success_in_grid
+1,10,2,all_succeed_upper_bound_only
+1,20,5,minimum_success_tested_grid
+1,30,NaN,no_success_in_grid
+1,40,NaN,no_success_in_grid

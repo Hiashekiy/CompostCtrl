@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "trials": [
+    {
+      "initial_H": 115.47005016226339,
+      "final_H": 124.52331038461931,
+      "error": "",
+      "active_ticks": 0,
+      "compensation_residual": 0
+    },
+    {
+      "initial_H": 115.47005016226339,
+      "final_H": 74.280181045259567,
+      "error": "",
+      "active_ticks": 75,
+      "compensation_residual": 0
+    },
+    {
+      "initial_H": 115.47005016226339,
+      "final_H": 124.52331038461931,
+      "error": "",
+      "active_ticks": 0,
+      "compensation_residual": 0
+    }
+  ],
+  "gate_test": "trial3 raises controller qbar gate to infinity; physical model unchanged"
+}

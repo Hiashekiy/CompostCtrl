@@ -1,0 +1,5 @@
+{
+  "batch_finished": true,
+  "paper_acceptance_complete": false,
+  "note": "Every configured attempt recorded; inspect method acceptance, infrastructure/domain failures and missing deliverables separately."
+}
