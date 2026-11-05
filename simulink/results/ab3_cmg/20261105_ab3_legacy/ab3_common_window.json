@@ -1,0 +1,47 @@
+[
+  {
+    "task": "S00_pitch30",
+    "t_common_s": 50,
+    "rms_A_deg": 3.9429679553873025,
+    "rms_B_deg": 0.31189284926129845,
+    "reduction_pct": 92.089896423450341,
+    "t_end_A_s": 60,
+    "t_end_B_s": 60,
+    "aborted_A": 0,
+    "aborted_B": 0,
+    "alpha_absmax_A_deg": 22.3674005341843,
+    "alpha_absmax_B_deg": 24.260847006028797,
+    "polar_alpha_min_deg": -40,
+    "polar_alpha_max_deg": 40
+  },
+  {
+    "task": "S01_pitch_minus30",
+    "t_common_s": 38.198,
+    "rms_A_deg": 4.5304238693604155,
+    "rms_B_deg": 1.0927093986183254,
+    "reduction_pct": 75.8806365557007,
+    "t_end_A_s": 56.892,
+    "t_end_B_s": 38.198,
+    "aborted_A": 1,
+    "aborted_B": 1,
+    "alpha_absmax_A_deg": 25.67952459025695,
+    "alpha_absmax_B_deg": 40.000872982998231,
+    "polar_alpha_min_deg": -40,
+    "polar_alpha_max_deg": 40
+  },
+  {
+    "task": "S06_pitch30_roll20",
+    "t_common_s": 50,
+    "rms_A_deg": 4.6675554740417162,
+    "rms_B_deg": 0.40939619902757857,
+    "reduction_pct": 91.228894840041932,
+    "t_end_A_s": 60,
+    "t_end_B_s": 60,
+    "aborted_A": 0,
+    "aborted_B": 0,
+    "alpha_absmax_A_deg": 21.181922241263841,
+    "alpha_absmax_B_deg": 22.904767632825706,
+    "polar_alpha_min_deg": -40,
+    "polar_alpha_max_deg": 40
+  }
+]

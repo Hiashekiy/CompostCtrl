@@ -1,0 +1,263 @@
+{
+  "task": "S01_pitch_minus30",
+  "inner_mode": "legacy",
+  "duration_s": 60,
+  "stamp": "20261105_ab3",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\ab3_cmg\\20261105_ab3_legacy",
+  "runs": [
+    {
+      "task": "S01_pitch_minus30",
+      "arm": "A",
+      "samples": 56893,
+      "t_end": 56.892,
+      "attitude": {
+        "window_rms_deg": 4.92501328944263,
+        "window_peak_deg": 9.9783816798507772,
+        "full_rms_deg": 4.6436365812355982,
+        "full_peak_deg": 9.9783816798507772,
+        "window_rms_euler_deg": [
+          1.2882736958539656,
+          4.7435667305898965,
+          0.37987845067967058
+        ],
+        "full_rms_euler_deg": [
+          1.2661012893531824,
+          4.459969313747651,
+          0.35875440379466356
+        ],
+        "window_peak_euler_deg": [
+          2.5608676121447687,
+          10.095381894394649,
+          0.62757311814116523
+        ]
+      },
+      "torque": {
+        "cmd_rms_Nm": [
+          1.0631979468435133,
+          9.4114989436535552,
+          0.93853620300009954
+        ],
+        "err_rms_Nm": [
+          0.16997541451768083,
+          1.0280418807240479,
+          0.096023688073249139
+        ],
+        "window_err_rms_Nm": [
+          0.18131183889429819,
+          1.0966051132043244,
+          0.10242779320943823
+        ],
+        "err_peak_Nm": [
+          1.8714587142323973,
+          12.468144000641407,
+          1.4557684946146703
+        ],
+        "composite_err_rms_Nm": 0.60414741543607919,
+        "window_composite_err_rms_Nm": 0.644439862736329
+      },
+      "surface": {
+        "deflection_saturation_pct": [
+          42.829522085318054,
+          5.8284850508849946,
+          0.73471253053978525
+        ],
+        "rate_saturation_pct": [
+          2.8492081626913679,
+          3.2868718471516707,
+          2.2305028738157597
+        ],
+        "deflection_abs_max_rad": [
+          0.43633231299833419,
+          0.34906584799175289,
+          0.34906524826843549
+        ],
+        "rate_abs_max_radps": [
+          1.0471975511966,
+          1.0471975511966,
+          1.0471975511966
+        ]
+      },
+      "counts": {
+        "mpc_cycles": 285,
+        "fallbacks": 115,
+        "cycle_ms_mean": 42.550367719298244,
+        "cycle_ms_p95": 102.4494,
+        "cycle_ms_max": 628.8851,
+        "over_200ms": 1,
+        "inner_ticks": null,
+        "inner_fallbacks": 0
+      },
+      "fallbacks": 115,
+      "cmg": {
+        "present": false,
+        "torque_norm_rms_Nm": null,
+        "h_norm_rms": null,
+        "pitch_torque_rms_Nm": null,
+        "gimbal_rate_max_radps": null
+      },
+      "box": {
+        "margin_mean": [
+          0.64485431081502864,
+          0.42153032792883177,
+          0.58139763032916336
+        ],
+        "margin_min": [
+          -0.13719191192791438,
+          -0.031994103771058886,
+          -0.16194924204263522
+        ],
+        "outside_fraction": [
+          0.063276677271369056,
+          0.02109222575712302,
+          0.0579860439772907
+        ]
+      },
+      "wall_s": 18.0459432,
+      "aborted": true,
+      "error_message": "在 56.892 时，在 'NearSpace_CMG_FlightControl_SurfaceOnly_AB3_M30_A/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言",
+      "t_end_s": 56.892
+    },
+    {
+      "task": "S01_pitch_minus30",
+      "arm": "B",
+      "samples": 38199,
+      "t_end": 38.198,
+      "attitude": {
+        "window_rms_deg": 1.0927093986183254,
+        "window_peak_deg": 5.6592481859687327,
+        "full_rms_deg": 1.0927093986183254,
+        "full_peak_deg": 5.6592481859687327,
+        "window_rms_euler_deg": [
+          0.79051149483029071,
+          0.80791394354405721,
+          0.13649289714022236
+        ],
+        "full_rms_euler_deg": [
+          0.79051149483029071,
+          0.80791394354405721,
+          0.13649289714022236
+        ],
+        "window_peak_euler_deg": [
+          3.2620566451100044,
+          4.80839039829089,
+          0.57742626470218728
+        ]
+      },
+      "torque": {
+        "cmd_rms_Nm": [
+          1.3734725195563886,
+          8.6220716143429286,
+          1.8111751561866087
+        ],
+        "err_rms_Nm": [
+          0.34835911214755472,
+          0.724660682813386,
+          0.20916167800432486
+        ],
+        "window_err_rms_Nm": [
+          0.34835911214755472,
+          0.724660682813386,
+          0.20916167800432486
+        ],
+        "err_peak_Nm": [
+          2.5993570062891438,
+          7.207127724242401,
+          1.9992880629795589
+        ],
+        "composite_err_rms_Nm": 0.47966508585935286,
+        "window_composite_err_rms_Nm": 0.47966508585935286
+      },
+      "surface": {
+        "deflection_saturation_pct": [
+          41.278567501767057,
+          0,
+          0
+        ],
+        "rate_saturation_pct": [
+          5.1205528940548177,
+          13.40611010759444,
+          7.77769051545852
+        ],
+        "deflection_abs_max_rad": [
+          0.43633226088301041,
+          0.32080877029328841,
+          0.34903044900572
+        ],
+        "rate_abs_max_radps": [
+          1.0471975511966,
+          1.0471975511966,
+          1.0471975511966
+        ]
+      },
+      "counts": {
+        "mpc_cycles": 191,
+        "fallbacks": 56,
+        "cycle_ms_mean": 40.306142931937174,
+        "cycle_ms_p95": 96.5484,
+        "cycle_ms_max": 188.1428,
+        "over_200ms": 0,
+        "inner_ticks": null,
+        "inner_fallbacks": 0
+      },
+      "fallbacks": 56,
+      "cmg": {
+        "present": true,
+        "torque_norm_rms_Nm": 27.348991404804256,
+        "pitch_torque_rms_Nm": 26.08373496220948,
+        "torque_peak_Nm": 99.3716173976102,
+        "h_norm_rms": 120.71702024836611,
+        "gimbal_rate_max_radps": 0.99994191936289467,
+        "gamma_abs_max_rad": 3.2979330683034678
+      },
+      "box": {
+        "margin_mean": [
+          0.66049688803444384,
+          0.42225253676958591,
+          0.4023289443851244
+        ],
+        "margin_min": [
+          -0.19578492067865674,
+          0.059594695754356539,
+          -0.15807521637516619
+        ],
+        "outside_fraction": [
+          0.031414434932851648,
+          0,
+          0.14398282677557003
+        ]
+      },
+      "wall_s": 11.0297036,
+      "aborted": true,
+      "error_message": "在 38.198 时，在 'NearSpace_CMG_FlightControl_AB3_M30_B/Environment_And_Forces/Public_surrogate/Assert_alpha_domain' 中检测到断言",
+      "t_end_s": 38.198
+    }
+  ],
+  "comparison": {
+    "task": "S01_pitch_minus30",
+    "window_rms_A_deg": 4.92501328944263,
+    "window_rms_B_deg": 1.0927093986183254,
+    "window_peak_A_deg": 9.9783816798507772,
+    "window_peak_B_deg": 5.6592481859687327,
+    "full_rms_A_deg": 4.6436365812355982,
+    "full_rms_B_deg": 1.0927093986183254,
+    "reduction_pct": 77.813067003074238,
+    "pitch_torque_err_A_Nm": 1.0280418807240479,
+    "pitch_torque_err_B_Nm": 0.724660682813386,
+    "composite_err_A_Nm": 0.60414741543607919,
+    "composite_err_B_Nm": 0.47966508585935286,
+    "window_composite_err_A_Nm": 0.644439862736329,
+    "window_composite_err_B_Nm": 0.47966508585935286,
+    "defl_sat_A_pct": 42.829522085318054,
+    "defl_sat_B_pct": 41.278567501767057,
+    "rate_sat_A_pct": 3.2868718471516707,
+    "rate_sat_B_pct": 13.40611010759444,
+    "cmg_pitch_torque_rms_Nm": 26.08373496220948,
+    "cmg_h_norm_rms": 120.71702024836611,
+    "fallbacks_A": 115,
+    "fallbacks_B": 56,
+    "aborted_A": 1,
+    "aborted_B": 1,
+    "t_end_A_s": 56.892,
+    "t_end_B_s": 38.198
+  }
+}

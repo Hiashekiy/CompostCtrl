@@ -1,0 +1,263 @@
+{
+  "task": "S06_pitch30_roll20",
+  "inner_mode": "legacy",
+  "duration_s": 60,
+  "stamp": "20261105_ab3",
+  "output": "D:\\项目\\飞轮\\simulink\\results\\ab3_cmg\\20261105_ab3_legacy",
+  "runs": [
+    {
+      "task": "S06_pitch30_roll20",
+      "arm": "A",
+      "samples": 60001,
+      "t_end": 60,
+      "attitude": {
+        "window_rms_deg": 4.6675554740417162,
+        "window_peak_deg": 9.9909235289616181,
+        "full_rms_deg": 4.6635596990638728,
+        "full_peak_deg": 9.9909235289616181,
+        "window_rms_euler_deg": [
+          2.6051995791422464,
+          3.8898899915530838,
+          0.095295700241466413
+        ],
+        "full_rms_euler_deg": [
+          2.7326509691902188,
+          3.7858481319109578,
+          0.10159030528356791
+        ],
+        "window_peak_euler_deg": [
+          6.1997587062009289,
+          7.988247651780866,
+          0.17737727346914978
+        ]
+      },
+      "torque": {
+        "cmd_rms_Nm": [
+          1.0687704922717483,
+          8.6142548166491419,
+          0.99882093810486761
+        ],
+        "err_rms_Nm": [
+          0.18716033477109764,
+          0.86653594300726655,
+          0.13181510213151479
+        ],
+        "window_err_rms_Nm": [
+          0.20502339687804866,
+          0.94923881596249737,
+          0.14439591494258242
+        ],
+        "err_peak_Nm": [
+          1.8949990165137374,
+          12.532216131234515,
+          1.7451307852259492
+        ],
+        "composite_err_rms_Nm": 0.51745813118391915,
+        "window_composite_err_rms_Nm": 0.566844806288694
+      },
+      "surface": {
+        "deflection_saturation_pct": [
+          78.633689438509364,
+          0.50832486125231247,
+          0
+        ],
+        "rate_saturation_pct": [
+          3.6199396676722055,
+          4.1149314178097027,
+          3.2282795286745221
+        ],
+        "deflection_abs_max_rad": [
+          0.43633231299858066,
+          0.34906576711395881,
+          0.349013898583803
+        ],
+        "rate_abs_max_radps": [
+          1.0471975511966,
+          1.0471975511966,
+          1.0471975511966
+        ]
+      },
+      "counts": {
+        "mpc_cycles": 301,
+        "fallbacks": 0,
+        "cycle_ms_mean": 56.104192358803985,
+        "cycle_ms_p95": 90.8612,
+        "cycle_ms_max": 759.908,
+        "over_200ms": 1,
+        "inner_ticks": null,
+        "inner_fallbacks": 0
+      },
+      "fallbacks": 0,
+      "cmg": {
+        "present": false,
+        "torque_norm_rms_Nm": null,
+        "h_norm_rms": null,
+        "pitch_torque_rms_Nm": null,
+        "gimbal_rate_max_radps": null
+      },
+      "box": {
+        "margin_mean": [
+          0.61510907735243225,
+          0.38054193342393222,
+          0.47339789869160692
+        ],
+        "margin_min": [
+          -0.15554643680430819,
+          -0.049921803785254466,
+          -0.18761620356429576
+        ],
+        "outside_fraction": [
+          0.041649305844902583,
+          0.081665305578240366,
+          0.089998500024999581
+        ]
+      },
+      "wall_s": 23.1774129,
+      "aborted": false,
+      "error_message": "",
+      "t_end_s": 60
+    },
+    {
+      "task": "S06_pitch30_roll20",
+      "arm": "B",
+      "samples": 60001,
+      "t_end": 60,
+      "attitude": {
+        "window_rms_deg": 0.40939619902757857,
+        "window_peak_deg": 1.03384515915895,
+        "full_rms_deg": 0.48571723561514413,
+        "full_peak_deg": 1.0344133234934152,
+        "window_rms_euler_deg": [
+          0.076847430983910933,
+          0.39452292161340147,
+          0.13449777680567371
+        ],
+        "full_rms_euler_deg": [
+          0.086810840491702956,
+          0.46507989823084334,
+          0.16282211053691478
+        ],
+        "window_peak_euler_deg": [
+          0.25623715857958063,
+          1.0244293469972503,
+          0.34118658195542106
+        ]
+      },
+      "torque": {
+        "cmd_rms_Nm": [
+          1.2561423897882029,
+          5.74859725854164,
+          1.5614243865988744
+        ],
+        "err_rms_Nm": [
+          0.19355803139927238,
+          0.70732584545429,
+          0.17522088962313015
+        ],
+        "window_err_rms_Nm": [
+          0.21196999895298463,
+          0.77340529374486422,
+          0.19192283319649606
+        ],
+        "err_peak_Nm": [
+          1.9781209875468495,
+          5.9626277221370305,
+          2.7686879187629683
+        ],
+        "composite_err_rms_Nm": 0.43530714188455821,
+        "window_composite_err_rms_Nm": 0.47606771323376468
+      },
+      "surface": {
+        "deflection_saturation_pct": [
+          14.771420476325394,
+          0,
+          0
+        ],
+        "rate_saturation_pct": [
+          7.6398726687888541,
+          14.708088198530026,
+          6.6315561407309875
+        ],
+        "deflection_abs_max_rad": [
+          0.43633197429445247,
+          0.34894424731766138,
+          0.34898111282759431
+        ],
+        "rate_abs_max_radps": [
+          1.0471975511966,
+          1.0471975511966,
+          1.0471975511966
+        ]
+      },
+      "counts": {
+        "mpc_cycles": 301,
+        "fallbacks": 0,
+        "cycle_ms_mean": 51.865791029900343,
+        "cycle_ms_p95": 86.0366,
+        "cycle_ms_max": 204.7641,
+        "over_200ms": 1,
+        "inner_ticks": null,
+        "inner_fallbacks": 0
+      },
+      "fallbacks": 0,
+      "cmg": {
+        "present": true,
+        "torque_norm_rms_Nm": 27.644983328246347,
+        "pitch_torque_rms_Nm": 24.997827894971824,
+        "torque_peak_Nm": 99.609045626280519,
+        "h_norm_rms": 123.39178796022475,
+        "gimbal_rate_max_radps": 0.99998675842582951,
+        "gamma_abs_max_rad": 5.3951287577024329
+      },
+      "box": {
+        "margin_mean": [
+          0.6035718719431431,
+          0.40979507920278485,
+          0.41458254810239653
+        ],
+        "margin_min": [
+          -0.077237392973834751,
+          0.0084982016451080819,
+          -0.18678836547234934
+        ],
+        "outside_fraction": [
+          0.00833319444675922,
+          0,
+          0.13666438892685123
+        ]
+      },
+      "wall_s": 19.7569724,
+      "aborted": false,
+      "error_message": "",
+      "t_end_s": 60
+    }
+  ],
+  "comparison": {
+    "task": "S06_pitch30_roll20",
+    "window_rms_A_deg": 4.6675554740417162,
+    "window_rms_B_deg": 0.40939619902757857,
+    "window_peak_A_deg": 9.9909235289616181,
+    "window_peak_B_deg": 1.03384515915895,
+    "full_rms_A_deg": 4.6635596990638728,
+    "full_rms_B_deg": 0.48571723561514413,
+    "reduction_pct": 91.228894840041932,
+    "pitch_torque_err_A_Nm": 0.86653594300726655,
+    "pitch_torque_err_B_Nm": 0.70732584545429,
+    "composite_err_A_Nm": 0.51745813118391915,
+    "composite_err_B_Nm": 0.43530714188455821,
+    "window_composite_err_A_Nm": 0.566844806288694,
+    "window_composite_err_B_Nm": 0.47606771323376468,
+    "defl_sat_A_pct": 78.633689438509364,
+    "defl_sat_B_pct": 14.771420476325394,
+    "rate_sat_A_pct": 4.1149314178097027,
+    "rate_sat_B_pct": 14.708088198530026,
+    "cmg_pitch_torque_rms_Nm": 24.997827894971824,
+    "cmg_h_norm_rms": 123.39178796022475,
+    "fallbacks_A": 0,
+    "fallbacks_B": 0,
+    "aborted_A": 0,
+    "aborted_B": 0,
+    "t_end_A_s": 60,
+    "t_end_B_s": 60
+  }
+}
