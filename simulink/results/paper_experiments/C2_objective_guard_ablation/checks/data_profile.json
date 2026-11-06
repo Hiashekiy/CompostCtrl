@@ -1,0 +1,14 @@
+{
+  "cases": 2,
+  "new_simulations": 1,
+  "baseline": "paper_final/V2_C2_3",
+  "design": "one deterministic mechanism ablation, not independent repeated trials",
+  "plot_points": {
+    "guard_on": 13245,
+    "guard_off": 12582
+  },
+  "cycle_records": 602,
+  "candidate_step_records": 687,
+  "baseline_candidate_deltas_available": false,
+  "plots": "time curves, per-cycle steps and per-candidate scatter; no smoothing or inferential error bars"
+}

@@ -1,0 +1,6 @@
+{
+  "invocations": 1,
+  "requested_end_s": 60,
+  "model": "NearSpace_CMG_FlightControl_C2_OG_OFF",
+  "enforce_objective_decrease": false
+}

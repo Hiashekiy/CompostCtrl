@@ -1,0 +1,14 @@
+{
+  "window": "[12,24)s",
+  "accepted_increase_steps": 54,
+  "positive_delta_min": 0.0289380605773901,
+  "positive_delta_max": 73.3563042052133,
+  "positive_delta_sum": 749.3611966969837,
+  "iteration_histogram": {
+    "1": 14,
+    "2": 18,
+    "3": 15,
+    "4": 13
+  },
+  "interpretation": "Each delta compares a candidate to its own cycle/iteration nominal; sums across different windows are bookkeeping, not a global Lyapunov or cost-descent proof."
+}

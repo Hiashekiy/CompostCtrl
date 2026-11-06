@@ -1,0 +1,6 @@
+{
+  "passed": true,
+  "scenario": "C2 initial control tick",
+  "default_and_explicit_true_match_archived_controller": true,
+  "new_simulations": 0
+}

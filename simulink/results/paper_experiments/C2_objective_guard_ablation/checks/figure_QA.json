@@ -1,0 +1,33 @@
+{
+  "automated_passed": true,
+  "figures": [
+    {
+      "name": "Fig1_C2_three_maneuvers",
+      "axis_text_inside_canvas": true,
+      "font_pt": 9,
+      "PNG_dpi": 300,
+      "vector_PDF": true,
+      "no_smoothing": true,
+      "width_in": 7.2
+    },
+    {
+      "name": "Fig2_C2_second_maneuver_detail",
+      "axis_text_inside_canvas": true,
+      "font_pt": 9,
+      "PNG_dpi": 300,
+      "vector_PDF": true,
+      "no_smoothing": true,
+      "width_in": 7.2
+    },
+    {
+      "name": "Fig3_C2_SQP_diagnostics",
+      "axis_text_inside_canvas": true,
+      "font_pt": 9,
+      "PNG_dpi": 300,
+      "vector_PDF": true,
+      "no_smoothing": true,
+      "width_in": 7.2
+    }
+  ],
+  "visual_review": "Assistant inspected all three PNGs; moved delta-J legend outside data and limited Fig2 plotted samples to16\u201328s; grayscale previews retained."
+}

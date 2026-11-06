@@ -1,0 +1,3 @@
+method,complete_60s,truth_1ms,all_real_actuator_bounds_passed,logged_authority_certificates_passed,cmg_H_geometry_max_error,cmg_torque_geometry_max_error,cmg_geometry_passed,actual_alpha_min_deg,actual_alpha_max_deg,observed_model_domain_valid,guard_setting_matches_experiment
+guard_on,1,1,1,1,5.6843418860808e-14,5.6843418860808e-14,1,1.97662957571519,23.3019530264258,1,1
+guard_off,1,1,1,1,5.6843418860808e-14,5.6843418860808e-14,1,1.97692178328578,23.3017956369571,1,1

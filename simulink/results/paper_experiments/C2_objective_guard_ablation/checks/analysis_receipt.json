@@ -1,0 +1,13 @@
+{
+  "baseline_metrics_match": true,
+  "baseline_60_successful_qps_and_zero_accepted_reproduced": true,
+  "new_simulations": 1,
+  "max_sqp_iterations_unchanged": true,
+  "all_physical_constraints_passed": true,
+  "all_saved_certificates_passed": true,
+  "all_cmg_geometry_checks_passed": true,
+  "guard_off_was_used": true,
+  "complete_60s": true,
+  "baseline_candidate_deltas_recorded": false,
+  "plot_sampling": "native20ms-bin endpoints and every-column extrema; metrics use all native1ms samples"
+}

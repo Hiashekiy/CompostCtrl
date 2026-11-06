@@ -1,0 +1,15 @@
+{
+  "baseline": {
+    "model_sha256": "55a9c14bf0ebb1e19e4fa2603b1d53d19bb8a1ab142be063985c91d6055836ac",
+    "bank_sha256": "e84937c4c6dc99d526eb54df574477596d102d849c18acabaf74ff57f76eb19a",
+    "raw_sha256": "4849d9b3a568ba6c91a2d435d0a416b2433be00bc6101de3dc958b544d0df24e"
+  },
+  "baseline_case": "V2_C2_3",
+  "model_sha256": "982a2074af56922f4b6a70bafae32842065a549697120c70061226e765c3f856",
+  "bank_sha256": "e84937c4c6dc99d526eb54df574477596d102d849c18acabaf74ff57f76eb19a",
+  "native_online_rti_step_sha256": "fe0b6fa3e1c558eb3e134d4a8e052b5db924c38d3f701e92b171ab873be8b233",
+  "template_only_change": "enforce_objective_decrease=false",
+  "max_sqp_iterations": 4,
+  "stagnation_stop_unchanged": true,
+  "baseline_simulations_added": 0
+}

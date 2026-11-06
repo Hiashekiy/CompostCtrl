@@ -6,6 +6,15 @@ function [command,state,info]=native_online_rti_step(s,x,state,force_failure)
 if nargin<4,force_failure=false;end
 started=tic;N=double(s.N);nx=double(s.nx);s.nu_previous=state.nu_previous;
 max_sqp=online_max_sqp_iterations(s);
+enforce_objective_decrease=true;
+if isfield(s,'enforce_objective_decrease')
+ enforce_objective_decrease=s.enforce_objective_decrease;
+ assert(isscalar(enforce_objective_decrease) && ...
+  (islogical(enforce_objective_decrease) || isnumeric(enforce_objective_decrease)) && ...
+  ismember(enforce_objective_decrease,[false true]),'online:objectiveGuard', ...
+  'enforce_objective_decrease must be a scalar logical or 0/1');
+ enforce_objective_decrease=logical(enforce_objective_decrease);
+end
 if nx==11,E=@native_E_B;else,E=@native_E_A;end
 % Warm start: s.dts is non-uniform, so the plan is shifted in TIME, not by index.
 if isempty(state.U),U=zeros(double(s.nu),N);
@@ -18,12 +27,18 @@ info=struct('fallback',false,'fallback_reason','','status',0,'objective',inf, ..
  'objective_tol',0,'authority',[]);
 info.control_period_s=s.dt_ctrl;info.prediction_dts=s.dts;
 info.iteration_authority={};
+info.enforce_objective_decrease=enforce_objective_decrease;
+info.nominal_objective=NaN;info.physical_rejected_steps=0;
+info.objective_before_by_step=[];info.candidate_objective_by_step=[];
+info.objective_delta_by_step=[];info.objective_candidate_iteration=[];
+info.objective_step_accepted=[];info.objective_would_reject=[];
 try
  [X,U,a,ok]=try_rollout(U,true);
  assert(ok,'online:restoration','Unable to restore feasible nominal control');
  assert(verify_authority_candidate(s,x,X,U,a,s.flight_state),'online:restoration', ...
   'Restored nominal control failed independent certification');
  obj=objective(X);objective_tol=1e-9*max(1,abs(obj));info.objective_tol=objective_tol;
+ info.nominal_objective=obj;
  accepted=struct('X',X,'U',U,'a',a,'objective',obj);
  info.iteration_authority{end+1}=a;
  for iteration=1:max_sqp
@@ -62,15 +77,23 @@ try
   end
   if ~ok
    if isempty(message),message='full-step proposal failed certification';end
+   info.physical_rejected_steps=info.physical_rejected_steps+1;
    info.rejected_steps=info.rejected_steps+1;info.rejected=info.rejected_steps;
    info.early_stop_reason=['rejected: ' message];break;
   end
   Jt=objective(Xt);
-  if Jt>obj+objective_tol
+  info.objective_before_by_step(end+1)=obj;
+  info.candidate_objective_by_step(end+1)=Jt;
+  info.objective_delta_by_step(end+1)=Jt-obj;
+  info.objective_candidate_iteration(end+1)=iteration;
+  info.objective_step_accepted(end+1)=false;
+  info.objective_would_reject(end+1)=Jt>obj+objective_tol;
+  if enforce_objective_decrease && Jt>obj+objective_tol
    info.rejected_steps=info.rejected_steps+1;info.rejected=info.rejected_steps;
    info.early_stop_reason='objective_increase';break;
   end
   improvement=obj-Jt;scale=max(1,abs(obj));
+  info.objective_step_accepted(end)=true;
   X=Xt;U=Ut;a=at;obj=Jt;
   accepted=struct('X',X,'U',U,'a',a,'objective',obj);
   info.accepted_steps=info.accepted_steps+1;info.iteration_authority{end+1}=a;

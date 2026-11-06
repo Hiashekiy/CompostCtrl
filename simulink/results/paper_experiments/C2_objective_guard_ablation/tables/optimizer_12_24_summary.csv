@@ -1,0 +1,3 @@
+method,window_start_s,window_end_exclusive_s,control_cycles,qp_attempts,qp_successes,qp_failures,accepted_steps,would_objective_reject,accepted_increase_steps,physical_candidate_rejections,fallbacks,sqp_iterations_mean,sqp_iterations_max,objective_delta_sum_observed,objective_stagnation_stops
+guard_on,12,24,60,60,60,0,0,60,0,0,0,1,1,NaN,0
+guard_off,12,24,60,147,147,0,147,54,54,0,0,2.45,4,-1167.98074565875,54
