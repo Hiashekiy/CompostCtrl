@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "files": 597,
+  "bytes": 6749741881,
+  "source_and_retained_SHA256_match": true,
+  "protected_old_raw_excluded": 99,
+  "tracked_files_excluded": true,
+  "retained_archive": "simulink/results/paper_final",
+  "new_simulations": 0,
+  "free_bytes_before": 10817101824
+}

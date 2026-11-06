@@ -1,0 +1,2 @@
+# Keep hash-bound relocation records byte-identical across Git checkouts.
+* -text
