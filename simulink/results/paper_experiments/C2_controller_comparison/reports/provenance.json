@@ -1,0 +1,35 @@
+{
+  "methods": [
+    "MPC + CMG",
+    "PID + CMG"
+  ],
+  "source": {
+    "PID": {
+      "raw": "simulink/results/paper_final/E2_Controller_Comparison/raw/V2_C2_1/sim_output.mat",
+      "raw_sha256": "12d9de58541d222c3690c699c3f5ea93011f350d8f1e20180822c1d5d94686f7",
+      "reference_bank": "simulink/results/paper_final/E2_Controller_Comparison/scenarios/V2_C2_1/reference_bank.mat",
+      "reference_bank_sha256": "8a22a7bc75c97c27e037f2b128249b6dd23f46778a0f6e61dc28c563041c99df",
+      "time_dataset": "#refs#/1h/tout",
+      "states_dataset": "#refs#/Dh",
+      "native_samples": 60001,
+      "original_rmse_deg": 1.048118957688327,
+      "recomputed_rmse_deg": 1.0481189576883303
+    },
+    "MPC": {
+      "raw": "simulink/results/paper_experiments/C2_objective_guard_ablation/raw/sim_output.mat",
+      "raw_sha256": "47a58acf6f60a0f8a869685e56aeb2e360a3bbfae44239b1a88673e58cf51188",
+      "reference_bank": "simulink/results/paper_experiments/C2_objective_guard_ablation/config/reference_bank.mat",
+      "reference_bank_sha256": "e84937c4c6dc99d526eb54df574477596d102d849c18acabaf74ff57f76eb19a",
+      "time_dataset": "#refs#/1h/tout",
+      "states_dataset": "#refs#/Dh",
+      "native_samples": 60001,
+      "original_rmse_deg": 0.0631106959013685,
+      "recomputed_rmse_deg": 0.06311069590131817
+    }
+  },
+  "new_simulations": 0,
+  "sampling": "Native1ms metrics;20ms bins retain endpoints and every-column extrema; no smoothing",
+  "matched_reference": true,
+  "native_metrics_match_saved": true,
+  "note": "MPC uses latest completed C2 result; PID uses archived frozen PID, no unload; old guard-on MPC is not plotted."
+}
