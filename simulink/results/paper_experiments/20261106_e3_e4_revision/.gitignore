@@ -1,0 +1,6 @@
+# Preserve raw simulation data locally; version only scripts and compact evidence.
+*.mat
+cache/
+E3/cases/*/*.csv
+tables/*_M_minus_Z.csv
+*.log

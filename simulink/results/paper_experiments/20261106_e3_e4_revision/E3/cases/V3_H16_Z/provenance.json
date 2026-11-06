@@ -1,0 +1,17 @@
+{
+  "case_id": "V3_H16_Z",
+  "baseline_git_sha": "66c9d5ce98c0e955c16191cf390133c3ca7ad653",
+  "controller_audit": "reports/E3_controller_audit.json",
+  "config_sha256": "0a7323f7310eca54014ee90a5024e098786867068251b808e0f8a7c389f15ff5",
+  "model_sha256": "723a72885a08b92734db28e8cca1e1f0809c472bdc13fb13f4988ef74a2a06f7",
+  "bank_sha256": "28f96e4dda14b6f6646ad5c43bea8e4357471b5edd8e5ca905b5df735340697c",
+  "entrypoint_sha256": {
+    "simulink/paper/v3/report_e3_horizon_pairs.m": "753f538f29566cecc0255752d2d86b4596c3c84181ec98040b03c421d9d3f969",
+    "simulink/paper/v3/run_e3_horizon_pairs.m": "5e9789780a0ca81f6c14c246d3204f6a3740f8f6d275e18777dfed2c9d5975c8",
+    "simulink/paper/v3/v3_e3_evidence.m": "90b41c52b24ad07382a56bc8d12db2e1220690acfe72e00bfc7322b628ed0079",
+    "simulink/paper/v3/v3_report_e3.m": "99a458b0f2e0b0a5e42f54624a4c2327ca446883e33441663646786e80d13deb",
+    "simulink/paper/v3/report_e4_1deg.m": "9b3acb216431f2c7299d3f7143b08ba9b1fd25dcf80c70b053dc234390dfe0c2",
+    "simulink/paper/v3/revision_controller_audit.m": "e549ec047899539a44459d15cfe8f6d7d1958ef7a743e9cce5f72ac2834c2123"
+  },
+  "raw_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e3_e4_revision\\E3\\cases\\V3_H16_Z\\sim_output.mat"
+}

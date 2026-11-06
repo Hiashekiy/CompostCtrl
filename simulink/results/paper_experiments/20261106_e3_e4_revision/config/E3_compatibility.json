@@ -1,0 +1,65 @@
+{
+  "compatible": true,
+  "sources": [
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_build.m",
+      "sha256": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_reference.m",
+      "sha256": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\native_mpc_sfun.m",
+      "sha256": "954b6ce6c3ca2271433ecb44424322333e49b254ef89acac22131b04a807e140"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\native_online_rti_step.m",
+      "sha256": "95d36b298a643bfd1e9ffcbab39dc60868d8398e7f9937f99c53d423c5e3e5c3"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\online_torque_feedback_step.m",
+      "sha256": "10c13fd513eef41a0c9a12264d12d40a4b6b595016bcf2f591baecf33e126bdb"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\bounded_control_allocation.m",
+      "sha256": "294feed0442a9bb55243688946a7ce0277397c136cc36d2950df6ac4f39d3180"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\data\\vehicle_params.m",
+      "sha256": "568424167007f809fc8875dc3e4de028fd14c4547542542eecec5c3e2fdce758"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\paper\\v3\\v3_reference.m",
+      "sha256": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\modelgen\\build_closedloop.m",
+      "sha256": "fff745048fcedcb4722cf49e3c501f70ac86ffa7313124834f966b1af3788df2"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\mex\\ocp_qp_create.mexw64",
+      "sha256": "727f21e88243b097cedde86f3696a9ce0cd7c9ff97395ef62f578706009efba9"
+    },
+    {
+      "path": "D:\\项目\\飞轮\\simulink\\hpipm\\mex\\ocp_qp_solver_solve.mexw64",
+      "sha256": "61e7600ac0ffef8d248a04edbeeb5eb8d3461294fef06dc029f1b97440759fa1"
+    }
+  ],
+  "reused_ids": [
+    "V3_S",
+    "V3_L",
+    "V3_Z"
+  ],
+  "bank_checks": [
+    "x0",
+    "time",
+    "q_ref",
+    "omega_ref",
+    "tau_d"
+  ],
+  "physical_step_s": 0.001,
+  "inner_step_s": 0.02,
+  "upper_step_s": 0.2,
+  "sqp_limit": 4
+}

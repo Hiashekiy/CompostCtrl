@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "E3_new_raw_simulations": 7,
+  "E3_reused": 3,
+  "E4_new_simulations": 0,
+  "E4_reused": 27,
+  "independent_pairs": [
+    {
+      "H": 5.0,
+      "samples_per_case": 60001,
+      "independent_migration_2deg_s": 31.643,
+      "prepreview_max_delta_gamma_deg": 0.0,
+      "passed": true
+    },
+    {
+      "H": 8.0,
+      "samples_per_case": 60001,
+      "independent_migration_2deg_s": 28.322,
+      "prepreview_max_delta_gamma_deg": 0.0,
+      "passed": true
+    },
+    {
+      "H": 12.0,
+      "samples_per_case": 60001,
+      "independent_migration_2deg_s": 24.397,
+      "prepreview_max_delta_gamma_deg": 0.0,
+      "passed": true
+    },
+    {
+      "H": 16.0,
+      "samples_per_case": 60001,
+      "independent_migration_2deg_s": 20.44,
+      "prepreview_max_delta_gamma_deg": 0.0,
+      "passed": true
+    },
+    {
+      "H": 23.2,
+      "samples_per_case": 60001,
+      "independent_migration_2deg_s": 13.49,
+      "prepreview_max_delta_gamma_deg": 0.0,
+      "passed": true
+    }
+  ],
+  "E4_core_metrics_match_sources": true,
+  "entrypoint_sha256": {
+    "simulink/paper/v3/report_e3_horizon_pairs.m": "753f538f29566cecc0255752d2d86b4596c3c84181ec98040b03c421d9d3f969",
+    "simulink/paper/v3/run_e3_horizon_pairs.m": "5e9789780a0ca81f6c14c246d3204f6a3740f8f6d275e18777dfed2c9d5975c8",
+    "simulink/paper/v3/v3_e3_evidence.m": "90b41c52b24ad07382a56bc8d12db2e1220690acfe72e00bfc7322b628ed0079",
+    "simulink/paper/v3/v3_report_e3.m": "99a458b0f2e0b0a5e42f54624a4c2327ca446883e33441663646786e80d13deb",
+    "simulink/paper/v3/report_e4_1deg.m": "9b3acb216431f2c7299d3f7143b08ba9b1fd25dcf80c70b053dc234390dfe0c2",
+    "simulink/paper/v3/revision_controller_audit.m": "e549ec047899539a44459d15cfe8f6d7d1958ef7a743e9cce5f72ac2834c2123"
+  }
+}

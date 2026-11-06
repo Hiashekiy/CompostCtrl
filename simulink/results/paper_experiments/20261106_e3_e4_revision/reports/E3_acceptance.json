@@ -1,0 +1,130 @@
+{
+  "expected": 10,
+  "actual": 10,
+  "new_simulations": 7,
+  "reused_cases": 3,
+  "complete": true,
+  "sources": [
+    {
+      "id": "V3_S",
+      "horizon_s": 5,
+      "task": "M",
+      "reused": true,
+      "source_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_redesign_v1\\E3\\cases\\V3_S",
+      "config_sha256": "0a45c968b085e380112056afec954056f0261a71a0d46ba4494f70b50ebfc4a6",
+      "metrics_sha256": "fd4f5b17c48c2e89b62be2a4ca88b7d557c392a8bf77c080dd012fd51764a353",
+      "status": "TRACKING_FAIL",
+      "complete": true
+    },
+    {
+      "id": "V3_H05_Z",
+      "horizon_s": 5,
+      "task": "Z",
+      "reused": false,
+      "source_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e3_e4_revision\\E3\\cases\\V3_H05_Z",
+      "config_sha256": "30c6b0fb2c4310bfc12e66d7ccfa1a9fe1150f8c5ab753ec94206192421e4a7b",
+      "metrics_sha256": "7e48295acb85875f9adb993348fa2bb10aa7f1b32ce2498ecc8ef7c37fad8048",
+      "status": "SUCCESS",
+      "complete": true
+    },
+    {
+      "id": "V3_H08_M",
+      "horizon_s": 8,
+      "task": "M",
+      "reused": false,
+      "source_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e3_e4_revision\\E3\\cases\\V3_H08_M",
+      "config_sha256": "2f8eb3eca234e8ab57787873ae20dd04b851871d195ac97ce55cfccb4f3b2a16",
+      "metrics_sha256": "78a154391abb05f1967c442f8b2c2e1df59b804c30823086edf360522604d3f6",
+      "status": "SUCCESS",
+      "complete": true
+    },
+    {
+      "id": "V3_H08_Z",
+      "horizon_s": 8,
+      "task": "Z",
+      "reused": false,
+      "source_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e3_e4_revision\\E3\\cases\\V3_H08_Z",
+      "config_sha256": "0552bdbfa9beba768092cbebe9d48b4bbcfe576c7885e160e20e1fb828206ec1",
+      "metrics_sha256": "905147ff2ce78f15409c95baa4f54ae13d0b97647abaeb406d9918bd07e38438",
+      "status": "SUCCESS",
+      "complete": true
+    },
+    {
+      "id": "V3_H12_M",
+      "horizon_s": 12,
+      "task": "M",
+      "reused": false,
+      "source_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e3_e4_revision\\E3\\cases\\V3_H12_M",
+      "config_sha256": "918687caad5f3c40f7e8018131c83d894d653a3895c1e67d611c49c14387c910",
+      "metrics_sha256": "9add71d871b8e08bab2444d04797bdc07e38796ae26448f19388a7b6858ee9ad",
+      "status": "SUCCESS",
+      "complete": true
+    },
+    {
+      "id": "V3_H12_Z",
+      "horizon_s": 12,
+      "task": "Z",
+      "reused": false,
+      "source_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e3_e4_revision\\E3\\cases\\V3_H12_Z",
+      "config_sha256": "84f6a56ae35bf6ecbf39fdaad6f05b263a8a31fac217761614ec6cf54ee4f3e6",
+      "metrics_sha256": "9da2fb2a41df086f41d2cdf7f02f04062281f71d10942d24a1a44fb962f2dec8",
+      "status": "SUCCESS",
+      "complete": true
+    },
+    {
+      "id": "V3_H16_M",
+      "horizon_s": 16,
+      "task": "M",
+      "reused": false,
+      "source_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e3_e4_revision\\E3\\cases\\V3_H16_M",
+      "config_sha256": "ed047269dc95f4293b078a906118a71c75fb1039b0dc7b21c20adb3e65d2cb70",
+      "metrics_sha256": "0e02c97502f0c2e0bfbc491f037267447ed223f155846e2584f4915da686ac3c",
+      "status": "SUCCESS",
+      "complete": true
+    },
+    {
+      "id": "V3_H16_Z",
+      "horizon_s": 16,
+      "task": "Z",
+      "reused": false,
+      "source_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e3_e4_revision\\E3\\cases\\V3_H16_Z",
+      "config_sha256": "0a7323f7310eca54014ee90a5024e098786867068251b808e0f8a7c389f15ff5",
+      "metrics_sha256": "7a386eba6dfee9340a4fb5e2d5e383cef41c2364c093c4d23ba24ea41409fdfb",
+      "status": "SUCCESS",
+      "complete": true
+    },
+    {
+      "id": "V3_L",
+      "horizon_s": 23.2,
+      "task": "M",
+      "reused": true,
+      "source_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_redesign_v1\\E3\\cases\\V3_L",
+      "config_sha256": "377b2cf66bc1e5bd61b2b3a0448f49f1be9bd73626f4bf9624261d200edb441b",
+      "metrics_sha256": "95de1ca68a8a77ba9fccf560530588d25d725b696b389f5f64064611b4706d14",
+      "status": "SUCCESS",
+      "complete": true
+    },
+    {
+      "id": "V3_Z",
+      "horizon_s": 23.2,
+      "task": "Z",
+      "reused": true,
+      "source_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_redesign_v1\\E3\\cases\\V3_Z",
+      "config_sha256": "197f841688ee65deaa2b1e675ce5a68819a12cd507337b43d5654ffae1146ad9",
+      "metrics_sha256": "33de31ee6eb3eccf8b4d3cf378b5b419dfbace4dc454bbb6283e5ca70e4ab80f",
+      "status": "SUCCESS",
+      "complete": true
+    }
+  ],
+  "prepreview_consistent": true,
+  "preposition_evidence_by_horizon": [
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "invalid_ids": [],
+  "historical_onset8_excluded": true,
+  "sustained_threshold_definition": "strictly > threshold for >=0.6s, entirely before35s; onset is first crossing, no preview censoring"
+}
