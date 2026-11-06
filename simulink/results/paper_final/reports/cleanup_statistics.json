@@ -1,12 +1,65 @@
 {
-  "state": "planned_backed_up",
+  "state": "completed",
   "before_files": 109,
   "before_bytes": 210296626,
   "backup_bytes": 79666688,
   "backup_sha256": "5043a77848b0cb0840dfe1dda644ab7b15ad33d21ffd37c48eb33ca579b3ab98",
   "raw_MAT_deleted": 0,
   "protected_baselines_deleted": 0,
-  "final_dataset_files": 3321,
-  "final_dataset_bytes": 7539040946,
-  "free_bytes_before_cleanup": 10624901120
+  "inventory_before_cleanup": {
+    "simulink/results/paper_experiments/20261105_redesign_v1": {
+      "files": 5557,
+      "bytes": 12078923638
+    },
+    "simulink/results/paper_experiments/20261106_e3_e4_revision": {
+      "files": 173,
+      "bytes": 471482470
+    },
+    "simulink/results/paper_experiments/20261106_e2_unload_revision": {
+      "files": 222,
+      "bytes": 534023701
+    },
+    "simulink/results/paper_final": {
+      "files": 3343,
+      "bytes": 7631196477
+    },
+    "simulink/results/paper_archive": {
+      "files": 2,
+      "bytes": 79666694
+    }
+  },
+  "inventory_scope": "Three source batches, paper_final and paper_archive; excludes four rolling cleanup/verification receipts.",
+  "after_files": 0,
+  "after_bytes": 0,
+  "deleted_files": 109,
+  "deleted_bytes": 210296626,
+  "free_bytes_after_cleanup": 10819014656,
+  "pre_cleanup_git_commit": "175a1852e8019415f73464791ef1822c2ca9dc32",
+  "inventory_after_cleanup": {
+    "simulink/results/paper_experiments/20261105_redesign_v1": {
+      "files": 5557,
+      "bytes": 12078923638
+    },
+    "simulink/results/paper_experiments/20261106_e3_e4_revision": {
+      "files": 145,
+      "bytes": 471425444
+    },
+    "simulink/results/paper_experiments/20261106_e2_unload_revision": {
+      "files": 190,
+      "bytes": 533958516
+    },
+    "simulink/results/paper_final": {
+      "files": 3304,
+      "bytes": 7421052368
+    },
+    "simulink/results/paper_archive": {
+      "files": 2,
+      "bytes": 79666694
+    }
+  },
+  "planning_snapshot": {
+    "final_dataset_files": 3321,
+    "final_dataset_bytes": 7539040946,
+    "free_bytes_before_cleanup": 10624901120
+  }
 }
