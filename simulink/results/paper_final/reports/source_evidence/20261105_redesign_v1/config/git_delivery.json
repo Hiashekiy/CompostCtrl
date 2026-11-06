@@ -1,0 +1,12 @@
+{
+  "native_outputs_retained_locally": 338,
+  "auxiliary_runs": 89,
+  "upstream_baseline": "f60ef63b3fb5962598dc7243861da90e5a0740ba",
+  "formal_runs": 249,
+  "time": "2026-11-06T01:45:10.0021933+08:00",
+  "independent_reanalysis_cases": 249,
+  "implementation_commit": "7df5d979bd4cfde87b03bdb7aec338b368c44e1c",
+  "branch": "codex/paper-experiments",
+  "results_commit_contains": "Compact configuration/metrics/provenance JSON, summary CSV, PNG/PDF and Chinese reports; large native MAT and complete trajectories remain local.",
+  "final_receipt_exit_code": 0
+}

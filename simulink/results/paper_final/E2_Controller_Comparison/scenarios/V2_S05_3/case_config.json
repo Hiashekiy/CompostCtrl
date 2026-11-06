@@ -1,0 +1,105 @@
+{
+  "id": "V2_S05_3",
+  "group": "E2",
+  "pair_id": "V2_S05",
+  "method": "MPC",
+  "cmg": true,
+  "profile": "step",
+  "amplitude": 5,
+  "onset": 8,
+  "transition": 5,
+  "duration": 60,
+  "frequency": 0,
+  "dts": [
+    0.2,
+    0.2,
+    0.2,
+    0.2,
+    0.2,
+    0.2,
+    0.5,
+    0.5,
+    0.5,
+    0.5,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "events": [],
+  "gamma0": [],
+  "pid": {
+    "kp": [
+      587.99999999999989,
+      4164.9999999999991,
+      4409.9999999999991
+    ],
+    "ki": [
+      11.759999999999998,
+      83.299999999999983,
+      88.199999999999989
+    ],
+    "kd": [
+      1411.1999999999998,
+      9996,
+      10584
+    ],
+    "imax": 0.3,
+    "lambda_delta": 1E-8,
+    "lambda_nu": 1E-7,
+    "lambda_change": 1E-7,
+    "Wa": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "Wc": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "unload": false,
+    "hon": 80,
+    "hoff": 60,
+    "kh": 0.1,
+    "qmin": 1,
+    "residual_gate": 2,
+    "unload_tau_cap": 2,
+    "unload_slew": 0.2,
+    "unload_compensation_tolerance": 0.25
+  },
+  "masked": false,
+  "phase": "formal"
+}

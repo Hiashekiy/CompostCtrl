@@ -1,0 +1,94 @@
+{
+  "id": "V1_0100_0020_B",
+  "group": "E1",
+  "pair_id": "V1_0100_0020",
+  "arm": "B",
+  "pitch_step_deg": 10,
+  "onset_s": 8,
+  "reference_profile": "step",
+  "reference_q0": [
+    0.99349030066954369,
+    -0.0045946523353322683,
+    0.10523483986500215,
+    0.043376723297693424
+  ],
+  "initial_state": [
+    0.99349030066954369,
+    -0.0045946523353322674,
+    0.10523483986500214,
+    0.043376723297693424,
+    0,
+    -0.0043273206504133811,
+    -6.9388939039072284E-15,
+    0,
+    0,
+    0,
+    0
+  ],
+  "reference_initial_pitch_deg": 12.09294636940445,
+  "absolute_pitch_min_deg": 11.978726247023172,
+  "absolute_pitch_max_deg": 22.282913888947128,
+  "actual_end_s": 60,
+  "status": "SUCCESS",
+  "settled_criterion_pass": true,
+  "source_git_sha": "f60ef63b3fb5962598dc7243861da90e5a0740ba",
+  "model_sha256": "9a2b85d5ef1d59316dc109c1b6aeb42836e7c8a4e6374a84e0228404c4ff3efa",
+  "bank_sha256": "ad20ceecc2a043a9b79f237efc7961623df3d17ed2bc61f8ffdd892844827236",
+  "controller_config": {},
+  "wall_time_s": 18.2776826,
+  "gamma0": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "H0": [
+    -7.1054273576010019E-15,
+    -9.1848509936051487E-15,
+    0
+  ],
+  "A0": [
+    [
+      -28.867520810803747,
+      -1.7676258480135209E-15,
+      28.867520810803747,
+      5.3028775440405625E-15
+    ],
+    [
+      -0,
+      -28.867520810803747,
+      -3.5352516960270418E-15,
+      28.867520810803747
+    ],
+    [
+      40.824823848215345,
+      40.824823848215345,
+      40.824823848215345,
+      40.824823848215345
+    ]
+  ],
+  "sigma_min0": 40.824839442726223,
+  "frame_angle_abs_peak_rad": 3.11718491732876,
+  "frame_speed_abs_peak_radps": 0.99999977208306612,
+  "frame_acceleration_abs_peak_radps2": 3,
+  "cmg_torque_norm_peak_Nm": 147.74979071914467,
+  "cmg_torque_norm_rms_Nm": 33.6053704372307,
+  "physical_bounds_pass": true,
+  "truth_period_pass": true,
+  "upper_period_pass": true,
+  "inner_period_pass": true,
+  "sqp_limit_observed": 4,
+  "inner_fallbacks": 0,
+  "period_audit_policy": "All internal intervals must equal nominal period; only terminal output may be a shorter positive interval",
+  "truth_last_interval_s": 0.00099999999999766942,
+  "surface_angle_saturation_pct": [
+    12.353127447875869,
+    0,
+    0.88331861135647738
+  ],
+  "surface_rate_saturation_pct": [
+    2.4882918618023031,
+    2.1332977783703604,
+    1.3449775837069382
+  ]
+}

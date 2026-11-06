@@ -1,0 +1,8 @@
+{
+  "status": "SUCCESS",
+  "config_hash": "412dff34c2d0932a30095ed343a37ac89d851cc6610283f2751cc346da6d8d08",
+  "wall_time_s": 66.6180479,
+  "error": "",
+  "actual_end_s": 60,
+  "independent_reanalysis": true
+}

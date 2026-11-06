@@ -1,0 +1,23 @@
+{
+  "counts": {
+    "E1_CMG_Benefit": 144,
+    "E2_Controller_Comparison": 16,
+    "E3_Prediction_Horizon": 10,
+    "E4_Frequency_Tracking": 27
+  },
+  "E1_representatives": [
+    "V1_0050_0020_A",
+    "V1_0050_0020_B",
+    "V1_0075_0020_A",
+    "V1_0075_0020_B",
+    "V1_0250_0200_A",
+    "V1_0250_0200_B"
+  ],
+  "E1_domain_failure_count": 0,
+  "E1_boundary_rule": "Highest recorded alpha, not a fabricated domain failure; compare against archived polar range",
+  "E2_excluded": "fixed2Nm unload; duplicate old unload S/C curves; old M1/M2",
+  "E3_excluded": "onset8s historical horizon studies",
+  "E4_excluded": "3/5degree data",
+  "simulation_count_added": 0,
+  "source_git_commit": "08b2053bc0b826c9b245110802812903947d3c29"
+}

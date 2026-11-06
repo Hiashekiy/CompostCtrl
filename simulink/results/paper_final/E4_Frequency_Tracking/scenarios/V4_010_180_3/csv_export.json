@@ -1,0 +1,7 @@
+{
+  "native_output": "sim_output.mat",
+  "native_period_s": 0.001,
+  "derived_CSV_period_s": 0.02,
+  "all_column_extrema_and_final_sample_preserved": true,
+  "performance_metrics_use_full_native_samples": true
+}

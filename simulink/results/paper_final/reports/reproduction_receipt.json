@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "raw_cases": 197,
+  "new_simulations": 0,
+  "MATLAB_version": "24.1.0.2537033 (R2024a)",
+  "metric_tolerance": 1E-8,
+  "physical_alpha_domain_deg": [
+    -40,
+    40
+  ],
+  "analysis_only": true,
+  "original_metrics_unchanged": true
+}

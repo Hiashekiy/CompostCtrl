@@ -1,0 +1,10 @@
+amplitude_deg,A_shortest_tested_s,B_shortest_tested_s,A_observed,B_observed,A_minus_B_s
+5,2,2,1,1,0
+7.5,6,2,1,1,4
+10,8,2,1,1,6
+12.5,16,2,1,1,14
+15,20,4,1,1,16
+17.5,NaN,4,0,1,NaN
+20,NaN,4,0,1,NaN
+22.5,NaN,6,0,1,NaN
+25,NaN,6,0,1,NaN

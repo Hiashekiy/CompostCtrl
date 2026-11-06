@@ -1,0 +1,3 @@
+# 原始实验数据
+
+本地已复制144例真实sim_output.mat及原诊断MAT，按工况ID分目录。文件位置与SHA见根目录manifest.csv及reports/file_sha256.csv。大型MAT不纳入Git；此处不是仅有CSV的占位数据集，跨机器使用时须同步清单对应的原始文件。

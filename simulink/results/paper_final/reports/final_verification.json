@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "formal_cases": 197,
+  "group_counts": {
+    "E1_CMG_Benefit": 144,
+    "E2_Controller_Comparison": 16,
+    "E3_Prediction_Horizon": 10,
+    "E4_Frequency_Tracking": 27
+  },
+  "native_metric_checks_passed": true,
+  "payload_copy_hashes_passed": true,
+  "recorded_case_config_hashes_passed": true,
+  "recorded_controller_source_hashes_passed": true,
+  "all_local_paths_exist": true,
+  "E3_pair_times_match_original": true,
+  "hashed_files": 3303,
+  "hashed_bytes": 7420585396,
+  "new_simulations": 0,
+  "figures": 19
+}

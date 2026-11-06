@@ -1,0 +1,5 @@
+# Preserve original evidence bytes and SHA256 across Git checkouts.
+* -text
+*.pdf binary
+*.png binary
+*.raw binary

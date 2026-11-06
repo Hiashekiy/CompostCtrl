@@ -1,0 +1,70 @@
+{
+  "E1": {
+    "expected": 144,
+    "status_count": 144,
+    "analyzed_count": 144,
+    "matrix_completed": true,
+    "infra_or_analysis_failures": 0,
+    "paper_acceptance_complete": true
+  },
+  "E2": {
+    "expected": 21,
+    "status_count": 21,
+    "analyzed_count": 21,
+    "matrix_completed": true,
+    "infra_or_analysis_failures": 0,
+    "paper_acceptance_complete": true
+  },
+  "E3": {
+    "expected": 3,
+    "status_count": 3,
+    "analyzed_count": 3,
+    "matrix_completed": true,
+    "infra_or_analysis_failures": 0,
+    "paper_acceptance_complete": true
+  },
+  "E4": {
+    "expected": 81,
+    "status_count": 81,
+    "analyzed_count": 81,
+    "matrix_completed": true,
+    "infra_or_analysis_failures": 0,
+    "paper_acceptance_complete": true
+  },
+  "protected_inputs_unchanged": true,
+  "protected_evidence": [
+    {
+      "path": "simulink/models/NearSpace_CMG_FlightControl.slx",
+      "initial_sha256": "193d7d7c4de25ed4842257343593672a74eaf36decb88b4fc97ef8fd6ef353b8",
+      "current_sha256": "193d7d7c4de25ed4842257343593672a74eaf36decb88b4fc97ef8fd6ef353b8",
+      "unchanged": true
+    },
+    {
+      "path": "simulink/models/NearSpace_CMG_FlightControl_SurfaceOnly.slx",
+      "initial_sha256": "b10b56648a02fffe7cabd10166d840550853536038a123942aef7d805bdf2991",
+      "current_sha256": "b10b56648a02fffe7cabd10166d840550853536038a123942aef7d805bdf2991",
+      "unchanged": true
+    },
+    {
+      "path": "simulink/data/online_plan_bank.mat",
+      "initial_sha256": "1126c8ecb399d0b6fa6e39c3874ca71c56fca466485664acb6582f745f48e460",
+      "current_sha256": "1126c8ecb399d0b6fa6e39c3874ca71c56fca466485664acb6582f745f48e460",
+      "unchanged": true
+    }
+  ],
+  "all_matrices_attempted": true,
+  "all_analysis_complete": true,
+  "paper_acceptance_complete": true,
+  "physical_core_unchanged": true,
+  "old_raw_unchanged": true,
+  "independent_verification": {
+    "cases_checked": 249,
+    "reanalysis_pass": true,
+    "E1_pairs": 72,
+    "E1_pairs_equal": true,
+    "E3_references_consistent": true,
+    "E4_triplets": 27,
+    "E4_conditions_and_PID_frozen": true
+  },
+  "MPC_isolation_regression": true
+}

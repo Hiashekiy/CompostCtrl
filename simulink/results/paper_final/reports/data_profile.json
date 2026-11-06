@@ -1,0 +1,55 @@
+{
+  "E1_CMG_Benefit": {
+    "cases": 144,
+    "methods": [
+      "JOINT_MPC",
+      "SURFACE_MPC"
+    ],
+    "status_counts": {
+      "SUCCESS": 86,
+      "TRACKING_FAIL": 58
+    },
+    "design": "deterministic cases, not independent repeated samples",
+    "chosen_plot": "matrix and ordered curves; actual time traces; no invented confidence intervals"
+  },
+  "E2_Controller_Comparison": {
+    "cases": 16,
+    "methods": [
+      "JOINT_MPC",
+      "PID_CMG",
+      "PID_DYNAMIC_UNLOAD"
+    ],
+    "status_counts": {
+      "SUCCESS": 6,
+      "TRACKING_FAIL": 10
+    },
+    "design": "deterministic cases, not independent repeated samples",
+    "chosen_plot": "matrix and ordered curves; actual time traces; no invented confidence intervals"
+  },
+  "E3_Prediction_Horizon": {
+    "cases": 10,
+    "methods": [
+      "JOINT_MPC"
+    ],
+    "status_counts": {
+      "SUCCESS": 9,
+      "TRACKING_FAIL": 1
+    },
+    "design": "deterministic cases, not independent repeated samples",
+    "chosen_plot": "matrix and ordered curves; actual time traces; no invented confidence intervals"
+  },
+  "E4_Frequency_Tracking": {
+    "cases": 27,
+    "methods": [
+      "JOINT_MPC",
+      "PID_CMG",
+      "SURFACE_MPC"
+    ],
+    "status_counts": {
+      "VALID_COMPLETE": 13,
+      "VALID_POOR_TRACKING": 14
+    },
+    "design": "deterministic cases, not independent repeated samples",
+    "chosen_plot": "matrix and ordered curves; actual time traces; no invented confidence intervals"
+  }
+}

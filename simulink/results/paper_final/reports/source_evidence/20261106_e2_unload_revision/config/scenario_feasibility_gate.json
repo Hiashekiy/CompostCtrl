@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "proof": [
+    {
+      "task": 1,
+      "A_samples": 50,
+      "A_feasible_ticks": 50,
+      "A_mean_extra_Nm": 0.36103024925476107,
+      "B_mean_extra_Nm": 0.204060575665735,
+      "A_qbar_range_Pa": [
+        6.09601316117097,
+        14.8362562156485
+      ],
+      "B_qbar_range_Pa": [
+        1.20857826534795,
+        5.994560822342
+      ],
+      "C_qbar_range_Pa": [
+        0.933959413351514,
+        1.19572948955028
+      ],
+      "passed": true
+    },
+    {
+      "task": 2,
+      "A_samples": 50,
+      "A_feasible_ticks": 50,
+      "A_mean_extra_Nm": 0.3303691660851385,
+      "B_mean_extra_Nm": 0.25824416775387782,
+      "A_qbar_range_Pa": [
+        6.0960131131443,
+        14.8362562124068
+      ],
+      "B_qbar_range_Pa": [
+        1.20857823113585,
+        5.99456077333296
+      ],
+      "C_qbar_range_Pa": [
+        0.933959347457482,
+        1.19572945514055
+      ],
+      "passed": true
+    }
+  ],
+  "not_a_benefit_requirement": true,
+  "scope": "Existing native trajectory with coupled candidate allocation and20ms surface+CMG drive prediction"
+}

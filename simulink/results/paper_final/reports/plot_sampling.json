@@ -1,0 +1,194 @@
+[
+  {
+    "case_id": "V1_0050_0020_A",
+    "native_samples": 60001,
+    "plot_samples": 8164,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V1_0050_0020_B",
+    "native_samples": 60001,
+    "plot_samples": 11811,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V1_0075_0020_A",
+    "native_samples": 60001,
+    "plot_samples": 7561,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V1_0075_0020_B",
+    "native_samples": 60001,
+    "plot_samples": 11712,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V1_0250_0200_A",
+    "native_samples": 60001,
+    "plot_samples": 9320,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V1_0250_0200_B",
+    "native_samples": 60001,
+    "plot_samples": 12892,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V2_S05_1",
+    "native_samples": 60001,
+    "plot_samples": 9199,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V2_S05_3",
+    "native_samples": 60001,
+    "plot_samples": 12173,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V2_S10_1",
+    "native_samples": 60001,
+    "plot_samples": 8980,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V2_S10_3",
+    "native_samples": 60001,
+    "plot_samples": 11995,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V2_S15_1",
+    "native_samples": 60001,
+    "plot_samples": 8889,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V2_S15_3",
+    "native_samples": 60001,
+    "plot_samples": 11720,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V2_C1_1",
+    "native_samples": 60001,
+    "plot_samples": 10495,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V2_C1_3",
+    "native_samples": 60001,
+    "plot_samples": 10119,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V2_C2_1",
+    "native_samples": 60001,
+    "plot_samples": 9311,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V2_C2_3",
+    "native_samples": 60001,
+    "plot_samples": 11153,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "E2R_M1_1",
+    "native_samples": 60001,
+    "plot_samples": 8889,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "E2R_M1_2",
+    "native_samples": 60001,
+    "plot_samples": 8866,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "E2R_M1_3",
+    "native_samples": 60001,
+    "plot_samples": 10031,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "E2R_M2_1",
+    "native_samples": 60001,
+    "plot_samples": 8835,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "E2R_M2_2",
+    "native_samples": 60001,
+    "plot_samples": 8738,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "E2R_M2_3",
+    "native_samples": 60001,
+    "plot_samples": 9265,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V3_S",
+    "native_samples": 60001,
+    "plot_samples": 11680,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V3_H05_Z",
+    "native_samples": 60001,
+    "plot_samples": 12839,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V3_H08_M",
+    "native_samples": 60001,
+    "plot_samples": 11491,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V3_H08_Z",
+    "native_samples": 60001,
+    "plot_samples": 13113,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V3_H12_M",
+    "native_samples": 60001,
+    "plot_samples": 11139,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V3_H12_Z",
+    "native_samples": 60001,
+    "plot_samples": 13124,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V3_H16_M",
+    "native_samples": 60001,
+    "plot_samples": 10644,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V3_H16_Z",
+    "native_samples": 60001,
+    "plot_samples": 13202,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V3_L",
+    "native_samples": 60001,
+    "plot_samples": 9891,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  },
+  {
+    "case_id": "V3_Z",
+    "native_samples": 60001,
+    "plot_samples": 13031,
+    "selection": "20ms endpoints plus every column min/max in each20ms bin; no smoothing; all numerical metrics use full1ms data"
+  }
+]
