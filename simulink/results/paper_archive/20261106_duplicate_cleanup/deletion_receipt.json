@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "pre_cleanup_commit": "0206aedb870f722a73c28a9f79be107da591ab66",
+  "deleted_files": 597,
+  "deleted_bytes": 6749741881,
+  "duplicate_paths_before": 597,
+  "duplicate_paths_after": 0,
+  "retained_files": 597,
+  "paper_final_integrity_passed": true,
+  "protected_old_raw_still_present": true,
+  "unselected_historical_MAT_deleted": 0,
+  "new_simulations": 0,
+  "free_bytes_after": 17567948800
+}
