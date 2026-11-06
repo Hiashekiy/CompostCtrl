@@ -1,0 +1,32 @@
+{
+  "source": "Original no-unload M1/M2 native60s trajectories, not new simulations",
+  "source_initial_height_m": 89748.737341529166,
+  "source_initial_velocity_NED_mps": [
+    3570.0331859747589,
+    312.33743218412809,
+    -637.89370548355453
+  ],
+  "proposed_A_s": [
+    2,
+    12
+  ],
+  "proposed_B_s": [
+    12,
+    35
+  ],
+  "proposed_C_maneuver_s": [
+    35,
+    40
+  ],
+  "proposed_C_observation_s": [
+    40,
+    50
+  ],
+  "duration_s": 60,
+  "no_unload_replay_max_command_difference": [
+    0,
+    0
+  ],
+  "dynamic_candidate_source_sha256": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+  "warning": "Offline local feasibility is conditional on baseline state; closed-loop prechecks required. Projection headroom alone is not coupled feasibility. qbar>=1 is only a coarse stop gate."
+}

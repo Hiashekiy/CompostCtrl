@@ -1,0 +1,8 @@
+# Retain complete raw outputs and dense native evidence locally.
+*.mat
+*.log
+cache/
+E2*/cases/*/timeseries.csv
+E2*/cases/*/domain_diagnostics.csv
+tables/C2_native_diagnostic.csv
+tables/C2_required_torque_native.csv

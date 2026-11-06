@@ -1,0 +1,25 @@
+{
+  "id": "E2R_PC_M2_DU",
+  "group": "E2_PRECHECK",
+  "phase": "precheck",
+  "raw_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e2_unload_revision\\E2_PRECHECK\\cases\\E2R_PC_M2_DU\\sim_output.mat",
+  "raw_sha256": "2f82fd3bd934bde746e044fe7f182b17db2521a03ec3f3ea0f7bb17ac5e4f538",
+  "config_sha256": "b74a0235961381254c69c065f7069e0f9ff4b57a99a4152f7b39eaa015ebf680",
+  "model_sha256": "90042312baee7bb76cfacb76308093b03d71ac00fb483ddab699d5577f67dedb",
+  "bank_sha256": "33463748f8c1b3a276a612c7fd4773addf3cc8078122f96151fa5c00c8810f22",
+  "baseline_git": {
+    "pre_revision_commit": "22cefb28b53dbab30874b19b748acefa76b9ac9f"
+  },
+  "simulation_sources": {
+    "e2r_pid_step": "3fdbb04392ef5becd0e9e335d3c773697d4d0c1ac6fb44f31f8598758372820d",
+    "e2r_pid_sfun": "eab4043b0923dd7433a7d31bf4ffaa1771282348089c6ac991c9b86a26b8ce24",
+    "e2r_select_unload": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+    "e2r_drive_endpoint": "e404b4fed4184df51947206dd414c78c7f6e63e57024e5673d515c9d5cc8242b",
+    "v3_build": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379",
+    "v3_reference": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d",
+    "v3_analyze": "d1bfd93b061b83760a2d53bdae057b5410649d8df41e78aba019a639e4c225a0"
+  },
+  "analysis_sources": "reports/revision_source_manifest.json",
+  "status": "TRACKING_FAIL",
+  "actual_end_s": 16
+}

@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "pairs": [
+    {
+      "task": 1,
+      "same_initial_state_reference_disturbance_and_grid": true,
+      "PID_only_config_difference": "unload flag",
+      "onset_s": 35,
+      "transition_s": 5,
+      "post_window_s": [
+        40,
+        50
+      ]
+    },
+    {
+      "task": 2,
+      "same_initial_state_reference_disturbance_and_grid": true,
+      "PID_only_config_difference": "unload flag",
+      "onset_s": 35,
+      "transition_s": 5,
+      "post_window_s": [
+        40,
+        50
+      ]
+    }
+  ]
+}

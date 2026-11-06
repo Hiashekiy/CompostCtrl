@@ -1,0 +1,9 @@
+{
+  "source_raw": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261105_redesign_v1\\E2\\cases\\V2_C2_3\\sim_output.mat",
+  "source_sha256": "4849d9b3a568ba6c91a2d435d0a416b2433be00bc6101de3dc958b544d0df24e",
+  "new_simulations": 0,
+  "native_samples": 60001,
+  "native_period_s": 0.001,
+  "segments": 7,
+  "event_metrics_recomputed": true
+}

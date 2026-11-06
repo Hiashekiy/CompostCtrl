@@ -1,0 +1,10 @@
+{
+  "active_ticks": 79,
+  "max_requested_extra_Nm": 56.099762804759067,
+  "max_selected_extra_Nm": 0.3737826076019507,
+  "predicted_compensation_max_Nm": 0.24959809402061059,
+  "actual_compensation_max_Nm": 0.1767599231066424,
+  "actual_compensation_rms_Nm": 0.1206245912655086,
+  "strict_predicted_momentum_descent": true,
+  "actual_extra_definition": "Measured20ms endpoint increment against a same-instant no-unload conditional endpoint, with natural aero canceled at measured endpoint; not a second counterfactual flight"
+}

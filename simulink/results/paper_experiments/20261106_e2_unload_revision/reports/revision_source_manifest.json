@@ -1,0 +1,25 @@
+{
+  "role": "Final analysis source manifest; each simulation has its own immutable source_manifest and configuration hash",
+  "files": {
+    "simulink/paper/v3/e2_revision/audit_e2_revision.py": "6680af1fb81a4c52c658ebe79104a424432e57c8d0eab643f84149a192773d4a",
+    "simulink/paper/v3/e2_revision/check_e2_scenario.m": "af83954b97c89e461f4fa8e17caefa4578714cd2fa838ef1e84b6f9bfd0dfbcf",
+    "simulink/paper/v3/e2_revision/diagnose_e2_c2.m": "00233b929e67cbea4bb6ca9c0eff8ec8fb1e1c7a7a5e088e16a911a15a554b07",
+    "simulink/paper/v3/e2_revision/e2r_drive_endpoint.m": "e404b4fed4184df51947206dd414c78c7f6e63e57024e5673d515c9d5cc8242b",
+    "simulink/paper/v3/e2_revision/e2r_native.m": "335bc9fc5138cb10797c19d97573443b3bf5acff62352d149f52dd8e8c185b4b",
+    "simulink/paper/v3/e2_revision/e2r_pid_sfun.m": "eab4043b0923dd7433a7d31bf4ffaa1771282348089c6ac991c9b86a26b8ce24",
+    "simulink/paper/v3/e2_revision/e2r_pid_step.m": "3fdbb04392ef5becd0e9e335d3c773697d4d0c1ac6fb44f31f8598758372820d",
+    "simulink/paper/v3/e2_revision/e2r_run_case.m": "42fc36804ff9b1cdebc2fc1f1e0b52bf64980518d3d39d93266b1f751855d039",
+    "simulink/paper/v3/e2_revision/e2r_select_unload.m": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+    "simulink/paper/v3/e2_revision/e2r_unload_log.m": "74fe282aa61cf48431160dd91a08f3b2ba50e05c67d68677d97b9782c6a63743",
+    "simulink/paper/v3/e2_revision/inspect_e2_revision.m": "5f7f0c4c7dea1137b2b58e8b18ee8bf8ea955df5bfdb0fc9656996e89f2a9714",
+    "simulink/paper/v3/e2_revision/label_c2_figure.m": "67379c04c573854828489f687e59c9138c2712d38b170d67f6675d40c6351db1",
+    "simulink/paper/v3/e2_revision/precheck_e2_revision.m": "d85288dab6c76ffb6125023f15b5a4f310262ebb098449ed122cb37fc5ea3fc2",
+    "simulink/paper/v3/e2_revision/report_e2_revision.m": "16847ffafa4e520f49309898346ff5692e5a580d2c563f503ddbd2a3b900a4a2",
+    "simulink/paper/v3/e2_revision/run_e2_revision.m": "f1352e02f909dc3ae0d4c8cf6261ae038c7cde8bf223dc47acdbd8e04e2e820c",
+    "simulink/paper/v3/e2_revision/supplement_c2_dynamics.m": "9a4a2e9c9fcf3242b9a15c391a91f53521cb5533938fb5c4c801f0ceb8aa944e",
+    "simulink/paper/v3/e2_revision/validate_e2_revision.m": "f6d7412d8c79119b01e13b92f7f5439de4dd88c58e3404447e19942db578e497",
+    "simulink/paper/v3/e2_revision/verify_e2_revision.py": "cdf8a3b3213c0a0b7e12cf96da4371485604223c8dc7e65d4be01750203c4ed1",
+    "simulink/paper/v3/e2_revision/write_c2_diagnosis.py": "203e5508d273b8484c44344b4d10faaa040f1ce6cd29c50aaee2cadf9a8ef54f",
+    "simulink/paper/v3/e2_revision/write_e2_scenario_report.m": "6a4902866291eea77e5612c64e915c0b96a11b81bb36d1a3ac7b57cc55ca37bc"
+  }
+}

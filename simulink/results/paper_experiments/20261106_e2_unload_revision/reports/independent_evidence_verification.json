@@ -1,0 +1,215 @@
+{
+  "passed": true,
+  "C2_native_samples": 60001,
+  "C2_event_metrics_match_original_and_independent_native_reduction": true,
+  "C2_first_pitch_error_over1deg_during_second_s": 20.98,
+  "C2_successful_QPs_but_rejected_full_steps_12to24": 60,
+  "formal_simulations": 6,
+  "informal_prechecks": 2,
+  "C2_new_simulations": 0,
+  "distinct_new_raw_outputs": 8,
+  "all_simulation_sources_unchanged_since_execution": true,
+  "physical_endpoint_check_passed": true,
+  "runs": [
+    {
+      "id": "E2R_M1_1",
+      "group": "E2",
+      "phase": "formal",
+      "raw_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e2_unload_revision\\E2\\cases\\E2R_M1_1\\sim_output.mat",
+      "raw_sha256": "e5362ba1a1d537b2d2f697bdba6fac36c6908054e79ea8dc8892c0da296e3254",
+      "config_sha256": "8b968c23eabeac59747db852700478c47e0aa927da27e296252d15a520837a7d",
+      "model_sha256": "e6ac56a927d3c5e7cab5d1ed7283899e281fd87d055ef281cfd389c7a9d805a0",
+      "bank_sha256": "9391d090e9d4ebe7a1db6ce14817dd05e82a0461b4e844ea389852083adb09a1",
+      "baseline_git": {
+        "pre_revision_commit": "22cefb28b53dbab30874b19b748acefa76b9ac9f"
+      },
+      "simulation_sources": {
+        "e2r_pid_step": "3fdbb04392ef5becd0e9e335d3c773697d4d0c1ac6fb44f31f8598758372820d",
+        "e2r_pid_sfun": "eab4043b0923dd7433a7d31bf4ffaa1771282348089c6ac991c9b86a26b8ce24",
+        "e2r_select_unload": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+        "e2r_drive_endpoint": "e404b4fed4184df51947206dd414c78c7f6e63e57024e5673d515c9d5cc8242b",
+        "v3_build": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379",
+        "v3_reference": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d",
+        "v3_analyze": "d1bfd93b061b83760a2d53bdae057b5410649d8df41e78aba019a639e4c225a0"
+      },
+      "analysis_sources": "reports/revision_source_manifest.json",
+      "status": "TRACKING_FAIL",
+      "actual_end_s": 60
+    },
+    {
+      "id": "E2R_M1_2",
+      "group": "E2",
+      "phase": "formal",
+      "raw_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e2_unload_revision\\E2\\cases\\E2R_M1_2\\sim_output.mat",
+      "raw_sha256": "017140983f477754bbcf018fce6f7f3b11fe479f522649e34683675ae921c138",
+      "config_sha256": "63945f24efd8bf7be5bca401967a763a4ec33f5d6d0263002cd7f555dea0db96",
+      "model_sha256": "2a4b534fbb8431932100c9d85eeef21d4ef39801365ace635f701c213d38d2a1",
+      "bank_sha256": "f1e6a63b31df9b589c3fbe07bec3e4d18ea1d8b72f1c1bbd085735534353a105",
+      "baseline_git": {
+        "pre_revision_commit": "22cefb28b53dbab30874b19b748acefa76b9ac9f"
+      },
+      "simulation_sources": {
+        "e2r_pid_step": "3fdbb04392ef5becd0e9e335d3c773697d4d0c1ac6fb44f31f8598758372820d",
+        "e2r_pid_sfun": "eab4043b0923dd7433a7d31bf4ffaa1771282348089c6ac991c9b86a26b8ce24",
+        "e2r_select_unload": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+        "e2r_drive_endpoint": "e404b4fed4184df51947206dd414c78c7f6e63e57024e5673d515c9d5cc8242b",
+        "v3_build": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379",
+        "v3_reference": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d",
+        "v3_analyze": "d1bfd93b061b83760a2d53bdae057b5410649d8df41e78aba019a639e4c225a0"
+      },
+      "analysis_sources": "reports/revision_source_manifest.json",
+      "status": "TRACKING_FAIL",
+      "actual_end_s": 60
+    },
+    {
+      "id": "E2R_M1_3",
+      "group": "E2",
+      "phase": "formal",
+      "raw_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e2_unload_revision\\E2\\cases\\E2R_M1_3\\sim_output.mat",
+      "raw_sha256": "0f5f936b24e64a1cbcba1bda07fdbbbd4f1a6303094821c0b3c3c20dded5643d",
+      "config_sha256": "b91719670822eaa59a30f2d29d120daa9919a484dc6801fc825153e1b58f948c",
+      "model_sha256": "6bc691f045c8ca61933f573fe76d8073e196f42df37ac65d3fd6df103df28c15",
+      "bank_sha256": "a5072e82e4df882e9cdf8e6e2551384b5c106b0f06456a0cf3e0364839f60fa3",
+      "baseline_git": {
+        "pre_revision_commit": "22cefb28b53dbab30874b19b748acefa76b9ac9f"
+      },
+      "simulation_sources": {
+        "e2r_pid_step": "3fdbb04392ef5becd0e9e335d3c773697d4d0c1ac6fb44f31f8598758372820d",
+        "e2r_pid_sfun": "eab4043b0923dd7433a7d31bf4ffaa1771282348089c6ac991c9b86a26b8ce24",
+        "e2r_select_unload": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+        "e2r_drive_endpoint": "e404b4fed4184df51947206dd414c78c7f6e63e57024e5673d515c9d5cc8242b",
+        "v3_build": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379",
+        "v3_reference": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d",
+        "v3_analyze": "d1bfd93b061b83760a2d53bdae057b5410649d8df41e78aba019a639e4c225a0"
+      },
+      "analysis_sources": "reports/revision_source_manifest.json",
+      "status": "SUCCESS",
+      "actual_end_s": 60
+    },
+    {
+      "id": "E2R_M2_1",
+      "group": "E2",
+      "phase": "formal",
+      "raw_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e2_unload_revision\\E2\\cases\\E2R_M2_1\\sim_output.mat",
+      "raw_sha256": "a020582098b01fbef5cf0177cbd2ee0ca98dd5963fdcf9e5f742e55546e2f9c6",
+      "config_sha256": "0c025301bb89b6599e6b8cf93374411214c974df97493ed7f8fc8f952d3d403a",
+      "model_sha256": "ca359ba84fc8afeebd48589ea33bc4e90c711f7616aad9eff9082790483ba872",
+      "bank_sha256": "f45c1194b6385b930f0d3301b10a3bff3d371c271efc9e4bed30edb5e23c9d0b",
+      "baseline_git": {
+        "pre_revision_commit": "22cefb28b53dbab30874b19b748acefa76b9ac9f"
+      },
+      "simulation_sources": {
+        "e2r_pid_step": "3fdbb04392ef5becd0e9e335d3c773697d4d0c1ac6fb44f31f8598758372820d",
+        "e2r_pid_sfun": "eab4043b0923dd7433a7d31bf4ffaa1771282348089c6ac991c9b86a26b8ce24",
+        "e2r_select_unload": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+        "e2r_drive_endpoint": "e404b4fed4184df51947206dd414c78c7f6e63e57024e5673d515c9d5cc8242b",
+        "v3_build": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379",
+        "v3_reference": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d",
+        "v3_analyze": "d1bfd93b061b83760a2d53bdae057b5410649d8df41e78aba019a639e4c225a0"
+      },
+      "analysis_sources": "reports/revision_source_manifest.json",
+      "status": "TRACKING_FAIL",
+      "actual_end_s": 60
+    },
+    {
+      "id": "E2R_M2_2",
+      "group": "E2",
+      "phase": "formal",
+      "raw_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e2_unload_revision\\E2\\cases\\E2R_M2_2\\sim_output.mat",
+      "raw_sha256": "f9e231ae866708d1eea85668deaa69ef35103502169dd8c1870c765b27be9ef8",
+      "config_sha256": "d022639c09ef498142d11c46acef434ab416299f8918f7c5acb24dec9d1b593d",
+      "model_sha256": "2e4d68dd743817f54bba10703236b6dc9dd68b6cba64e6d6d98af7b1c65eaae1",
+      "bank_sha256": "c9fa99bcb45375f5fa3cbf7d6a07877c2c99a60062c08ba3ec30f4608bf5f3a4",
+      "baseline_git": {
+        "pre_revision_commit": "22cefb28b53dbab30874b19b748acefa76b9ac9f"
+      },
+      "simulation_sources": {
+        "e2r_pid_step": "3fdbb04392ef5becd0e9e335d3c773697d4d0c1ac6fb44f31f8598758372820d",
+        "e2r_pid_sfun": "eab4043b0923dd7433a7d31bf4ffaa1771282348089c6ac991c9b86a26b8ce24",
+        "e2r_select_unload": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+        "e2r_drive_endpoint": "e404b4fed4184df51947206dd414c78c7f6e63e57024e5673d515c9d5cc8242b",
+        "v3_build": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379",
+        "v3_reference": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d",
+        "v3_analyze": "d1bfd93b061b83760a2d53bdae057b5410649d8df41e78aba019a639e4c225a0"
+      },
+      "analysis_sources": "reports/revision_source_manifest.json",
+      "status": "TRACKING_FAIL",
+      "actual_end_s": 60
+    },
+    {
+      "id": "E2R_M2_3",
+      "group": "E2",
+      "phase": "formal",
+      "raw_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e2_unload_revision\\E2\\cases\\E2R_M2_3\\sim_output.mat",
+      "raw_sha256": "7e570303533efa233b9c78de560466be490bae162eb868fe2223b8aab6503baa",
+      "config_sha256": "c869e83a941cfaab90fe16c8315b018e3fba7779aa61445eb50f99247ed80bad",
+      "model_sha256": "5f6b0f515758311a99d8632a2ad9684616b5732be47d6bcb7fed5913fd69bbf0",
+      "bank_sha256": "c3615b14f11a0b37b4c0632c19782d7a0f67c610438487b62bc92d14511ac758",
+      "baseline_git": {
+        "pre_revision_commit": "22cefb28b53dbab30874b19b748acefa76b9ac9f"
+      },
+      "simulation_sources": {
+        "e2r_pid_step": "3fdbb04392ef5becd0e9e335d3c773697d4d0c1ac6fb44f31f8598758372820d",
+        "e2r_pid_sfun": "eab4043b0923dd7433a7d31bf4ffaa1771282348089c6ac991c9b86a26b8ce24",
+        "e2r_select_unload": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+        "e2r_drive_endpoint": "e404b4fed4184df51947206dd414c78c7f6e63e57024e5673d515c9d5cc8242b",
+        "v3_build": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379",
+        "v3_reference": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d",
+        "v3_analyze": "d1bfd93b061b83760a2d53bdae057b5410649d8df41e78aba019a639e4c225a0"
+      },
+      "analysis_sources": "reports/revision_source_manifest.json",
+      "status": "SUCCESS",
+      "actual_end_s": 60
+    },
+    {
+      "id": "E2R_PC_M1_DU",
+      "group": "E2_PRECHECK",
+      "phase": "precheck",
+      "raw_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e2_unload_revision\\E2_PRECHECK\\cases\\E2R_PC_M1_DU\\sim_output.mat",
+      "raw_sha256": "563596fcba047067b53ef685b0bfc3ec03d023d09bc42bdb080b661b484d6329",
+      "config_sha256": "0802b77d0dfdc2598e70ceea5729590c7a6363a1b007e9aa5b9a620b6784e3ec",
+      "model_sha256": "f96c50da9d0fe4558f7079770b7970d28812a9bdfbe4dbca141e82bdfac57bc5",
+      "bank_sha256": "81602ddcb54b3b53ca376807506d465d694f5af5544ee7922415903286e295a6",
+      "baseline_git": {
+        "pre_revision_commit": "22cefb28b53dbab30874b19b748acefa76b9ac9f"
+      },
+      "simulation_sources": {
+        "e2r_pid_step": "3fdbb04392ef5becd0e9e335d3c773697d4d0c1ac6fb44f31f8598758372820d",
+        "e2r_pid_sfun": "eab4043b0923dd7433a7d31bf4ffaa1771282348089c6ac991c9b86a26b8ce24",
+        "e2r_select_unload": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+        "e2r_drive_endpoint": "e404b4fed4184df51947206dd414c78c7f6e63e57024e5673d515c9d5cc8242b",
+        "v3_build": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379",
+        "v3_reference": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d",
+        "v3_analyze": "d1bfd93b061b83760a2d53bdae057b5410649d8df41e78aba019a639e4c225a0"
+      },
+      "analysis_sources": "reports/revision_source_manifest.json",
+      "status": "TRACKING_FAIL",
+      "actual_end_s": 16
+    },
+    {
+      "id": "E2R_PC_M2_DU",
+      "group": "E2_PRECHECK",
+      "phase": "precheck",
+      "raw_path": "D:\\项目\\飞轮\\simulink\\results\\paper_experiments\\20261106_e2_unload_revision\\E2_PRECHECK\\cases\\E2R_PC_M2_DU\\sim_output.mat",
+      "raw_sha256": "2f82fd3bd934bde746e044fe7f182b17db2521a03ec3f3ea0f7bb17ac5e4f538",
+      "config_sha256": "b74a0235961381254c69c065f7069e0f9ff4b57a99a4152f7b39eaa015ebf680",
+      "model_sha256": "90042312baee7bb76cfacb76308093b03d71ac00fb483ddab699d5577f67dedb",
+      "bank_sha256": "33463748f8c1b3a276a612c7fd4773addf3cc8078122f96151fa5c00c8810f22",
+      "baseline_git": {
+        "pre_revision_commit": "22cefb28b53dbab30874b19b748acefa76b9ac9f"
+      },
+      "simulation_sources": {
+        "e2r_pid_step": "3fdbb04392ef5becd0e9e335d3c773697d4d0c1ac6fb44f31f8598758372820d",
+        "e2r_pid_sfun": "eab4043b0923dd7433a7d31bf4ffaa1771282348089c6ac991c9b86a26b8ce24",
+        "e2r_select_unload": "3d3954018784b4043a1d4de6070cf124e2bb72cb227339e8dcde75bc146fa465",
+        "e2r_drive_endpoint": "e404b4fed4184df51947206dd414c78c7f6e63e57024e5673d515c9d5cc8242b",
+        "v3_build": "45bd7ac30df52d2481608f2347ee9f54d5c09525d9edb5b815f680853556a379",
+        "v3_reference": "35945d714842f793a233d097b499020e5ef7c3e8e06254bc10382df5c004608d",
+        "v3_analyze": "d1bfd93b061b83760a2d53bdae057b5410649d8df41e78aba019a639e4c225a0"
+      },
+      "analysis_sources": "reports/revision_source_manifest.json",
+      "status": "TRACKING_FAIL",
+      "actual_end_s": 16
+    }
+  ]
+}

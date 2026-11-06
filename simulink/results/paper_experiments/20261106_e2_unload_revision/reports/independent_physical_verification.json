@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "drive_and_descent_checks": [
+    {
+      "task": 1,
+      "variant": 1,
+      "validated_endpoints": 300,
+      "active_descent_checks": 0,
+      "measured_rate_input_max_error_radps": 0,
+      "drive_endpoint_max_rate_error_radps": 1.1102230246251565E-16,
+      "drive_endpoint_max_angle_error_rad": 1.3877787807814457E-17,
+      "independent_H_delta_max_error_Nms": 0,
+      "passed": true
+    },
+    {
+      "task": 1,
+      "variant": 2,
+      "validated_endpoints": 300,
+      "active_descent_checks": 174,
+      "measured_rate_input_max_error_radps": 0,
+      "drive_endpoint_max_rate_error_radps": 1.1102230246251565E-16,
+      "drive_endpoint_max_angle_error_rad": 0,
+      "independent_H_delta_max_error_Nms": 0,
+      "passed": true
+    },
+    {
+      "task": 2,
+      "variant": 1,
+      "validated_endpoints": 300,
+      "active_descent_checks": 0,
+      "measured_rate_input_max_error_radps": 0,
+      "drive_endpoint_max_rate_error_radps": 1.1102230246251565E-16,
+      "drive_endpoint_max_angle_error_rad": 0,
+      "independent_H_delta_max_error_Nms": 0,
+      "passed": true
+    },
+    {
+      "task": 2,
+      "variant": 2,
+      "validated_endpoints": 300,
+      "active_descent_checks": 179,
+      "measured_rate_input_max_error_radps": 0,
+      "drive_endpoint_max_rate_error_radps": 1.1102230246251565E-16,
+      "drive_endpoint_max_angle_error_rad": 0,
+      "independent_H_delta_max_error_Nms": 0,
+      "passed": true
+    }
+  ],
+  "MPC_templates": [
+    {
+      "task": 1,
+      "entire_template_identical": true,
+      "horizon_s": 23.2,
+      "sqp_limit": 4
+    },
+    {
+      "task": 2,
+      "entire_template_identical": true,
+      "horizon_s": 23.2,
+      "sqp_limit": 4
+    }
+  ],
+  "no_extra_simulations": true
+}

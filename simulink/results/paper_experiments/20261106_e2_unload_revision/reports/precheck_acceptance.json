@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "new_informal_simulations": 2,
+  "results": [
+    {
+      "id": "E2R_PC_M1_DU",
+      "complete": true,
+      "status": "TRACKING_FAIL",
+      "physical_bounds": true,
+      "hold_peak_after2_deg": 0.1403908829667454,
+      "initial_H_Nms": 115.47005016226339,
+      "final_H_Nms": 113.99603476640698,
+      "unload": {
+        "active_ticks": 79,
+        "max_requested_extra_Nm": 56.099762804759067,
+        "max_selected_extra_Nm": 0.3737826076019507,
+        "predicted_compensation_max_Nm": 0.24959809402061059,
+        "actual_compensation_max_Nm": 0.1767599231066424,
+        "actual_compensation_rms_Nm": 0.1206245912655086,
+        "strict_predicted_momentum_descent": true,
+        "actual_extra_definition": "Measured20ms endpoint increment against a same-instant no-unload conditional endpoint, with natural aero canceled at measured endpoint; not a second counterfactual flight"
+      },
+      "passed": true
+    },
+    {
+      "id": "E2R_PC_M2_DU",
+      "complete": true,
+      "status": "TRACKING_FAIL",
+      "physical_bounds": true,
+      "hold_peak_after2_deg": 0.14013191741688311,
+      "initial_H_Nms": 162.8902284703538,
+      "final_H_Nms": 159.15434774851147,
+      "unload": {
+        "active_ticks": 81,
+        "max_requested_extra_Nm": 21.166950812719733,
+        "max_selected_extra_Nm": 0.44450109094154394,
+        "predicted_compensation_max_Nm": 0.24969382048903302,
+        "actual_compensation_max_Nm": 0.15798660937887987,
+        "actual_compensation_rms_Nm": 0.09495988998102628,
+        "strict_predicted_momentum_descent": true,
+        "actual_extra_definition": "Measured20ms endpoint increment against a same-instant no-unload conditional endpoint, with natural aero canceled at measured endpoint; not a second counterfactual flight"
+      },
+      "passed": true
+    }
+  ],
+  "strict_attitude_guard_deg": 1,
+  "unchanged_compensation_tolerance_Nm": 0.25
+}
