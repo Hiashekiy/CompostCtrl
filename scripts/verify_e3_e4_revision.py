@@ -62,7 +62,10 @@ def main():
     code.update({p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'simulink/paper/v3').glob('*e4_1deg*') if p.is_file()})
     audit=ROOT/'simulink/paper/v3/revision_controller_audit.m'
     code[audit.relative_to(ROOT).as_posix()]=hashlib.sha256(audit.read_bytes()).hexdigest()
-    baseline=subprocess_sha()
+    # Verification after a commit must retain the actual pre-run Git baseline.
+    first_provenance=raw[0].parent/'provenance.json'
+    baseline=(json.loads(first_provenance.read_text(encoding='utf-8'))['baseline_git_sha']
+              if first_provenance.exists() else subprocess_sha())
     for path in raw:
         folder=path.parent
         cfg=json.loads((folder/'build_config.json').read_text())
