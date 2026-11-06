@@ -6,7 +6,8 @@ function [command,state,info]=native_online_rti_step(s,x,state,force_failure)
 if nargin<4,force_failure=false;end
 started=tic;N=double(s.N);nx=double(s.nx);s.nu_previous=state.nu_previous;
 max_sqp=online_max_sqp_iterations(s);
-enforce_objective_decrease=true;
+% Objective-increase rejection is disabled by default; opt in explicitly if needed.
+enforce_objective_decrease=false;
 if isfield(s,'enforce_objective_decrease')
  enforce_objective_decrease=s.enforce_objective_decrease;
  assert(isscalar(enforce_objective_decrease) && ...
